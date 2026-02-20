@@ -25,7 +25,11 @@ logs/
 .DS_Store
 Thumbs.db
 
-# Test outputs
+# Test outputs and images
+backend/test/*.png
+backend/test/*.jpg
+backend/test/*.jpeg
+backend/test/*.webp
 backend/test/*.json
 backend/test/*.txt
 backend/PDF/
