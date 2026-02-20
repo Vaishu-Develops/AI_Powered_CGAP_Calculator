@@ -1,0 +1,229 @@
+{
+  "branch": "MECH",
+  "branch_full": "Mechanical Engineering",
+  "regulation": "2021",
+  "total_credits": 162,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3256": {"name": "Physics for Mechanical Sciences", "credits": 3, "type": "BSC"},
+        "BE3255": {"name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 4, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "ME3251": {"name": "Engineering Mechanics", "credits": 4, "type": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "ME3261": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 28
+    },
+    "3": {
+      "subjects": {
+        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
+        "ME3351": {"name": "Engineering Thermodynamics", "credits": 4, "type": "PCC"},
+        "ME3391": {"name": "Engineering Materials and Metallurgy", "credits": 3, "type": "PCC"},
+        "ME3352": {"name": "Manufacturing Technology - I", "credits": 3, "type": "PCC"},
+        "ME3353": {"name": "Fluid Mechanics and Machinery", "credits": 4, "type": "PCC"},
+        "ME3354": {"name": "Strength of Materials", "credits": 4, "type": "PCC"},
+        "ME3361": {"name": "Fluid Mechanics and Machinery Laboratory", "credits": 1.5, "type": "PCC"},
+        "ME3362": {"name": "Manufacturing Technology Laboratory - I", "credits": 1.5, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 26
+    },
+    "4": {
+      "subjects": {
+        "ME3451": {"name": "Kinematics and Dynamics of Machinery", "credits": 4, "type": "PCC"},
+        "ME3452": {"name": "Thermal Engineering", "credits": 4, "type": "PCC"},
+        "ME3491": {"name": "Manufacturing Technology - II", "credits": 4, "type": "PCC"},
+        "ME3453": {"name": "Design of Machine Elements", "credits": 4, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "ME3461": {"name": "Thermal Engineering Laboratory", "credits": 1.5, "type": "PCC"},
+        "ME3462": {"name": "Manufacturing Technology Laboratory - II", "credits": 1.5, "type": "PCC"},
+        "ME3463": {"name": "Strength of Materials and Design Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 22.5
+    },
+    "5": {
+      "subjects": {
+        "ME3501": {"name": "Heat and Mass Transfer", "credits": 4, "type": "PCC"},
+        "ME3502": {"name": "Metrology and Measurements", "credits": 3, "type": "PCC"},
+        "ME3503": {"name": "Computer Aided Design and Manufacturing", "credits": 4, "type": "PCC"},
+        "ME3511": {"name": "Metrology and Measurements Laboratory", "credits": 1.5, "type": "PCC"},
+        "ME3512": {"name": "Computer Aided Design and Manufacturing Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 23,
+      "notes": "Professional Elective I, II, III (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "ME3601": {"name": "Mechatronics", "credits": 4, "type": "PCC"},
+        "ME3611": {"name": "Dynamics and Mechatronics Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 17.5,
+      "notes": "Open Elective I (3 cr), Professional Elective IV, V, VI (3 cr each)"
+    },
+    "7": {
+      "subjects": {
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
+        "ME3711": {"name": "Summer Internship", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 16,
+      "notes": "Elective Management (3 cr), Open Elective II, III, IV (3 cr each), Professional Elective VII (3 cr)"
+    },
+    "8": {
+      "subjects": {
+        "ME3811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_modern_mobility_systems": {
+      "name": "Modern Mobility Systems",
+      "subjects": {
+        "CME331": {"name": "Automotive Materials, Components, Design and Testing", "credits": 3},
+        "CME332": {"name": "Conventional and Futuristic Vehicle Technology", "credits": 3},
+        "CME333": {"name": "Renewable Powered Off Highway Vehicles and Emission Control Technology", "credits": 3},
+        "CME334": {"name": "Vehicle Health Monitoring, Maintenance and Safety", "credits": 3},
+        "CME335": {"name": "CAE and CFD Approach in Future Mobility", "credits": 3},
+        "CME336": {"name": "Hybrid and Electric Vehicle Technology", "credits": 3},
+        "CME337": {"name": "Thermal Management of Batteries and Fuel Cells", "credits": 3}
+      }
+    },
+    "vertical_2_product_process_development": {
+      "name": "Product and Process Development",
+      "subjects": {
+        "CME338": {"name": "Value Engineering", "credits": 3},
+        "CME339": {"name": "Additive Manufacturing", "credits": 3},
+        "CME340": {"name": "CAD/CAM", "credits": 3},
+        "CME341": {"name": "Design For X", "credits": 3},
+        "CME342": {"name": "Ergonomics in Design", "credits": 3},
+        "CME343": {"name": "New Product Development", "credits": 3},
+        "CME344": {"name": "Product Life Cycle Management", "credits": 3}
+      }
+    },
+    "vertical_3_robotics_automation": {
+      "name": "Robotics and Automation",
+      "subjects": {
+        "MR3491": {"name": "Sensors and Instrumentation", "credits": 3},
+        "MR3392": {"name": "Electrical Drives and Actuators", "credits": 3},
+        "MR3492": {"name": "Embedded Systems and Programming", "credits": 3},
+        "MR3691": {"name": "Robotics", "credits": 3},
+        "CMR338": {"name": "Smart Mobility and Intelligent Vehicles", "credits": 3},
+        "CME345": {"name": "Haptics and Immersive Technologies", "credits": 3},
+        "CRA332": {"name": "Drone Technologies", "credits": 3}
+      }
+    },
+    "vertical_4_digital_green_manufacturing": {
+      "name": "Digital and Green Manufacturing",
+      "subjects": {
+        "CME346": {"name": "Digital Manufacturing and IoT", "credits": 3},
+        "CME347": {"name": "Lean Manufacturing", "credits": 3},
+        "CME348": {"name": "Modern Robotics", "credits": 3},
+        "CME349": {"name": "Green Manufacturing Design and Practices", "credits": 3},
+        "CME350": {"name": "Environment Sustainability and Impact Assessment", "credits": 3},
+        "CME351": {"name": "Energy Saving Machinery and Components", "credits": 3},
+        "CME352": {"name": "Green Supply Chain Management", "credits": 3}
+      }
+    },
+    "vertical_5_process_equipment_piping": {
+      "name": "Process Equipment and Piping Design",
+      "subjects": {
+        "CME353": {"name": "Design of Pressure Vessels", "credits": 3},
+        "CME354": {"name": "Failure Analysis and NDT Techniques", "credits": 3},
+        "CME355": {"name": "Material Handling and Solid Processing Equipment", "credits": 3},
+        "CME356": {"name": "Rotating Machinery Design", "credits": 3},
+        "CME357": {"name": "Thermal and Fired Equipment Design", "credits": 3},
+        "CME358": {"name": "Industrial Layout Design and Safety", "credits": 3},
+        "CME359": {"name": "Design Codes and Standards", "credits": 3}
+      }
+    },
+    "vertical_6_clean_green_energy": {
+      "name": "Clean and Green Energy Technologies",
+      "subjects": {
+        "CME360": {"name": "Bioenergy Conversion Technologies", "credits": 3},
+        "CME361": {"name": "Carbon Footprint Estimation and Reduction Techniques", "credits": 3},
+        "CME362": {"name": "Energy Conservation in Industries", "credits": 3},
+        "CME363": {"name": "Energy Efficient Buildings", "credits": 3},
+        "CME364": {"name": "Energy Storage Devices", "credits": 3},
+        "CME365": {"name": "Renewable Energy Technologies", "credits": 3},
+        "CME366": {"name": "Equipment for Pollution Control", "credits": 3}
+      }
+    },
+    "vertical_7_computational_engineering": {
+      "name": "Computational Engineering",
+      "subjects": {
+        "CME367": {"name": "Computational Solid Mechanics", "credits": 3},
+        "CME368": {"name": "Computational Fluid Dynamics and Heat Transfer", "credits": 3},
+        "CME369": {"name": "Theory on Computation and Visualization", "credits": 3},
+        "CME370": {"name": "Computational Bio-Mechanics", "credits": 3},
+        "CME371": {"name": "Advanced Statistics and Data Analytics", "credits": 3},
+        "CME372": {"name": "CAD and CAE", "credits": 3},
+        "CRA342": {"name": "Machine Learning for Intelligent Systems", "credits": 3}
+      }
+    },
+    "vertical_8_diversified_group1": {
+      "name": "Diversified Courses Group 1",
+      "subjects": {
+        "CME380": {"name": "Automobile Engineering", "credits": 3},
+        "ME3001": {"name": "Measurements and Controls", "credits": 3},
+        "CME381": {"name": "Design Concepts in Engineering", "credits": 3},
+        "CME382": {"name": "Composite Materials and Mechanics", "credits": 3},
+        "CME383": {"name": "Electrical Drives and Control", "credits": 3},
+        "CME384": {"name": "Power Plant Engineering", "credits": 3},
+        "CME385": {"name": "Refrigeration and Air Conditioning", "credits": 3},
+        "CAU332": {"name": "Dynamics of Ground Vehicles", "credits": 3}
+      }
+    },
+    "vertical_9_diversified_group2": {
+      "name": "Diversified Courses Group 2",
+      "subjects": {
+        "CAE353": {"name": "Turbo Machines", "credits": 3},
+        "CME387": {"name": "Non-traditional Machining Processes", "credits": 3},
+        "CME388": {"name": "Industrial Safety", "credits": 3},
+        "CME389": {"name": "Design of Transmission System", "credits": 3},
+        "CME390": {"name": "Thermal Power Engineering", "credits": 3},
+        "CME391": {"name": "Design for Manufacturing", "credits": 3},
+        "CME392": {"name": "Power Generation Equipment Design", "credits": 3}
+      }
+    },
+    "vertical_10_diversified_group3": {
+      "name": "Diversified Courses Group 3",
+      "subjects": {
+        "CME393": {"name": "Advanced Vehicle Engineering", "credits": 3},
+        "CME394": {"name": "Advanced Internal Combustion Engineering", "credits": 3},
+        "CME395": {"name": "Casting and Welding Processes", "credits": 3},
+        "CME396": {"name": "Process Planning and Cost Estimation", "credits": 3},
+        "CME397": {"name": "Surface Engineering", "credits": 3},
+        "CME398": {"name": "Precision Manufacturing", "credits": 3},
+        "CME386": {"name": "Gas Dynamics and Jet Propulsion", "credits": 3},
+        "CME399": {"name": "Operational Research", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

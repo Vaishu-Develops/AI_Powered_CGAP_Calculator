@@ -1,0 +1,107 @@
+{
+  "branch": "Industrial Engineering",
+  "branch_code": "IE",
+  "regulation": "R2021",
+  "total_credits": 164,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "PH3251", "name": "Materials Science", "credits": 3, "category": "BSC"},
+        {"code": "BE3251", "name": "Basic Electrical and Electronics Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BE3271", "name": "Basic Electrical and Electronics Engineering Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {"code": "MA3352", "name": "Probability and Linear Algebra", "credits": 4, "category": "BSC"},
+        {"code": "CE3391", "name": "Fluid Mechanics and Machinery", "credits": 4, "category": "ESC"},
+        {"code": "CE3491", "name": "Strength of Materials", "credits": 3, "category": "ESC"},
+        {"code": "IE3351", "name": "Work System Design", "credits": 3, "category": "PCC"},
+        {"code": "ME3393", "name": "Manufacturing Processes", "credits": 3, "category": "PCC"},
+        {"code": "ME3351", "name": "Engineering Mechanics", "credits": 3, "category": "ESC"},
+        {"code": "CE3481", "name": "Strength of Materials and Fluid Machinery Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "ME3382", "name": "Manufacturing Technology Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {"code": "IE3491", "name": "Operations Research", "credits": 3, "category": "PCC"},
+        {"code": "IE3451", "name": "Thermodynamics", "credits": 4, "category": "PCC"},
+        {"code": "IE3452", "name": "Applied Ergonomics", "credits": 4, "category": "PCC"},
+        {"code": "IE3453", "name": "Engineering Quality Control", "credits": 3, "category": "PCC"},
+        {"code": "AE3491", "name": "Mechanics of Machines", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "IE3411", "name": "Work System Design Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "IE3461", "name": "Optimization Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 22
+    },
+    "5": {
+      "subjects": [
+        {"code": "IE3551", "name": "Production and Operations Management", "credits": 3, "category": "PCC"},
+        {"code": "CPR333", "name": "Machine Design", "credits": 3, "category": "PCC"},
+        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
+        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
+        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
+        {"code": "PEC504", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
+        {"code": "IE3511", "name": "Ergonomics Laboratory", "credits": 1, "category": "PCC"},
+        {"code": "ME3381", "name": "Computer Aided Machine Drawing", "credits": 2, "category": "PCC"}
+      ],
+      "total_credits": 21
+    },
+    "6": {
+      "subjects": [
+        {"code": "IE3651", "name": "Manufacturing Automation", "credits": 3, "category": "PCC"},
+        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
+        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
+        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
+        {"code": "PEC607", "name": "Professional Elective VII", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE7"},
+        {"code": "PEC608", "name": "Professional Elective VIII", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE8"},
+        {"code": "IE3611", "name": "Automation Laboratory", "credits": 1, "category": "PCC"}
+      ],
+      "total_credits": 19
+    },
+    "7": {
+      "subjects": [
+        {"code": "IE3791", "name": "Simulation Modeling and Analysis", "credits": 3, "category": "PCC"},
+        {"code": "IE3792", "name": "Supply Chain Management", "credits": 3, "category": "PCC"},
+        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 3, "category": "HSMC"},
+        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
+        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
+        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
+        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
+        {"code": "IE3781", "name": "Systems Simulation Laboratory", "credits": 1, "category": "PCC"}
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {"code": "IE3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  }
+}

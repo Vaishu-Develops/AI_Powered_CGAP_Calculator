@@ -1,0 +1,186 @@
+{
+  "branch": "EEE",
+  "branch_full": "Electrical and Electronics Engineering",
+  "regulation": "2021",
+  "total_credits": 167,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3253": {"name": "Physics for Electrical Engineering", "credits": 3, "type": "BSC"},
+        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "EE3251": {"name": "Electric Circuit Analysis", "credits": 4, "type": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "EE3261": {"name": "Electric Circuits Laboratory", "credits": 2, "type": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 27
+    },
+    "3": {
+      "subjects": {
+        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
+        "EE3301": {"name": "Electromagnetic Fields", "credits": 3, "type": "PCC"},
+        "EE3351": {"name": "Measurements and Instrumentation", "credits": 3, "type": "PCC"},
+        "EE3302": {"name": "Digital Logic Circuits", "credits": 3, "type": "PCC"},
+        "EE3303": {"name": "Electron Devices and Circuits", "credits": 3, "type": "PCC"},
+        "EE3391": {"name": "Electrical Machines - I", "credits": 4, "type": "PCC"},
+        "EE3361": {"name": "Electrical Machines Laboratory - I", "credits": 1.5, "type": "PCC"},
+        "EE3311": {"name": "Measurements Laboratory", "credits": 1, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"},
+        "EE3312": {"name": "Electron Devices and Circuits Lab", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 25.5
+    },
+    "4": {
+      "subjects": {
+        "EE3491": {"name": "Electrical Machines - II", "credits": 4, "type": "PCC"},
+        "EE3401": {"name": "Transmission and Distribution", "credits": 3, "type": "PCC"},
+        "EE3402": {"name": "Microprocessors and Microcontrollers", "credits": 4, "type": "PCC"},
+        "EE3403": {"name": "Generation of Electrical Energy", "credits": 3, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "EE3461": {"name": "Electrical Machines Laboratory - II", "credits": 1.5, "type": "PCC"},
+        "EE3462": {"name": "Microprocessors and Microcontrollers Laboratory", "credits": 1.5, "type": "PCC"},
+        "EE3411": {"name": "Electrical Machine Design and Simulation Lab", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 21.5
+    },
+    "5": {
+      "subjects": {
+        "EE3501": {"name": "Power System Analysis", "credits": 3, "type": "PCC"},
+        "EE3591": {"name": "Power Electronics", "credits": 3, "type": "PCC"},
+        "EE3503": {"name": "Control Systems", "credits": 3, "type": "PCC"},
+        "EE3511": {"name": "Power Electronics Laboratory", "credits": 1.5, "type": "PCC"},
+        "EE3512": {"name": "Control and Instrumentation Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 21.5,
+      "notes": "Professional Elective I, II, III (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "EE3601": {"name": "Protection and Switchgear", "credits": 3, "type": "PCC"},
+        "EE3602": {"name": "Power System Operation and Control", "credits": 3, "type": "PCC"},
+        "EE3611": {"name": "Power System Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 19.5,
+      "notes": "Open Elective I (3 cr), Professional Elective IV, V, VI (3 cr each)"
+    },
+    "7": {
+      "subjects": {
+        "EE3701": {"name": "High Voltage Engineering", "credits": 3, "type": "PCC"},
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"}
+      },
+      "total_credits": 20,
+      "notes": "Elective Management (3 cr), Open Elective II, III, IV (3 cr each), Professional Elective VII (3 cr)"
+    },
+    "8": {
+      "subjects": {
+        "EE3811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_power_engineering": {
+      "name": "Power Engineering",
+      "subjects": {
+        "EE3001": {"name": "Utilization and Conservation of Electrical Energy", "credits": 3},
+        "EE3002": {"name": "Underground Cable Engineering", "credits": 3},
+        "EE3003": {"name": "Substation Engineering and Automation", "credits": 3},
+        "EE3004": {"name": "HVDC and FACTS", "credits": 3},
+        "EE3005": {"name": "Energy Management and Auditing", "credits": 3},
+        "EE3006": {"name": "Power Quality", "credits": 3},
+        "EE3007": {"name": "Smart Grid", "credits": 3},
+        "EE3008": {"name": "Restructured Power Market", "credits": 3}
+      }
+    },
+    "vertical_2_converters_and_drives": {
+      "name": "Converters and Drives",
+      "subjects": {
+        "EE3009": {"name": "Special Electrical Machines", "credits": 3},
+        "EE3010": {"name": "Analysis of Electrical Machines", "credits": 3},
+        "EE3011": {"name": "Multilevel Power Converters", "credits": 3},
+        "EE3012": {"name": "Electrical Drives", "credits": 3},
+        "EE3013": {"name": "SMPS and UPS", "credits": 3},
+        "EE3014": {"name": "Power Electronics for Renewable Energy Systems", "credits": 3},
+        "EE3015": {"name": "Control of Power Electronics Circuits", "credits": 3}
+      }
+    },
+    "vertical_3_embedded_systems": {
+      "name": "Embedded Systems",
+      "subjects": {
+        "EE3016": {"name": "Embedded System Design", "credits": 3},
+        "EE3017": {"name": "Embedded C-programming", "credits": 3},
+        "EE3018": {"name": "Embedded Processors", "credits": 3},
+        "EE3019": {"name": "Embedded Control for Electric Drives", "credits": 3},
+        "EE3020": {"name": "Smart System Automation", "credits": 3},
+        "EE3021": {"name": "Embedded System for Automotive Applications", "credits": 3},
+        "EE3022": {"name": "VLSI Design", "credits": 3},
+        "EE3023": {"name": "MEMS and NEMS", "credits": 3},
+        "EE3024": {"name": "Digital Signal Processing System Design", "credits": 3}
+      }
+    },
+    "vertical_4_electric_vehicle_technology": {
+      "name": "Electric Vehicle Technology",
+      "subjects": {
+        "EE3025": {"name": "Electric Vehicle Architecture", "credits": 3},
+        "EE3026": {"name": "Design of Motor and Power Converters for Electric Vehicles", "credits": 3},
+        "EE3027": {"name": "Electric Vehicle Design, Mechanics and Control", "credits": 3},
+        "EE3028": {"name": "Design of Electric Vehicle Charging System", "credits": 3},
+        "EE3029": {"name": "Testing of Electric Vehicles", "credits": 3},
+        "EE3030": {"name": "Grid Integration of Electric Vehicles", "credits": 3},
+        "EE3031": {"name": "Intelligent Control of Electric Vehicles", "credits": 3}
+      }
+    },
+    "vertical_5_advanced_control": {
+      "name": "Advanced Control",
+      "subjects": {
+        "CIC331": {"name": "Process Modeling and Simulation", "credits": 3},
+        "CIC332": {"name": "Computer Control of Processes", "credits": 3},
+        "CIC333": {"name": "System Identification", "credits": 3},
+        "CIC336": {"name": "Model Based Control", "credits": 3},
+        "CIC334": {"name": "Non Linear Control", "credits": 3},
+        "CIC337": {"name": "Optimal Control", "credits": 3},
+        "CIC335": {"name": "Adaptive Control", "credits": 3},
+        "CIC338": {"name": "Machine Monitoring System", "credits": 3}
+      }
+    },
+    "vertical_6_diversified_courses": {
+      "name": "Diversified Courses",
+      "subjects": {
+        "EE3032": {"name": "Energy Storage Systems", "credits": 3},
+        "EE3033": {"name": "Hybrid Energy Technology", "credits": 3},
+        "EE3034": {"name": "Design and Modeling of Renewable Energy Systems", "credits": 3},
+        "EE3035": {"name": "Grid Integrating Techniques and Challenges", "credits": 3},
+        "EE3036": {"name": "Sustainable and Environmental Friendly HV Insulation System", "credits": 3},
+        "EE3037": {"name": "Power System Transients", "credits": 3},
+        "CEI331": {"name": "PLC Programming", "credits": 3},
+        "CCS334": {"name": "Big Data Analytics", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

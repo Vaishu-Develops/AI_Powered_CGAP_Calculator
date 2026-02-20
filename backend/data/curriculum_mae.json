@@ -1,0 +1,402 @@
+{
+  "branch": "B.E. Mechanical and Automation Engineering",
+  "branch_code": "MAE",
+  "regulation": "R2021",
+  "total_credits": 164,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர ்மரபு/Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3259",
+          "name": "Applied Materials Science",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3253",
+          "name": "Basic Electrical, Electronics Engineering and Measurements",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் ததொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3273",
+          "name": "Basic Electrical, Electronics Engineering and Measurements Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language $",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "ME3351",
+          "name": "Engineering Mechanics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3351",
+          "name": "Thermodynamics and Thermal Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CE3391",
+          "name": "Fluid Mechanics and Machinery",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ME3493",
+          "name": "Manufacturing Technology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3392",
+          "name": "Electrical Drives and Actuators",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3361",
+          "name": "Electrical Drives and Actuators Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ME3382",
+          "name": "Manufacturing Technology Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development $",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "ME3392",
+          "name": "Engineering Materials and Metallurgy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3391",
+          "name": "Digital Electronics and Microprocessor",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MF3391",
+          "name": "Mechanics of Materials",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ME3491",
+          "name": "Theory of Machines",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3491",
+          "name": "Sensors and Instrumentation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CE3481",
+          "name": "Strength of Materials and Fluid Machinery Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3461",
+          "name": "Sensors and Instrumentation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 21
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "CPR333",
+          "name": "Machine Design",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3591",
+          "name": "Fluid Power Systems and Industrial Automation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3561",
+          "name": "Industrial Automation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC504",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 20.0
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "ME3791",
+          "name": "Mechatronics and IOT",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ME3592",
+          "name": "Metrology and Measurements",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ME3581",
+          "name": "Metrology and Dynamics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "AN3611",
+          "name": "Design and Fabrication Project",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VII",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective VIII",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "MR3691",
+          "name": "Robotics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "AN3711",
+          "name": "Mechatronics and Robotics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 19
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "AN3811",
+          "name": "Project Work",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  }
+}

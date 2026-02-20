@@ -1,0 +1,402 @@
+{
+  "branch": "B.E. Instrumentation and Control Engineering",
+  "branch_code": "ICE",
+  "regulation": "R2021",
+  "total_credits": 167,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தழர ்மர / Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3255",
+          "name": "Physics for Instrumentation Engineering",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3255",
+          "name": "Basic Civil and Mechanical Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "EE3251",
+          "name": "Electric Circuit Analysis",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தழம் ெதால்ட்பம் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "EE3271",
+          "name": "Electric Circuits Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language$",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 27
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3353",
+          "name": "Transforms and Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "EI3351",
+          "name": "Analog Electronics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3352",
+          "name": "Digital System Design and Applications",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3353",
+          "name": "Transducers Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3354",
+          "name": "Linear Integrated Circuits and Applications",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CS3353",
+          "name": "C Programming and Data Structures",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3361",
+          "name": "Semiconductor Devices and Circuits Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "CS3362",
+          "name": "C Programming and Data Structures Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "EI3451",
+          "name": "Industrial Instrumentation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "IC3451",
+          "name": "Automatic Control Systems",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "IC3401",
+          "name": "Modern Electronic Instrumentation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "IC3402",
+          "name": "Embedded Systems and IoT",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "IC3452",
+          "name": "Electrical Machines and Drives",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3461",
+          "name": "Digital and Linear Integrated Circuits Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3462",
+          "name": "Sensors and Signal Conditioning Circuits Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "EI3551",
+          "name": "Process Control",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "IC3501",
+          "name": "Advanced Control Theory",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3561",
+          "name": "Process Control and Instrumentation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC504",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "EI3651",
+          "name": "Industrial Automation Systems",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3652",
+          "name": "Introduction to Industrial Processes, Measurement and Control",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3661",
+          "name": "Industrial Automation Systems Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VII",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective VIII",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "EI3751",
+          "name": "Industrial Data Communication",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EI3752",
+          "name": "Applied Machine learning",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 20
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "IC3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  }
+}

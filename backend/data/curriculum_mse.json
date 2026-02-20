@@ -1,0 +1,408 @@
+{
+  "branch": "B.E. Materials Science and Engineering",
+  "branch_code": "MSE",
+  "regulation": "R2021",
+  "total_credits": 166,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர ்மரபு/ Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3202",
+          "name": "Solid State Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3251",
+          "name": "Basic Electrical and Electronics Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் ததொழில்நுட்பமும் / Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3271",
+          "name": "Basic Electrical and Electronics Engineering Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language $",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "ML3301",
+          "name": "Polymer Science and Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ML3302",
+          "name": "Metallurgical Thermodynamics",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3391",
+          "name": "Mechanics of Solids",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ME3351",
+          "name": "Engineering Mechanics",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ML3303",
+          "name": "Physical Metallurgy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3311",
+          "name": "Microstructural Analysis Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CE3312",
+          "name": "Strength of Materials Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development $",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "ML3401",
+          "name": "Characterization of Materials",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3402",
+          "name": "Iron and Steel Making",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3403",
+          "name": "Mechanical Behavior of Materials",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3404",
+          "name": "Heat Treatment of Metals and Alloys",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CE3391",
+          "name": "Fluid Mechanics and Machinery",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "ML3411",
+          "name": "Materials Characterization Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3412",
+          "name": "Heat Treatment Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "ML3591",
+          "name": "Metal and Powder Forming Techniques",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3501",
+          "name": "Foundry Metallurgy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3502",
+          "name": "Non-Ferrous Metallurgy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3511",
+          "name": "Summer Internship-I*",
+          "credits": 1.0,
+          "category": "EEC"
+        },
+        {
+          "code": "ML3512",
+          "name": "Metal and Powder Forming Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 21.0
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "ML3601",
+          "name": "Welding Technology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3611",
+          "name": "Foundry and Welding Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective VII",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 20.0
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "ML3701",
+          "name": "Non-destructive Evaluation of Materials",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CME397",
+          "name": "Surface Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3711",
+          "name": "Non-Destructive Testing Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ML3712",
+          "name": "Summer Internship-II*",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 23.0
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "ML3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "version": "R2021",
+  "regulation": "Anna University Regulation 2021",
+  "branch": "CSE",
+  "branch_full_name": "Computer Science and Engineering",
+  "last_updated": "2026-01-31",
+  "total_credits": 162,
+  
+  "semesters": {
+    "1": {
+      "total_credits": 22,
+      "subjects": {
+        "IP3151": {"name": "Induction Programme", "credits": 0, "type": "other", "category": "HSMC"},
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "theory", "category": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "theory", "category": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "theory", "category": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "theory", "category": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "theory", "category": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "theory", "category": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "lab", "category": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "lab", "category": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "lab", "category": "EEC"}
+      }
+    },
+    "2": {
+      "total_credits": 26,
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "theory", "category": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "theory", "category": "BSC"},
+        "PH3256": {"name": "Physics for Information Science", "credits": 3, "type": "theory", "category": "BSC"},
+        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "theory", "category": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "theory", "category": "ESC"},
+        "CS3251": {"name": "Programming in C", "credits": 3, "type": "theory", "category": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "theory", "category": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "lab", "category": "ESC"},
+        "CS3271": {"name": "Programming in C Laboratory", "credits": 2, "type": "lab", "category": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "lab", "category": "EEC"}
+      }
+    },
+    "3": {
+      "total_credits": 23,
+      "subjects": {
+        "MA3354": {"name": "Discrete Mathematics", "credits": 4, "type": "theory", "category": "BSC"},
+        "CS3351": {"name": "Digital Principles and Computer Organization", "credits": 4, "type": "theory", "category": "ESC"},
+        "CS3352": {"name": "Foundations of Data Science", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3301": {"name": "Data Structures", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3391": {"name": "Object Oriented Programming", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3311": {"name": "Data Structures Laboratory", "credits": 1.5, "type": "lab", "category": "PCC"},
+        "CS3381": {"name": "Object Oriented Programming Laboratory", "credits": 1.5, "type": "lab", "category": "PCC"},
+        "CS3361": {"name": "Data Science Laboratory", "credits": 2, "type": "lab", "category": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "lab", "category": "EEC"}
+      }
+    },
+    "4": {
+      "total_credits": 22,
+      "subjects": {
+        "CS3452": {"name": "Theory of Computation", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3491": {"name": "Artificial Intelligence and Machine Learning", "credits": 4, "type": "theory", "category": "PCC"},
+        "CS3492": {"name": "Database Management Systems", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3401": {"name": "Algorithms", "credits": 4, "type": "theory", "category": "PCC"},
+        "CS3451": {"name": "Introduction to Operating Systems", "credits": 3, "type": "theory", "category": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "theory", "category": "BSC"},
+        "CS3461": {"name": "Operating Systems Laboratory", "credits": 1.5, "type": "lab", "category": "PCC"},
+        "CS3481": {"name": "Database Management Systems Laboratory", "credits": 1.5, "type": "lab", "category": "PCC"}
+      }
+    },
+    "5": {
+      "total_credits": 20,
+      "subjects": {
+        "CS3591": {"name": "Computer Networks", "credits": 4, "type": "theory", "category": "PCC"},
+        "CS3501": {"name": "Compiler Design", "credits": 4, "type": "theory", "category": "PCC"},
+        "CB3491": {"name": "Cryptography and Cyber Security", "credits": 3, "type": "theory", "category": "PCC"},
+        "CS3551": {"name": "Distributed Computing", "credits": 3, "type": "theory", "category": "PCC"}
+      }
+    },
+    "6": {
+      "total_credits": 23,
+      "subjects": {
+        "CCS356": {"name": "Object Oriented Software Engineering", "credits": 4, "type": "theory", "category": "PCC"},
+        "CS3691": {"name": "Embedded Systems and IoT", "credits": 4, "type": "theory", "category": "PCC"}
+      }
+    },
+    "7": {
+      "total_credits": 16,
+      "subjects": {
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "theory", "category": "HSMC"},
+        "CS3711": {"name": "Summer Internship", "credits": 2, "type": "other", "category": "EEC"}
+      }
+    },
+    "8": {
+      "total_credits": 10,
+      "subjects": {
+        "CS3811": {"name": "Project Work/Internship", "credits": 10, "type": "project", "category": "EEC"}
+      }
+    }
+  },
+  
+  "professional_electives": {
+    "vertical_1_data_science": {
+      "name": "Data Science",
+      "subjects": {
+        "CCS346": {"name": "Exploratory Data Analysis", "credits": 3, "type": "elective"},
+        "CCS360": {"name": "Recommender Systems", "credits": 3, "type": "elective"},
+        "CCS355": {"name": "Neural Networks and Deep Learning", "credits": 3, "type": "elective"},
+        "CCS369": {"name": "Text and Speech Analysis", "credits": 3, "type": "elective"},
+        "CCW331": {"name": "Business Analytics", "credits": 3, "type": "elective"},
+        "CCS349": {"name": "Image and Video Analytics", "credits": 3, "type": "elective"},
+        "CCS338": {"name": "Computer Vision", "credits": 3, "type": "elective"},
+        "CCS334": {"name": "Big Data Analytics", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_2_full_stack": {
+      "name": "Full Stack Development",
+      "subjects": {
+        "CCS375": {"name": "Web Technologies", "credits": 3, "type": "elective"},
+        "CCS332": {"name": "App Development", "credits": 3, "type": "elective"},
+        "CCS336": {"name": "Cloud Services Management", "credits": 3, "type": "elective"},
+        "CCS370": {"name": "UI and UX Design", "credits": 3, "type": "elective"},
+        "CCS366": {"name": "Software Testing and Automation", "credits": 3, "type": "elective"},
+        "CCS374": {"name": "Web Application Security", "credits": 3, "type": "elective"},
+        "CCS342": {"name": "DevOps", "credits": 3, "type": "elective"},
+        "CCS358": {"name": "Principles of Programming Languages", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_3_cloud": {
+      "name": "Cloud Computing and Data Center Technologies",
+      "subjects": {
+        "CCS335": {"name": "Cloud Computing", "credits": 3, "type": "elective"},
+        "CCS372": {"name": "Virtualization", "credits": 3, "type": "elective"},
+        "CCS341": {"name": "Data Warehousing", "credits": 3, "type": "elective"},
+        "CCS367": {"name": "Storage Technologies", "credits": 3, "type": "elective"},
+        "CCS365": {"name": "Software Defined Networks", "credits": 3, "type": "elective"},
+        "CCS368": {"name": "Stream Processing", "credits": 3, "type": "elective"},
+        "CCS362": {"name": "Security and Privacy in Cloud", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_4_cyber_security": {
+      "name": "Cyber Security and Data Privacy",
+      "subjects": {
+        "CCS344": {"name": "Ethical Hacking", "credits": 3, "type": "elective"},
+        "CCS343": {"name": "Digital and Mobile Forensics", "credits": 3, "type": "elective"},
+        "CCS363": {"name": "Social Network Security", "credits": 3, "type": "elective"},
+        "CCS351": {"name": "Modern Cryptography", "credits": 3, "type": "elective"},
+        "CB3591": {"name": "Engineering Secure Software Systems", "credits": 3, "type": "elective"},
+        "CCS339": {"name": "Cryptocurrency and Blockchain Technologies", "credits": 3, "type": "elective"},
+        "CCS354": {"name": "Network Security", "credits": 3, "type": "elective"},
+        "CCS362": {"name": "Security and Privacy in Cloud", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_5_creative_media": {
+      "name": "Creative Media",
+      "subjects": {
+        "CCS333": {"name": "Augmented Reality/Virtual Reality", "credits": 3, "type": "elective"},
+        "CCS352": {"name": "Multimedia and Animation", "credits": 3, "type": "elective"},
+        "CCS371": {"name": "Video Creation and Editing", "credits": 3, "type": "elective"},
+        "CCS370": {"name": "UI and UX Design", "credits": 3, "type": "elective"},
+        "CCW332": {"name": "Digital marketing", "credits": 3, "type": "elective"},
+        "CCS373": {"name": "Visual Effects", "credits": 3, "type": "elective"},
+        "CCS347": {"name": "Game Development", "credits": 3, "type": "elective"},
+        "CCS353": {"name": "Multimedia Data Compression and Storage", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_6_emerging_technologies": {
+      "name": "Emerging Technologies",
+      "subjects": {
+        "CCS333": {"name": "Augmented Reality/Virtual Reality", "credits": 3, "type": "elective"},
+        "CCS361": {"name": "Robotic Process Automation", "credits": 3, "type": "elective"},
+        "CCS355": {"name": "Neural Networks and Deep Learning", "credits": 3, "type": "elective"},
+        "CCS340": {"name": "Cyber security", "credits": 3, "type": "elective"},
+        "CCS359": {"name": "Quantum Computing", "credits": 3, "type": "elective"},
+        "CCS339": {"name": "Cryptocurrency and Blockchain Technologies", "credits": 3, "type": "elective"},
+        "CCS347": {"name": "Game Development", "credits": 3, "type": "elective"},
+        "CCS331": {"name": "3D Printing and Design", "credits": 3, "type": "elective"}
+      }
+    },
+    "vertical_7_ai_ml": {
+      "name": "Artificial Intelligence and Machine Learning",
+      "subjects": {
+        "CCS350": {"name": "Knowledge Engineering", "credits": 3, "type": "elective"},
+        "CCS364": {"name": "Soft Computing", "credits": 3, "type": "elective"},
+        "CCS355": {"name": "Neural Networks and Deep Learning", "credits": 3, "type": "elective"},
+        "CCS369": {"name": "Text and Speech Analysis", "credits": 3, "type": "elective"},
+        "CCS357": {"name": "Optimization Techniques", "credits": 3, "type": "elective"},
+        "CCS348": {"name": "Game Theory", "credits": 3, "type": "elective"},
+        "CCS337": {"name": "Cognitive Science", "credits": 3, "type": "elective"},
+        "CCS345": {"name": "Ethics And AI", "credits": 3, "type": "elective"}
+      }
+    }
+  },
+  
+  "management_electives": {
+    "GE3751": {"name": "Principles of Management", "credits": 3, "type": "elective"},
+    "GE3752": {"name": "Total Quality Management", "credits": 3, "type": "elective"},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3, "type": "elective"},
+    "GE3754": {"name": "Human Resource Management", "credits": 3, "type": "elective"},
+    "GE3755": {"name": "Knowledge Management", "credits": 3, "type": "elective"},
+    "GE3792": {"name": "Industrial Management", "credits": 3, "type": "elective"}
+  },
+  
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {"name": "Introduction to Women and Gender Studies", "credits": 0, "type": "mandatory"},
+      "MX3082": {"name": "Elements of Literature", "credits": 0, "type": "mandatory"},
+      "MX3083": {"name": "Film Appreciation", "credits": 0, "type": "mandatory"},
+      "MX3084": {"name": "Disaster Risk Reduction and Management", "credits": 0, "type": "mandatory"}
+    },
+    "mandatory_2": {
+      "MX3085": {"name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha", "credits": 0, "type": "mandatory"},
+      "MX3086": {"name": "History of Science and Technology in India", "credits": 0, "type": "mandatory"},
+      "MX3087": {"name": "Political and Economic Thought for a Humane Society", "credits": 0, "type": "mandatory"},
+      "MX3088": {"name": "State, Nation Building and Politics in India", "credits": 0, "type": "mandatory"},
+      "MX3089": {"name": "Industrial Safety", "credits": 0, "type": "mandatory"}
+    }
+  }
+}

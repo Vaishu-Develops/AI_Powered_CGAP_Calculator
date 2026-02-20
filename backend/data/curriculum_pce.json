@@ -1,0 +1,408 @@
+{
+  "branch": "B.E. Petrochemical Engineering",
+  "branch_code": "PCE",
+  "regulation": "R2021",
+  "total_credits": 165.5,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English – I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர ்மரபு /Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory $",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English – II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistic and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3253",
+          "name": "Materials Science for Technologists",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3252",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3251",
+          "name": "Chemistry for Technologists",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் ததொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3272",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language $",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PE3351",
+          "name": "Process Calculations",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3351",
+          "name": "Fluid Mechanics for Petrochemical Technologists",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3353",
+          "name": "Petroleum Primary Processing Technology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3491",
+          "name": "Heat Transfer",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3352",
+          "name": "Mechanical Operations",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3481",
+          "name": "Heat Transfer Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3361",
+          "name": "Fluid Mechanics and Solid Operations laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "PE3451",
+          "name": "Chemical Engineering Thermodynamics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3451",
+          "name": "Petroleum Secondary Processing Technology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EL3491",
+          "name": "Mass Transfer",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CPE339",
+          "name": "Natural Gas and LNG Processing",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CPE331",
+          "name": "Chemical Reaction Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PC3461",
+          "name": "Petrochemical and Polymer Analysis Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3462",
+          "name": "Petroleum Product Testing Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 21.0
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "PM3501",
+          "name": "Equilibrium Staged Operations",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3551",
+          "name": "Catalytic Reaction Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PM3511",
+          "name": "Industrial Training/Internship I*",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "CH3561",
+          "name": "Mass Transfer Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 19
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "PC3652",
+          "name": "Process Instrumentation Dynamics and Control",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PM3601",
+          "name": "Refinery Process Design",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3611",
+          "name": "Chemical Reaction and Process Control Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3651",
+          "name": "Computational Petrochemical Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "PC3752",
+          "name": "Process Safety in Petrochemical Industries",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3751",
+          "name": "Process Equipment Design",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "PM3711",
+          "name": "Industrial Training/Internship II##",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "PM3811",
+          "name": "# Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  }
+}

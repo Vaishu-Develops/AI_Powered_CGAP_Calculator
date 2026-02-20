@@ -1,0 +1,185 @@
+{
+  "branch": "CSD",
+  "branch_full": "Computer Science and Design",
+  "degree": "B.E.",
+  "regulation": "2021",
+  "total_credits": 160,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3256": {"name": "Physics for Information Science", "credits": 3, "type": "BSC"},
+        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "CD3291": {"name": "Data Structures and Algorithms", "credits": 3, "type": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "CD3281": {"name": "Data Structures and Algorithms Laboratory", "credits": 2, "type": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": {
+        "MA3304": {"name": "Discrete Mathematical Structures", "credits": 4, "type": "BSC"},
+        "CS3492": {"name": "Database Management Systems", "credits": 3, "type": "PCC"},
+        "CS3391": {"name": "Object Oriented Programming", "credits": 3, "type": "PCC"},
+        "CD3302": {"name": "Human Computer Interaction", "credits": 3, "type": "PCC"},
+        "CD3301": {"name": "Data Analytics and Visualization", "credits": 4, "type": "PCC"},
+        "CS3351": {"name": "Digital Principles and Computer Organization", "credits": 4, "type": "PCC"},
+        "CS3381": {"name": "Object Oriented Programming Laboratory", "credits": 1.5, "type": "PCC"},
+        "CS3481": {"name": "Database Management Systems Laboratory", "credits": 1.5, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": {
+        "CD3402": {"name": "Visual Design and Communication", "credits": 3, "type": "PCC"},
+        "AL3452": {"name": "Operating Systems", "credits": 4, "type": "PCC"},
+        "CD3403": {"name": "Computer Graphics", "credits": 4, "type": "PCC"},
+        "CD3401": {"name": "Fundamentals of Computer Networks", "credits": 3, "type": "PCC"},
+        "CS3491": {"name": "Artificial Intelligence and Machine Learning", "credits": 4, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "CD3412": {"name": "Visual Design and Communication Laboratory", "credits": 2, "type": "PCC"},
+        "CD3411": {"name": "IOT Based Design Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 24
+    },
+    "5": {
+      "subjects": {
+        "CD3502": {"name": "Mixed Reality", "credits": 3, "type": "PCC"},
+        "CD3501": {"name": "Game Design", "credits": 4, "type": "PCC"},
+        "CS3551": {"name": "Distributed Computing", "credits": 3, "type": "PCC"},
+        "CD3511": {"name": "Mixed Reality Laboratory", "credits": 2, "type": "PCC"},
+        "CD3512": {"name": "Summer Internship", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 20,
+      "notes": "Professional Elective I, II (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "CD3601": {"name": "Web Design and Development", "credits": 3, "type": "PCC"},
+        "CD3611": {"name": "Web Designs Development Laboratory", "credits": 1.5, "type": "PCC"},
+        "IT3681": {"name": "Mobile Applications Development Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 21,
+      "notes": "Open Elective I (3 cr), Professional Elective III, IV, V, VI (3 cr each)"
+    },
+    "7": {
+      "subjects": {
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"}
+      },
+      "total_credits": 14,
+      "notes": "Management Elective (3 cr), Open Elective II, III, IV (3 cr each)"
+    },
+    "8": {
+      "subjects": {
+        "CD3811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_data_science": {
+      "name": "Data Science",
+      "subjects": {
+        "CCS358": {"name": "Principles of Machine Learning", "credits": 3},
+        "CCS363": {"name": "Deep Learning", "credits": 3},
+        "CCS366": {"name": "Natural Language Processing", "credits": 3},
+        "CCS354": {"name": "Data Mining and Analytics", "credits": 3},
+        "CCS355": {"name": "Data Visualization", "credits": 3},
+        "CCS359": {"name": "Neural Networks and Fuzzy Systems", "credits": 3}
+      }
+    },
+    "vertical_2_full_stack": {
+      "name": "Full Stack Development",
+      "subjects": {
+        "CCS331": {"name": "Web Technology", "credits": 3},
+        "CCS332": {"name": "User Experience Design", "credits": 3},
+        "CCS335": {"name": "Object Relational Mapping (ORM) Techniques", "credits": 3},
+        "CCS371": {"name": "Introduction to Mobile Application Development", "credits": 3},
+        "CCS333": {"name": "NoSQL Databases", "credits": 3},
+        "CCS334": {"name": "Agile Methodologies", "credits": 3}
+      }
+    },
+    "vertical_3_cloud": {
+      "name": "Cloud Computing",
+      "subjects": {
+        "CCS351": {"name": "Software Testing", "credits": 3},
+        "CCS352": {"name": "Distributed Computing", "credits": 3},
+        "CCS353": {"name": "Cloud Computing", "credits": 3},
+        "CCS356": {"name": "Virtualization Techniques", "credits": 3},
+        "CCS357": {"name": "Introduction to DevOps", "credits": 3},
+        "CCS370": {"name": "Microservices and Containerization", "credits": 3}
+      }
+    },
+    "vertical_4_marketing_management": {
+      "name": "Marketing and Management",
+      "subjects": {
+        "CCD351": {"name": "UI and UX Testing", "credits": 3},
+        "CCD352": {"name": "Marketing Research and Analytics", "credits": 3},
+        "CCD353": {"name": "Brand Management for Designers", "credits": 3},
+        "CCD354": {"name": "Introduction to Digital Marketing", "credits": 3},
+        "CCD355": {"name": "Techno Entrepreneurship", "credits": 3},
+        "CCD356": {"name": "Product Design and Management", "credits": 3}
+      }
+    },
+    "vertical_5_creative_media_csd": {
+      "name": "Creative Media Technology for CSD",
+      "subjects": {
+        "CCD361": {"name": "Digital Asset Management", "credits": 3},
+        "CCD362": {"name": "Social Network Analysis", "credits": 3},
+        "CCD363": {"name": "Multimedia Compression Techniques", "credits": 3},
+        "CCD364": {"name": "Interaction Design", "credits": 3},
+        "CCD365": {"name": "Semiotics and Design", "credits": 3},
+        "CCD366": {"name": "Augmented Reality / Virtual Reality", "credits": 3}
+      }
+    },
+    "vertical_6_emerging_tech_csd": {
+      "name": "Emerging Technologies for CSD",
+      "subjects": {
+        "CCS361": {"name": "Robotic Process Automation", "credits": 3},
+        "CCS362": {"name": "Quantum Computing", "credits": 3},
+        "CCS364": {"name": "High Performance Computing", "credits": 3},
+        "CCD371": {"name": "Design for IOT", "credits": 3},
+        "CCD372": {"name": "Visual Analytics", "credits": 3},
+        "CCS368": {"name": "Full Stack AI", "credits": 3}
+      }
+    },
+    "vertical_7_media_processing": {
+      "name": "Media Processing",
+      "subjects": {
+        "CCD381": {"name": "Audio Processing and Synthesis", "credits": 3},
+        "CCD382": {"name": "Image Processing", "credits": 3},
+        "CCD383": {"name": "3D Modelling and Animation", "credits": 3},
+        "CCD384": {"name": "Video Processing", "credits": 3},
+        "CCD385": {"name": "Editing and Post Production", "credits": 3},
+        "CCD386": {"name": "Game Design", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

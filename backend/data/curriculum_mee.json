@@ -1,0 +1,390 @@
+{
+  "branch": "B.E. Medical Electronics",
+  "branch_code": "MEE",
+  "regulation": "R2021",
+  "total_credits": 163.0,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர ்மரபு /Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory $",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BM3251",
+          "name": "Biosciences for Medical Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BE3251",
+          "name": "Basic Electrical and Electronics Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3252",
+          "name": "Medical Physics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் ததொழில்நுட்பமும் /Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3271",
+          "name": "Biosciences Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language $",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "EC3354",
+          "name": "Signals and Systems",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3352",
+          "name": "Electric Circuit Analysis",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3353",
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3351",
+          "name": "Anatomy and Human Physiology",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CS3391",
+          "name": "Object Oriented Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3361",
+          "name": "Fundamentals of Electronic Devices and Circuits Laboratory",
+          "credits": 1.5,
+          "category": "ESC"
+        },
+        {
+          "code": "CS3381",
+          "name": "Object Oriented programming Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25.0
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "MA3355",
+          "name": "Random Processes and Linear Algebra",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "MD3401",
+          "name": "Analog and Digital Electronics",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BM3451",
+          "name": "Bio Control Systems",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MD3402",
+          "name": "Biomedical sensors and Instrumentation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3492",
+          "name": "Digital Signal Processing",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "MD3411",
+          "name": "Analog and Digital Electronics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MD3412",
+          "name": "Biomedical Sensors and Instrumentation Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 22.5
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "BM3551",
+          "name": "Embedded systems and IOMT",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3591",
+          "name": "Diagnostic and Therapeutic Equipment",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3561",
+          "name": "Diagnostic and Therapeutic Equipment Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3562",
+          "name": "Embedded systems and IOMT Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 18.5
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "CS3491",
+          "name": "Artificial Intelligence and Machine Learning",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3651",
+          "name": "Fundamentals of Healthcare Analytics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "BM3652",
+          "name": "Medical Image Processing",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 23.0
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "MD3711",
+          "name": "Hospital Training",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 16.0
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "MD3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  }
+}

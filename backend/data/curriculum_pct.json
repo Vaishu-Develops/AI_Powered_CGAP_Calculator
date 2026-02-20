@@ -1,0 +1,463 @@
+{
+  "branch": "B.Tech. Petrochemical Technology",
+  "branch_code": "PCT",
+  "regulation": "R2021",
+  "total_credits": 165.5,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர் மரபு/ Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3255",
+          "name": "Physics for Chemical Science",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CH3251",
+          "name": "Chemical Engineering Thermodynamics",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் தொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "CH3254",
+          "name": "Organic Chemistry",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "CH3271",
+          "name": "Organic Chemistry Laboratory",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CH3391",
+          "name": "Fluid Mechanics",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3301",
+          "name": "Petroleum Refining Engineering",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3392",
+          "name": "Mechanical Operations",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3393",
+          "name": "Physical Chemistry",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3361",
+          "name": "Fluid Mechanics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3362",
+          "name": "Physical Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "CH3491",
+          "name": "Heat Transfer",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3401",
+          "name": "Crude Oil Evaluation and Products",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3492",
+          "name": "Chemical Reaction Engineering - I",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3493",
+          "name": "Mass Transfer - I",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CH3461",
+          "name": "Heat Transfer Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3411",
+          "name": "Petroleum Refining Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3463",
+          "name": "CAD Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 21
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "CH3591",
+          "name": "Mass Transfer - II",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3592",
+          "name": "Chemical Reaction Engineering - II",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3561",
+          "name": "Mass Transfer Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3511",
+          "name": "Industrial Training I",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 18.5
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "PC3601",
+          "name": "Petrochemical Process Technology",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3691",
+          "name": "Process Equipment Design",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PC3611",
+          "name": "Petrochemical Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3661",
+          "name": "Process Control Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective IV",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective V",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PC3612",
+          "name": "Seminar",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "PC3701",
+          "name": "Petroleum and Petrochemical Project Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "PC3711",
+          "name": "Industrial Training II",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC701",
+          "name": "Professional Elective VI",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "PC3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "verticals": [
+      {
+        "name": "Vertical I: Petrochemical Process Technology",
+        "courses": [
+          {"code": "PC3001", "name": "Petrochemical Unit processes", "credits": 3},
+          {"code": "PC3002", "name": "Petroleum Exploration and Exploitation Techniques", "credits": 3},
+          {"code": "PC3003", "name": "Process equipment auxiliaries and Utilities", "credits": 3},
+          {"code": "CPC332", "name": "Polymer Technology", "credits": 3},
+          {"code": "PC3004", "name": "Fertilizer Technology", "credits": 3},
+          {"code": "PC3005", "name": "Petrochemical Derivatives", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical II: Hydrocarbon Transportation and Storage",
+        "courses": [
+          {"code": "CPE345", "name": "Storage Transportation of Crude Oil and Natural Gas", "credits": 3},
+          {"code": "CPE341", "name": "Petroleum Corrosion Technology", "credits": 3},
+          {"code": "CPE343", "name": "Piping Engineering", "credits": 3},
+          {"code": "CPE347", "name": "Unconventional Hydrocarbon sources", "credits": 3},
+          {"code": "CPE332", "name": "Design of Pressure Vessels and storage Vessels", "credits": 3},
+          {"code": "CPE339", "name": "Natural Gas and LNG Processing", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical III: Health, Safety and Environment",
+        "courses": [
+          {"code": "CPC331", "name": "Fire and Explosion Control", "credits": 3},
+          {"code": "CPE338", "name": "Industrial Hygiene", "credits": 3},
+          {"code": "CPE346", "name": "Transportation Safety", "credits": 3},
+          {"code": "CPC333", "name": "Process Hazard Analysis Studies", "credits": 3},
+          {"code": "CPE336", "name": "Health Safety and Environmental Management", "credits": 3},
+          {"code": "CPE344", "name": "Plant Safety and Risk Management", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical IV: Process Intensification",
+        "courses": [
+          {"code": "PC3006", "name": "Multi component Distillation", "credits": 3},
+          {"code": "CCH331", "name": "Process modelling and simulation", "credits": 3},
+          {"code": "PC3007", "name": "Optimization of chemical Processes", "credits": 3},
+          {"code": "PC3008", "name": "Modern Separation Techniques", "credits": 3},
+          {"code": "CPE335", "name": "Fluidization Engineering", "credits": 3},
+          {"code": "CPC334", "name": "Process Instrumentation", "credits": 3}
+        ]
+      }
+    ]
+  },
+  "open_electives": {
+    "OE_I_II": "Emerging Technologies",
+    "OE_III": "From list of Open Electives III",
+    "OE_IV": "From list of Open Electives IV"
+  },
+  "management_electives": [
+    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
+    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
+    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
+    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
+    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
+    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
+  ]
+}

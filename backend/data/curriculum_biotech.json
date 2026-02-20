@@ -1,0 +1,203 @@
+{
+  "branch": "BIOTECH",
+  "branch_full": "Biotechnology",
+  "degree": "B.Tech.",
+  "regulation": "2021",
+  "total_credits": 166,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3252": {"name": "Materials Science for Biotechnologists", "credits": 3, "type": "PCC"},
+        "BE3252": {"name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "BT3201": {"name": "Bioorganic Chemistry", "credits": 3, "type": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "BT3211": {"name": "Bioorganic Chemistry Laboratory", "credits": 2, "type": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": {
+        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
+        "BT3392": {"name": "Biochemistry", "credits": 3, "type": "PCC"},
+        "BT3351": {"name": "Cell Biology", "credits": 3, "type": "PCC"},
+        "BT3352": {"name": "Microbiology", "credits": 3, "type": "PCC"},
+        "BT3301": {"name": "Biochemical Thermodynamics", "credits": 3, "type": "PCC"},
+        "BT3391": {"name": "Basic Industrial Biotechnology", "credits": 3, "type": "PCC"},
+        "BT3361": {"name": "Biochemistry Laboratory", "credits": 1.5, "type": "PCC"},
+        "BT3362": {"name": "Cell and Microbiology Laboratory", "credits": 1.5, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 23
+    },
+    "4": {
+      "subjects": {
+        "BT3401": {"name": "Molecular Biology", "credits": 3, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "BT3402": {"name": "Fluid Flow and Heat Transfer Operations", "credits": 3, "type": "ESC"},
+        "BT3451": {"name": "Analytical Techniques in Biotechnology", "credits": 3, "type": "PCC"},
+        "BT3491": {"name": "Chemical Process Calculations in Biotechnology", "credits": 3, "type": "PCC"},
+        "BT3452": {"name": "Industrial Enzymology", "credits": 3, "type": "PCC"},
+        "BT3411": {"name": "Chemical Engineering Laboratory for Biotechnologists", "credits": 1.5, "type": "PCC"},
+        "BT3461": {"name": "Analytical Instrumentation Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 20,
+      "notes": "Industrial Training/Internship I evaluated in Sem 5"
+    },
+    "5": {
+      "subjects": {
+        "BT3551": {"name": "Bioprocess Principles", "credits": 3, "type": "PCC"},
+        "BT3552": {"name": "Immunology", "credits": 3, "type": "PCC"},
+        "BT3501": {"name": "Genetic Engineering", "credits": 3, "type": "PCC"},
+        "BT3511": {"name": "Molecular Biology and Genetic Engineering Laboratory", "credits": 2, "type": "PCC"},
+        "BT3561": {"name": "Immunology Laboratory", "credits": 1.5, "type": "PCC"},
+        "BT3512": {"name": "Industrial Training/Internship I", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 23.5,
+      "notes": "Professional Elective I, II, III (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "BT3601": {"name": "Bioinformatics", "credits": 3, "type": "PCC"},
+        "BT3651": {"name": "Bioprocess Engineering", "credits": 3, "type": "PCC"},
+        "BT3611": {"name": "Bioinformatics Lab", "credits": 1.5, "type": "PCC"},
+        "BT3661": {"name": "Bioprocess Laboratory", "credits": 1.5, "type": "PCC"}
+      },
+      "total_credits": 18,
+      "notes": "Professional Elective IV, V (3 cr each), Open Elective I (3 cr)"
+    },
+    "7": {
+      "subjects": {
+        "BT3751": {"name": "Downstream Processing", "credits": 3, "type": "PCC"},
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
+        "BT3761": {"name": "Downstream Laboratory", "credits": 1.5, "type": "PCC"},
+        "BT3711": {"name": "Industrial Training/Internship II", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 23.5,
+      "notes": "Professional Elective VI (3 cr), Management Elective (3 cr), Open Elective II, III, IV (3 cr each)"
+    },
+    "8": {
+      "subjects": {
+        "BT3811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_bioprocess_tech": {
+      "name": "Bioprocess Technology",
+      "subjects": {
+        "CBT331": {"name": "Environmental Biotechnology", "credits": 3},
+        "CBT332": {"name": "Food Technology", "credits": 3},
+        "CBT333": {"name": "Process Dynamics and Control", "credits": 3},
+        "CBT334": {"name": "Process Equipment Design", "credits": 3},
+        "CBT335": {"name": "Industrial Fermentation Technology", "credits": 3},
+        "CBT336": {"name": "Renewable Energy Technology", "credits": 3},
+        "CBT337": {"name": "Process Intensification", "credits": 3}
+      }
+    },
+    "vertical_2_biosciences": {
+      "name": "Biosciences",
+      "subjects": {
+        "CBT341": {"name": "Bioethics and Biosafety", "credits": 3},
+        "CBT342": {"name": "Epigenetics", "credits": 3},
+        "CBT343": {"name": "Genomics and Proteomics", "credits": 3},
+        "CBT344": {"name": "Human Genetics", "credits": 3},
+        "CBT345": {"name": "Nanobiotechnology", "credits": 3},
+        "CBT346": {"name": "Stem Cell Technology", "credits": 3},
+        "CBT347": {"name": "Drug Discovery and Delivery Systems", "credits": 3}
+      }
+    },
+    "vertical_3_medical_biotech": {
+      "name": "Medical Biotechnology",
+      "subjects": {
+        "CBT351": {"name": "Cancer Biology", "credits": 3},
+        "CBT352": {"name": "Clinical Trials", "credits": 3},
+        "CBT353": {"name": "Gene Therapy", "credits": 3},
+        "CBT354": {"name": "Pharmaceutical Biotechnology", "credits": 3},
+        "CBT355": {"name": "Vaccine Technology", "credits": 3},
+        "CBT356": {"name": "Diagnostic Biotechnology", "credits": 3},
+        "CBT357": {"name": "Microbial Technology", "credits": 3}
+      }
+    },
+    "vertical_4_biochemical_eng": {
+      "name": "Biochemical Engineering",
+      "subjects": {
+        "CBT361": {"name": "Biological Waste Treatment", "credits": 3},
+        "CBT362": {"name": "Bioseparation Technology", "credits": 3},
+        "CBT363": {"name": "Enzyme and Microbial Technology", "credits": 3},
+        "CBT364": {"name": "Metabolic Engineering", "credits": 3},
+        "CBT365": {"name": "Systems Biology", "credits": 3},
+        "CBT366": {"name": "Synthetic Biology", "credits": 3},
+        "CBT367": {"name": "Bioanalytical Techniques", "credits": 3}
+      }
+    },
+    "vertical_5_animal_biotech": {
+      "name": "Animal Biotechnology",
+      "subjects": {
+        "CBT371": {"name": "Animal Biotechnology", "credits": 3},
+        "CBT372": {"name": "Animal Cell Culture Technology", "credits": 3},
+        "CBT373": {"name": "Marine Biotechnology", "credits": 3},
+        "CBT374": {"name": "Aquaculture Technology", "credits": 3},
+        "CBT375": {"name": "Cellular Bioengineering", "credits": 3},
+        "CBT376": {"name": "Tissue Engineering", "credits": 3}
+      }
+    },
+    "vertical_6_computational_biotech": {
+      "name": "Computational Biotechnology",
+      "subjects": {
+        "CBT381": {"name": "Computational Biology and Drug Design", "credits": 3},
+        "CBT382": {"name": "Data Science and Machine Learning", "credits": 3},
+        "CBT383": {"name": "Biostatistics", "credits": 3},
+        "CBT384": {"name": "Structural Bioinformatics", "credits": 3},
+        "CBT385": {"name": "Systems Informatics", "credits": 3}
+      }
+    },
+    "vertical_7_quality_regulatory": {
+      "name": "Quality Assurance and Regulatory Affairs",
+      "subjects": {
+        "CBT391": {"name": "Bioprocess Validation and Quality Assurance", "credits": 3},
+        "CBT392": {"name": "IPR and Technology Transfer", "credits": 3},
+        "CBT393": {"name": "Good Manufacturing Practices", "credits": 3},
+        "CBT394": {"name": "Regulatory Affairs", "credits": 3},
+        "CBT395": {"name": "Entrepreneurship in Biotechnology", "credits": 3}
+      }
+    },
+    "vertical_8_agro_biotech": {
+      "name": "Agro Biotechnology",
+      "subjects": {
+        "CBT401": {"name": "Agricultural Biotechnology", "credits": 3},
+        "CBT402": {"name": "Plant Tissue Culture and Biotechnology", "credits": 3},
+        "CBT403": {"name": "Seed Biotechnology", "credits": 3},
+        "CBT404": {"name": "Biopesticides and Biofertilizers", "credits": 3},
+        "CBT405": {"name": "Plant Molecular Biology", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

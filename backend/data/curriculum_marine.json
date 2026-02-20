@@ -1,0 +1,390 @@
+{
+  "branch": "B.E. Marine Engineering",
+  "branch_code": "MARINE",
+  "regulation": "R2021",
+  "total_credits": 177,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3101",
+          "name": "Technical English for Marine Engineers - I",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MA3101",
+          "name": "Mathematics for Marine Engineering – I",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3101",
+          "name": "Chemistry for Marine Engineering",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர ்மரபு/Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3201",
+          "name": "Technical English for Marine Engineers – II",
+          "credits": 4.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3201",
+          "name": "Mathematics for Marine Engineering – II",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3251",
+          "name": "Materials Science",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3251",
+          "name": "Basic Electrical and Electronics Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் ததொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3271",
+          "name": "Basic Electrical and Electronics Engineering Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "MV3301",
+          "name": "Marine Hydraulics and Fluid Machinery",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3302",
+          "name": "Strength of Materials for Marine Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3303",
+          "name": "Marine Auxiliary Machinery",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3304",
+          "name": "Ship Construction",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3305",
+          "name": "Seamanship, Elementary Navigation and Survival at Sea",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3311",
+          "name": "Marine Hydraulics and Fluid Machinery Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3312",
+          "name": "Strength of Materials and Applied Mechanics Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development$",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "MV3401",
+          "name": "Marine Electrical Machines",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3402",
+          "name": "Marine Refrigeration and Air Conditioning",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3403",
+          "name": "Ship’s Fire Prevention and Control",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3405",
+          "name": "Marine Diesel Engines",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3406",
+          "name": "Marine Boilers and Steam Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "MV3411",
+          "name": "Welding Techniques, Lathe and Special Machine Shop",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3412",
+          "name": "Heat Engines, Boiler Chemistry and Refrigeration Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "MV3501",
+          "name": "Marine Propulsion",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3511",
+          "name": "Electrical Engineering, Electronics and Microprocessor Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MV3512",
+          "name": "Marine Machinery Drawing",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC504",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 19.0
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "MV3601",
+          "name": "Stability of Ships",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3611",
+          "name": "Fire Fighting, Controls and Simulator Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3612",
+          "name": "Measurement and Instrumentation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VII",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective VIII",
+          "credits": 3,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "MV3701",
+          "name": "Ship Operational Management and IMO Requirements",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3702",
+          "name": "Marine Vehicles Performance",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MV3703",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MV3711",
+          "name": "Project Work",
+          "credits": 3.0,
+          "category": "EEC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "MV3811",
+          "name": "Marine Workshop Practical and Afloat Training",
+          "credits": 18.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 18
+    }
+  }
+}

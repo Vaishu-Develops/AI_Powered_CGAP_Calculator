@@ -1,0 +1,199 @@
+{
+  "branch": "AUTO",
+  "branch_full": "Automobile Engineering",
+  "degree": "B.E.",
+  "regulation": "2021",
+  "total_credits": 165,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3251": {"name": "Materials Science", "credits": 3, "type": "BSC"},
+        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "BE3271": {"name": "Basic Electrical and Electronics Engineering Laboratory", "credits": 2, "type": "ESC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": {
+        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
+        "ME3393": {"name": "Manufacturing Processes", "credits": 3, "type": "PCC"},
+        "AU3301": {"name": "Thermodynamics and Heat Transfer", "credits": 3, "type": "ESC"},
+        "ME3351": {"name": "Engineering Mechanics", "credits": 3, "type": "ESC"},
+        "AU3302": {"name": "Automotive Hydraulics and Machinery", "credits": 3, "type": "ESC"},
+        "AU3303": {"name": "Automotive Engines", "credits": 3, "type": "PCC"},
+        "AU3311": {"name": "Mechanical Sciences Laboratory", "credits": 2, "type": "ESC"},
+        "ME3382": {"name": "Manufacturing Technology Laboratory", "credits": 2, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 24
+    },
+    "4": {
+      "subjects": {
+        "AU3401": {"name": "Fuels and Lubricants", "credits": 3, "type": "PCC"},
+        "AU3402": {"name": "Automotive Chassis", "credits": 3, "type": "PCC"},
+        "AU3403": {"name": "Vehicle Body Engineering", "credits": 3, "type": "PCC"},
+        "ML3391": {"name": "Mechanics of Solids", "credits": 3, "type": "ESC"},
+        "AU3404": {"name": "Automotive Transmission", "credits": 3, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "AU3411": {"name": "Vehicle Components Laboratory", "credits": 2, "type": "PCC"},
+        "AU3412": {"name": "Fuels and Lubricants Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 21
+    },
+    "5": {
+      "subjects": {
+        "AU3501": {"name": "Mechanics of Machines", "credits": 3, "type": "PCC"},
+        "AU3502": {"name": "Automotive Electrical and Electronics", "credits": 3, "type": "PCC"},
+        "AU3511": {"name": "Automotive Electrical and Electronics Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 20,
+      "notes": "Professional Elective I, II, III, IV (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "AU3601": {"name": "Automotive Pollution and Control", "credits": 3, "type": "PCC"},
+        "AU3611": {"name": "Computer Aided Vehicle Design and Analysis Laboratory", "credits": 2, "type": "PCC"},
+        "AU3612": {"name": "Engine Testing and Emission Measurement Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 22,
+      "notes": "Open Elective I (3 cr), Professional Elective V, VI, VII, VIII (3 cr each)"
+    },
+    "7": {
+      "subjects": {
+        "AU3701": {"name": "Engine and Chassis Components Design", "credits": 3, "type": "PCC"},
+        "AU3791": {"name": "Electrical and Hybrid Vehicles", "credits": 3, "type": "PCC"},
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
+        "AU3711": {"name": "Vehicle Maintenance and Testing Laboratory", "credits": 2, "type": "PCC"},
+        "AU3712": {"name": "Summer Internship", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 23,
+      "notes": "Elective Management (3 cr), Open Elective II, III, IV (3 cr each)"
+    },
+    "8": {
+      "subjects": {
+        "AU3811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_electric_vehicles": {
+      "name": "Electric Vehicles",
+      "subjects": {
+        "AU3001": {"name": "Electric Two and Three Wheelers", "credits": 3},
+        "AU3002": {"name": "Batteries and Management System", "credits": 3},
+        "AU3003": {"name": "Traction Motors", "credits": 3},
+        "AU3004": {"name": "Automotive Power Electronics", "credits": 3},
+        "AU3005": {"name": "Automotive Functional Safety", "credits": 3},
+        "AU3006": {"name": "Fuel Cell Technologies", "credits": 3},
+        "AU3007": {"name": "Autonomous and Connected Vehicles", "credits": 3},
+        "AU3008": {"name": "Sensors and Actuators", "credits": 3}
+      }
+    },
+    "vertical_2_computational_design": {
+      "name": "Computational Design",
+      "subjects": {
+        "AU3009": {"name": "Computer Aided Design and Manufacturing", "credits": 3},
+        "AU3010": {"name": "Integrated Computational Materials Engineering", "credits": 3},
+        "AU3011": {"name": "Computational Theory on Solid Mechanics", "credits": 3},
+        "AU3012": {"name": "Computational and Visualization Theory", "credits": 3},
+        "AU3013": {"name": "Computer Integrated Manufacturing in Automotive Sector", "credits": 3},
+        "AU3014": {"name": "Computational Aero Dynamics", "credits": 3},
+        "AU3015": {"name": "CFD and Heat Transfer", "credits": 3},
+        "AU3016": {"name": "Digital Manufacturing of Automobiles", "credits": 3}
+      }
+    },
+    "vertical_3_vehicle_research_validation": {
+      "name": "Vehicle Research and Validation",
+      "subjects": {
+        "AU3017": {"name": "Advanced Automotive Materials", "credits": 3},
+        "AU3018": {"name": "Noise, Vibration and Harshness", "credits": 3},
+        "AU3019": {"name": "Combustion Thermodynamics and Heat Transfer", "credits": 3},
+        "AU3020": {"name": "Alternative Fuels and Energy Systems", "credits": 3},
+        "AU3021": {"name": "Automotive Instrumentation", "credits": 3},
+        "AU3022": {"name": "Testing and Measurement Systems", "credits": 3},
+        "AU3023": {"name": "Homologation", "credits": 3},
+        "AU3024": {"name": "IC Engine Process Modelling", "credits": 3}
+      }
+    },
+    "vertical_4_special_purpose_vehicles": {
+      "name": "Special Purpose Vehicles",
+      "subjects": {
+        "AU3025": {"name": "Agricultural Vehicles", "credits": 3},
+        "AU3026": {"name": "Defence Vehicles", "credits": 3},
+        "AU3027": {"name": "Construction Vehicles", "credits": 3},
+        "AU3028": {"name": "Marine Vehicles", "credits": 3},
+        "AU3029": {"name": "Space Vehicles", "credits": 3},
+        "CME386": {"name": "Gas Dynamics and Jet Propulsion", "credits": 3},
+        "CRA332": {"name": "Drone Technologies", "credits": 3}
+      }
+    },
+    "vertical_5_product_process_development": {
+      "name": "Product and Process Development",
+      "subjects": {
+        "AU3030": {"name": "Automotive Product Design", "credits": 3},
+        "AU3031": {"name": "Ergonomics in Automotive Design", "credits": 3},
+        "AU3032": {"name": "Vehicle Control Systems", "credits": 3},
+        "CME339": {"name": "Additive Manufacturing", "credits": 3},
+        "AU3033": {"name": "Finite Element Analysis", "credits": 3},
+        "AU3034": {"name": "New Product Development Process", "credits": 3},
+        "AU3035": {"name": "Automotive Product Life Cycle Management", "credits": 3},
+        "CAU332": {"name": "Dynamics of Ground Vehicles", "credits": 3}
+      }
+    },
+    "vertical_6_diversified_group1": {
+      "name": "Diversified Courses Group 1",
+      "subjects": {
+        "CME380": {"name": "Engine and Vehicle Management Systems", "credits": 3},
+        "CME381": {"name": "Transport Management", "credits": 3},
+        "CME382": {"name": "Vehicle Maintenance", "credits": 3},
+        "CME383": {"name": "Two and Three Wheelers", "credits": 3},
+        "CIE362": {"name": "Entrepreneurship Development", "credits": 3},
+        "CSF331": {"name": "Disaster Management", "credits": 3},
+        "AU3036": {"name": "Advance Theory of IC Engines", "credits": 3},
+        "IE3491": {"name": "Operations Research", "credits": 3}
+      }
+    },
+    "vertical_7_diversified_group2": {
+      "name": "Diversified Courses Group 2",
+      "subjects": {
+        "ME3492": {"name": "Hydraulics and Pneumatics", "credits": 3},
+        "CML331": {"name": "Fundamentals of Nanoscience", "credits": 3},
+        "CAU331": {"name": "Intellectual Property Rights", "credits": 3},
+        "AU3037": {"name": "Road Vehicle Aerodynamics", "credits": 3},
+        "CIE350": {"name": "Lean Six Sigma", "credits": 3},
+        "AU3038": {"name": "Renewable Sources of Energy", "credits": 3},
+        "AU3039": {"name": "Vehicle Air-Conditioning", "credits": 3},
+        "AU3040": {"name": "Solar Energy Technology", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

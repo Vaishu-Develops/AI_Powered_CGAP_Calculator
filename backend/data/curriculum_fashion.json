@@ -1,0 +1,110 @@
+{
+  "branch": "Fashion Technology",
+  "branch_code": "FASHION",
+  "regulation": "R2021",
+  "total_credits": 164,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "FT3201", "name": "Fibre Science", "credits": 3, "category": "PCC"},
+        {"code": "BE3252", "name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "CY3252", "name": "Chemistry for Textile Technologists", "credits": 3, "category": "BSC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BE3272", "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {"code": "MA3357", "name": "Probability and Statistical Methods", "credits": 4, "category": "BSC"},
+        {"code": "FT3301", "name": "Characteristics of Textile Fibres", "credits": 3, "category": "PCC"},
+        {"code": "FT3302", "name": "Technology of Spinning Processes", "credits": 2, "category": "PCC"},
+        {"code": "FT3303", "name": "Fabric Manufacturing", "credits": 3, "category": "PCC"},
+        {"code": "FT3304", "name": "Fabric Structures", "credits": 3, "category": "PCC"},
+        {"code": "FT3305", "name": "Concepts and Evolution of Fashion and Design", "credits": 3, "category": "PCC"},
+        {"code": "FT3311", "name": "Fabric Structure Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "FT3312", "name": "Fashion Illustration Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "4": {
+      "subjects": [
+        {"code": "FT3401", "name": "Apparel Production Machinery", "credits": 3, "category": "PCC"},
+        {"code": "FT3402", "name": "Fabric and Garment Quality Evaluation", "credits": 4, "category": "PCC"},
+        {"code": "FT3403", "name": "Fundamentals of Garment Manufacturing", "credits": 3, "category": "PCC"},
+        {"code": "FT3404", "name": "Pattern Engineering", "credits": 3, "category": "PCC"},
+        {"code": "FT3405", "name": "Textile Chemical Processing", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "FT3411", "name": "Computer Aided Fashion Designing Laboratory", "credits": 1, "category": "PCC"},
+        {"code": "FT3412", "name": "Basics of Pattern Engineering and Garment Construction Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "FT3413", "name": "Textile Chemical Processing Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 22
+    },
+    "5": {
+      "subjects": [
+        {"code": "FT3501", "name": "Garment Construction", "credits": 3, "category": "PCC"},
+        {"code": "FT3591", "name": "Apparel Production Planning and Process Control", "credits": 3, "category": "PCC"},
+        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
+        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
+        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
+        {"code": "FT3511", "name": "Garment Construction Laboratory - I", "credits": 1.5, "category": "PCC"},
+        {"code": "FT3512", "name": "Computer Aided Garment Designing Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "FT3513", "name": "Industrial Training / Internship I", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {"code": "FT3691", "name": "Apparel Marketing and Merchandising", "credits": 3, "category": "PCC"},
+        {"code": "FT3692", "name": "Industrial Engineering in Garment Manufacturing", "credits": 3, "category": "PCC"},
+        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
+        {"code": "PEC604", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
+        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
+        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
+        {"code": "FT3611", "name": "Garment Construction Laboratory - II", "credits": 1.5, "category": "PCC"},
+        {"code": "FT3612", "name": "Design Collection / Portfolio", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 21
+    },
+    "7": {
+      "subjects": [
+        {"code": "FT3701", "name": "Fundamentals of Economics and Apparel Costing", "credits": 3, "category": "PCC"},
+        {"code": "GE3751", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
+        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
+        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
+        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
+        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
+        {"code": "FT3711", "name": "Apparel Product Engineering Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "FT3712", "name": "Industrial Training / Internship II", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 21
+    },
+    "8": {
+      "subjects": [
+        {"code": "FT3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  }
+}

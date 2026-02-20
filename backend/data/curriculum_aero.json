@@ -1,0 +1,188 @@
+{
+  "branch": "AERO",
+  "branch_full": "Aeronautical Engineering",
+  "degree": "B.E.",
+  "regulation": "2021",
+  "total_credits": 166,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
+        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
+        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
+        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "HSMC"}
+      },
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
+        "PH3205": {"name": "Applied Physics", "credits": 3, "type": "BSC"},
+        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "ESC"},
+        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
+        "BE3271": {"name": "Basic Electrical and Electronics Engineering Laboratory", "credits": 2, "type": "ESC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": {
+        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
+        "AE3351": {"name": "Aero Engineering Thermodynamics", "credits": 3, "type": "PCC"},
+        "AE3352": {"name": "Solid Mechanics", "credits": 4, "type": "ESC"},
+        "CE3391": {"name": "Fluid Mechanics and Machinery", "credits": 4, "type": "ESC"},
+        "AE3301": {"name": "Elements of Aeronautical Engineering", "credits": 3, "type": "PCC"},
+        "AE3302": {"name": "Aircraft Systems and Instruments", "credits": 3, "type": "PCC"},
+        "AS3361": {"name": "Thermodynamics and Strength of Materials Laboratory", "credits": 2, "type": "PCC"},
+        "CE3362": {"name": "Fluid Mechanics and Machinery Laboratory", "credits": 2, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 26
+    },
+    "4": {
+      "subjects": {
+        "MA3452": {"name": "Vector Calculus and Complex Functions", "credits": 4, "type": "BSC"},
+        "AE3401": {"name": "Aerodynamics I", "credits": 3, "type": "PCC"},
+        "AE3402": {"name": "Air Breathing Propulsion", "credits": 4, "type": "PCC"},
+        "AE3491": {"name": "Mechanics of Machines", "credits": 3, "type": "PCC"},
+        "AE3403": {"name": "Aircraft Structures-I", "credits": 3, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "AE3411": {"name": "Aerodynamics Laboratory", "credits": 2, "type": "PCC"},
+        "AE3412": {"name": "Propulsion Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 23
+    },
+    "5": {
+      "subjects": {
+        "AE3501": {"name": "Aircraft Structures-II", "credits": 3, "type": "PCC"},
+        "AE3502": {"name": "Aerodynamics II", "credits": 3, "type": "PCC"},
+        "AE3511": {"name": "Aircraft Structures Laboratory", "credits": 2, "type": "PCC"},
+        "AE3581": {"name": "CAD Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 19,
+      "notes": "Professional Elective I, II, III (3 credits each)"
+    },
+    "6": {
+      "subjects": {
+        "AE3691": {"name": "Flight Dynamics", "credits": 4, "type": "PCC"},
+        "AE3601": {"name": "Aircraft Design", "credits": 3, "type": "PCC"},
+        "AE3611": {"name": "Aircraft Design Project", "credits": 2, "type": "PCC"},
+        "AE3612": {"name": "Flight Training / Flight Simulation Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 23,
+      "notes": "Open Elective I (3 cr), Professional Elective IV, V, VI (3 cr each)"
+    },
+    "7": {
+      "subjects": {
+        "AE3701": {"name": "Wind Tunnel Techniques", "credits": 3, "type": "PCC"},
+        "GE3751": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
+        "AE3711": {"name": "Aero Engine and Airframe Laboratory", "credits": 1, "type": "PCC"},
+        "AE3712": {"name": "Aircraft Systems Laboratory", "credits": 1, "type": "PCC"},
+        "AE3781": {"name": "Computational Analysis Laboratory", "credits": 1, "type": "PCC"}
+      },
+      "total_credits": 20,
+      "notes": "Elective Management (3 cr), Open Elective II, III, IV (3 cr each)"
+    },
+    "8": {
+      "subjects": {
+        "AE8811": {"name": "Project Work / Internship", "credits": 10, "type": "EEC"}
+      },
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_computational_engineering": {
+      "name": "Computational Engineering",
+      "subjects": {
+        "CAE331": {"name": "Numerical Methods in Fluid Dynamics", "credits": 3},
+        "CAE332": {"name": "Computational Heat Transfer", "credits": 3},
+        "CAE333": {"name": "Finite Element Methods", "credits": 3},
+        "CAE334": {"name": "Computational Fluid Dynamics", "credits": 3},
+        "CAE335": {"name": "Computer Aided Design and Analysis", "credits": 3},
+        "CAE336": {"name": "Grid Generation Techniques", "credits": 3}
+      }
+    },
+    "vertical_2_aerodynamics_propulsion": {
+      "name": "Aerodynamics and Propulsion",
+      "subjects": {
+        "CAE337": {"name": "Experimental Aerodynamics", "credits": 3},
+        "CAE338": {"name": "High Speed Aerodynamics", "credits": 3},
+        "CAE339": {"name": "Industrial Aerodynamics", "credits": 3},
+        "CAE340": {"name": "Rocket Propulsion", "credits": 3},
+        "CAE341": {"name": "Advanced Propulsion Systems", "credits": 3},
+        "CAE342": {"name": "Hypersonic Aerodynamics", "credits": 3}
+      }
+    },
+    "vertical_3_aerospace_structures": {
+      "name": "Aerospace Structures",
+      "subjects": {
+        "CAE343": {"name": "Fatigue and Fracture Mechanics", "credits": 3},
+        "CAE344": {"name": "Experimental Stress Analysis", "credits": 3},
+        "CAE345": {"name": "Composite Materials and Structures", "credits": 3},
+        "CME339": {"name": "Additive Manufacturing", "credits": 3},
+        "CMF338": {"name": "Non Destructive Testing and Evaluation", "credits": 3},
+        "CAE346": {"name": "Aerospace Materials", "credits": 3}
+      }
+    },
+    "vertical_4_avionics_drone": {
+      "name": "Avionics and Drone Technology",
+      "subjects": {
+        "CAE347": {"name": "Avionics", "credits": 3},
+        "CAE348": {"name": "Control Engineering", "credits": 3},
+        "CAE349": {"name": "Guidance and Control", "credits": 3},
+        "CAE350": {"name": "Navigation and Communication System", "credits": 3},
+        "CAE351": {"name": "Design of UAV Systems", "credits": 3},
+        "CAE352": {"name": "Aerodynamics of Drones", "credits": 3}
+      }
+    },
+    "vertical_5_aircraft_maintenance": {
+      "name": "Aircraft Maintenance",
+      "subjects": {
+        "AE3001": {"name": "Airframe Maintenance and Repair", "credits": 3},
+        "AE3002": {"name": "Aircraft General Engineering and Maintenance Practices", "credits": 3},
+        "AE3003": {"name": "Civil Aviation Regulations", "credits": 3},
+        "AE3004": {"name": "Aircraft Engine Maintenance and Repair", "credits": 3},
+        "AE3010": {"name": "Air Traffic Control", "credits": 3},
+        "AE3005": {"name": "Airport Management", "credits": 3}
+      }
+    },
+    "vertical_6_diversified_group1": {
+      "name": "Diversified Courses Group 1",
+      "subjects": {
+        "AE3006": {"name": "Design of Gas Turbine Engine Components", "credits": 3},
+        "AE3007": {"name": "Vibration and Aero Elasticity", "credits": 3},
+        "ME3393": {"name": "Manufacturing Processes", "credits": 3},
+        "CAE353": {"name": "Turbo Machines", "credits": 3},
+        "AE3008": {"name": "Helicopter Theory", "credits": 3},
+        "CAE354": {"name": "Smart Materials and Structures", "credits": 3}
+      }
+    },
+    "vertical_7_diversified_group2": {
+      "name": "Diversified Courses Group 2",
+      "subjects": {
+        "CAE355": {"name": "Boundary Layer Theory", "credits": 3},
+        "CAE356": {"name": "Theory of Elasticity", "credits": 3},
+        "CAE357": {"name": "Structural Dynamics", "credits": 3},
+        "CAE358": {"name": "Heat Transfer", "credits": 3},
+        "AE3009": {"name": "Aeroelasticity", "credits": 3},
+        "CME393": {"name": "Advanced Vehicle Engineering", "credits": 3}
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {"name": "Principles of Management", "credits": 3},
+    "GE3752": {"name": "Total Quality Management", "credits": 3},
+    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
+    "GE3754": {"name": "Human Resource Management", "credits": 3},
+    "GE3755": {"name": "Knowledge Management", "credits": 3},
+    "GE3792": {"name": "Industrial Management", "credits": 3}
+  }
+}

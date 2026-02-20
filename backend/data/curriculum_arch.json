@@ -1,0 +1,180 @@
+{
+  "branch": "ARCH",
+  "branch_full": "Architecture",
+  "degree": "B.Arch.",
+  "regulation": "2021",
+  "total_credits": 260,
+  "total_semesters": 10,
+  "semesters": {
+    "1": {
+      "subjects": {
+        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
+        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
+        "AR3151": {"name": "Building Materials - I", "credits": 3, "type": "PCC"},
+        "AR3152": {"name": "History of Architecture - I", "credits": 3, "type": "PCC"},
+        "AR3153": {"name": "Basic Design", "credits": 4, "type": "PCC"},
+        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
+        "AR3111": {"name": "Basic Design Studio", "credits": 6, "type": "PCC"},
+        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 25
+    },
+    "2": {
+      "subjects": {
+        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
+        "AR3251": {"name": "Building Materials - II", "credits": 3, "type": "PCC"},
+        "AR3252": {"name": "History of Architecture - II", "credits": 3, "type": "PCC"},
+        "AR3253": {"name": "Building Construction - I", "credits": 4, "type": "PCC"},
+        "AR3254": {"name": "Climatology", "credits": 3, "type": "PCC"},
+        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
+        "AR3211": {"name": "Architectural Design Studio - I", "credits": 8, "type": "PCC"},
+        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+      },
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": {
+        "AR3351": {"name": "Building Construction - II", "credits": 4, "type": "PCC"},
+        "AR3352": {"name": "History of Architecture - III", "credits": 3, "type": "PCC"},
+        "AR3353": {"name": "Theory of Structures - I", "credits": 4, "type": "PCC"},
+        "AR3354": {"name": "Surveying and Leveling", "credits": 3, "type": "PCC"},
+        "AR3311": {"name": "Architectural Design Studio - II", "credits": 8, "type": "PCC"},
+        "AR3312": {"name": "Surveying Laboratory", "credits": 2, "type": "PCC"},
+        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+      },
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": {
+        "AR3451": {"name": "Building Construction - III", "credits": 4, "type": "PCC"},
+        "AR3452": {"name": "History of Architecture - IV", "credits": 3, "type": "PCC"},
+        "AR3453": {"name": "Theory of Structures - II", "credits": 4, "type": "PCC"},
+        "AR3454": {"name": "Building Services - I", "credits": 3, "type": "PCC"},
+        "GE3451": {"name": "Environmental Sciences and Sustainability", "credits": 2, "type": "BSC"},
+        "AR3411": {"name": "Architectural Design Studio - III", "credits": 8, "type": "PCC"},
+        "AR3412": {"name": "Computer Aided Design Laboratory - I", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 26
+    },
+    "5": {
+      "subjects": {
+        "AR3551": {"name": "Building Construction - IV", "credits": 4, "type": "PCC"},
+        "AR3552": {"name": "Building Services - II", "credits": 3, "type": "PCC"},
+        "AR3553": {"name": "Specifications, Estimation and Valuation", "credits": 3, "type": "PCC"},
+        "AR3554": {"name": "Site Planning and Landscape Architecture", "credits": 3, "type": "PCC"},
+        "AR3511": {"name": "Architectural Design Studio - IV", "credits": 8, "type": "PCC"},
+        "AR3512": {"name": "Computer Aided Design Laboratory - II", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 26,
+      "notes": "Elective I (3 credits)"
+    },
+    "6": {
+      "subjects": {
+        "AR3651": {"name": "Building Construction - V", "credits": 3, "type": "PCC"},
+        "AR3652": {"name": "Urban Design", "credits": 3, "type": "PCC"},
+        "AR3653": {"name": "Planning Legislation", "credits": 3, "type": "PCC"},
+        "AR3611": {"name": "Architectural Design Studio - V", "credits": 8, "type": "PCC"},
+        "AR3612": {"name": "Building Services Laboratory", "credits": 2, "type": "PCC"}
+      },
+      "total_credits": 25,
+      "notes": "Elective II, III (3 credits each)"
+    },
+    "7": {
+      "subjects": {
+        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
+        "AR3751": {"name": "Project Management and Entrepreneurship", "credits": 3, "type": "PCC"},
+        "AR3752": {"name": "Energy Efficient Buildings", "credits": 3, "type": "PCC"},
+        "AR3753": {"name": "Professional Practice - I", "credits": 3, "type": "PCC"},
+        "AR3711": {"name": "Architectural Design Studio - VI", "credits": 8, "type": "PCC"}
+      },
+      "total_credits": 25,
+      "notes": "Elective IV, V (3 credits each)"
+    },
+    "8": {
+      "subjects": {
+        "AR3851": {"name": "Professional Practice - II", "credits": 3, "type": "PCC"},
+        "AR3811": {"name": "Architectural Design Studio - VII", "credits": 8, "type": "PCC"},
+        "AR3812": {"name": "Seminar", "credits": 2, "type": "EEC"},
+        "AR3813": {"name": "Research Thesis - I", "credits": 4, "type": "EEC"}
+      },
+      "total_credits": 20,
+      "notes": "Elective VI (3 credits)"
+    },
+    "9": {
+      "subjects": {
+        "AR3911": {"name": "Research Thesis - II", "credits": 6, "type": "EEC"},
+        "AR3912": {"name": "Practical Training", "credits": 14, "type": "EEC"}
+      },
+      "total_credits": 20
+    },
+    "10": {
+      "subjects": {
+        "AR3A11": {"name": "Comprehensive Design Project", "credits": 16, "type": "EEC"},
+        "AR3A12": {"name": "Comprehensive Viva Voce", "credits": 6, "type": "EEC"}
+      },
+      "total_credits": 22
+    }
+  },
+  "professional_electives": {
+    "group_1_design_process": {
+      "name": "Design Process",
+      "subjects": {
+        "CAR331": {"name": "Vernacular Architecture", "credits": 3},
+        "CAR332": {"name": "Industrial Design", "credits": 3},
+        "CAR333": {"name": "Interior Design", "credits": 3},
+        "CAR334": {"name": "Art Appreciation", "credits": 3},
+        "CAR335": {"name": "Architecture and Society", "credits": 3}
+      }
+    },
+    "group_2_energy_tech": {
+      "name": "Energy and Technology",
+      "subjects": {
+        "CAR341": {"name": "Smart Buildings", "credits": 3},
+        "CAR342": {"name": "Passive Design Strategies", "credits": 3},
+        "CAR343": {"name": "Lighting Design", "credits": 3},
+        "CAR344": {"name": "Acoustics and Noise Control", "credits": 3},
+        "CAR345": {"name": "Prefabrication and Advanced Construction Technology", "credits": 3}
+      }
+    },
+    "group_3_tectonics": {
+      "name": "Architectural Tectonics",
+      "subjects": {
+        "CAR351": {"name": "Tall Building Design", "credits": 3},
+        "CAR352": {"name": "Earthquake Resistant Structures", "credits": 3},
+        "CAR353": {"name": "Form and Structure", "credits": 3},
+        "CAR354": {"name": "Building Rehabilitation and Retrofitting", "credits": 3},
+        "CAR355": {"name": "Steel and Tensile Structures", "credits": 3}
+      }
+    },
+    "group_4_digital_design": {
+      "name": "Digital Design",
+      "subjects": {
+        "CAR361": {"name": "Digital Design Fabrication", "credits": 3},
+        "CAR362": {"name": "Parametric Design", "credits": 3},
+        "CAR363": {"name": "Building Information Modelling", "credits": 3},
+        "CAR364": {"name": "Geographic Information Systems", "credits": 3},
+        "CAR365": {"name": "Virtual Reality in Architecture", "credits": 3}
+      }
+    },
+    "group_5_urban_studies": {
+      "name": "Urban Studies",
+      "subjects": {
+        "CAR371": {"name": "Urban Planning", "credits": 3},
+        "CAR372": {"name": "Transport Planning", "credits": 3},
+        "CAR373": {"name": "Housing", "credits": 3},
+        "CAR374": {"name": "Real Estate Development", "credits": 3},
+        "CAR375": {"name": "Urban Conservation", "credits": 3}
+      }
+    },
+    "group_6_allied_art": {
+      "name": "Allied Art and Design",
+      "subjects": {
+        "CAR381": {"name": "Visual Communication", "credits": 3},
+        "CAR382": {"name": "Furniture Design", "credits": 3},
+        "CAR383": {"name": "Exhibition Design", "credits": 3},
+        "CAR384": {"name": "Film Studies", "credits": 3},
+        "CAR385": {"name": "Photography", "credits": 3}
+      }
+    }
+  }
+}

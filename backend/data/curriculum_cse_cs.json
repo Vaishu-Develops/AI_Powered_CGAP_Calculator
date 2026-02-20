@@ -1,0 +1,104 @@
+{
+  "branch": "Computer Science and Engineering (Cyber Security)",
+  "branch_code": "CSE_CS",
+  "regulation": "R2021",
+  "total_credits": 163,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "PH3256", "name": "Physics for Information Science", "credits": 3, "category": "BSC"},
+        {"code": "BE3251", "name": "Basic Electrical and Electronics Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "CS3251", "name": "Programming in C", "credits": 3, "category": "PCC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "CS3271", "name": "Programming in C Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {"code": "MA3354", "name": "Discrete Mathematics", "credits": 4, "category": "BSC"},
+        {"code": "CS3351", "name": "Digital Principles and Computer Organization", "credits": 4, "category": "ESC"},
+        {"code": "CS3352", "name": "Foundations of Data Science", "credits": 3, "category": "PCC"},
+        {"code": "CD3291", "name": "Data Structures and Algorithms", "credits": 3, "category": "PCC"},
+        {"code": "CS3391", "name": "Object Oriented Programming", "credits": 3, "category": "PCC"},
+        {"code": "CD3281", "name": "Data Structures and Algorithms Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "CS3381", "name": "Object Oriented Programming Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "CS3361", "name": "Data Science Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 23.5
+    },
+    "4": {
+      "subjects": [
+        {"code": "CS3452", "name": "Theory of Computation", "credits": 3, "category": "PCC"},
+        {"code": "CS3491", "name": "Artificial Intelligence and Machine Learning", "credits": 4, "category": "PCC"},
+        {"code": "CB3401", "name": "Database Management Systems and Security", "credits": 3, "category": "PCC"},
+        {"code": "CB3402", "name": "Operating Systems and Security", "credits": 4, "category": "PCC"},
+        {"code": "CB3491", "name": "Cryptography and Cyber Security", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "CB3411", "name": "Cryptography and Cyber Security Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "CB3412", "name": "Database Management Systems and Security Laboratory", "credits": 2, "category": "PCC"}
+      ],
+      "total_credits": 22.5
+    },
+    "5": {
+      "subjects": [
+        {"code": "CS3551", "name": "Distributed Computing", "credits": 3, "category": "PCC"},
+        {"code": "CB3591", "name": "Engineering Secure Software Systems", "credits": 3, "category": "PCC"},
+        {"code": "CS3691", "name": "Embedded Systems and IoT", "credits": 4, "category": "PCC"},
+        {"code": "CS3591", "name": "Computer Networks", "credits": 4, "category": "PCC"},
+        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
+        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"}
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {"code": "CB3601", "name": "Cyber Forensics", "credits": 4, "category": "PCC"},
+        {"code": "CB3602", "name": "Network Security", "credits": 4, "category": "PCC"},
+        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
+        {"code": "PEC603", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
+        {"code": "PEC604", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
+        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
+        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"}
+      ],
+      "total_credits": 23
+    },
+    "7": {
+      "subjects": [
+        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
+        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
+        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
+        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
+        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
+        {"code": "CB3711", "name": "Summer Internship", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 16
+    },
+    "8": {
+      "subjects": [
+        {"code": "CB3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  }
+}

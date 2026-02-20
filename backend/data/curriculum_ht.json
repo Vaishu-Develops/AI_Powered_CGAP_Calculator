@@ -1,0 +1,109 @@
+{
+  "branch": "Handloom and Textile Technology",
+  "branch_code": "HT",
+  "regulation": "R2021",
+  "total_credits": 166,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "PH3257", "name": "Physics for Textile Technologists", "credits": 3, "category": "BSC"},
+        {"code": "BE3252", "name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "CY3252", "name": "Chemistry for Textile Technologists", "credits": 3, "category": "BSC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BE3272", "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 26
+    },
+    "3": {
+      "subjects": [
+        {"code": "MA3357", "name": "Probability and Statistical Methods", "credits": 4, "category": "BSC"},
+        {"code": "HT3301", "name": "Handloom Weaving Technology", "credits": 3, "category": "PCC"},
+        {"code": "TT3354", "name": "Technology of Pre-Spinning Process", "credits": 3, "category": "PCC"},
+        {"code": "TT3351", "name": "Preparatory Process for Woven Fabric Manufacture", "credits": 4, "category": "PCC"},
+        {"code": "TT3353", "name": "Structure and Properties of Textile Fibres", "credits": 4, "category": "PCC"},
+        {"code": "TT3352", "name": "Production of Textile Fibres", "credits": 3, "category": "PCC"},
+        {"code": "TT3361", "name": "Pre Spinning Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "HT3311", "name": "Handloom Weaving Laboratory", "credits": 1, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 24.5
+    },
+    "4": {
+      "subjects": [
+        {"code": "TT3454", "name": "Technology of Yarn Spinning", "credits": 4, "category": "PCC"},
+        {"code": "TT3453", "name": "Technology of Woven Fabric Manufacture", "credits": 3, "category": "PCC"},
+        {"code": "TT3452", "name": "Knitting Technology", "credits": 3, "category": "PCC"},
+        {"code": "TT3451", "name": "Chemical Processing of Textile Materials I", "credits": 3, "category": "PCC"},
+        {"code": "HT3401", "name": "Fabric Structure I", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "TT3461", "name": "Fabric Manufacture Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "TT3462", "name": "Fabric Structure Analysis Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 21
+    },
+    "5": {
+      "subjects": [
+        {"code": "TT3591", "name": "Testing of Textile Materials", "credits": 3, "category": "PCC"},
+        {"code": "HT3501", "name": "Fabric Structure II", "credits": 4, "category": "PCC"},
+        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
+        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
+        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
+        {"code": "TT3581", "name": "Testing of Textile Materials Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "HT3511", "name": "Textile Design and CAD Laboratory", "credits": 1, "category": "PCC"},
+        {"code": "HT3512", "name": "Industrial Training / Internship I", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 19.5
+    },
+    "6": {
+      "subjects": [
+        {"code": "TT3651", "name": "Chemical Processing of Textile Material II", "credits": 3, "category": "PCC"},
+        {"code": "TT3691", "name": "Technology of Nonwoven", "credits": 3, "category": "PCC"},
+        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
+        {"code": "PEC604", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
+        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
+        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
+        {"code": "TT3661", "name": "Textile Chemical Processing Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "TT3611", "name": "Textile Product Engineering Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 21
+    },
+    "7": {
+      "subjects": [
+        {"code": "TT3751", "name": "Apparel and Home Furnishings Manufacture", "credits": 4, "category": "PCC"},
+        {"code": "TT3752", "name": "Financial Management for Textile Industries", "credits": 3, "category": "PCC"},
+        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
+        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
+        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
+        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
+        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
+        {"code": "HT3711", "name": "Industrial Training / Internship II", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {"code": "HT3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  }
+}

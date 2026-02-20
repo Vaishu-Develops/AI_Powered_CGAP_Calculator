@@ -1,0 +1,469 @@
+{
+  "branch": "B.Tech. Pharmaceutical Technology",
+  "branch_code": "PHARMA",
+  "regulation": "R2021",
+  "total_credits": 166,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர் மரபு/ Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3258",
+          "name": "Physics for Pharmaceutical Technology",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PY3251",
+          "name": "Organic Chemistry",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் தொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "PY3271",
+          "name": "Organic Chemistry Laboratory",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PY3301",
+          "name": "Microbiology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3302",
+          "name": "Pharmaceutical Chemistry",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3303",
+          "name": "Biochemistry",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3304",
+          "name": "Human Anatomy and Physiology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3311",
+          "name": "Microbiology Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3312",
+          "name": "Pharmaceutical Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3313",
+          "name": "Biochemistry Laboratory",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "PY3401",
+          "name": "Chemical Engineering Thermodynamics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3402",
+          "name": "Fluid Mechanics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3403",
+          "name": "Cell Biology and Genetic Engineering",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3404",
+          "name": "Physical Pharmacy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PY3411",
+          "name": "Fluid Mechanics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3412",
+          "name": "CAD Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3413",
+          "name": "Physical Pharmacy Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 20
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "PY3501",
+          "name": "Technology of Dosage Forms",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3502",
+          "name": "Unit Operations",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3503",
+          "name": "Pharmacology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3511",
+          "name": "Industrial Training / Internship I",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "PY3512",
+          "name": "Technology of Dosage Forms Laboratory",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "PY3601",
+          "name": "Heat and Mass Transfer",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3602",
+          "name": "Drug Analysis",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3611",
+          "name": "Heat Transfer Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3612",
+          "name": "Drug Analysis Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective IV",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective V",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VI",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "PY3701",
+          "name": "Regulatory Requirements and Intellectual Property Rights",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PY3702",
+          "name": "Biopharmaceutics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "PY3711",
+          "name": "Industrial Training / Internship II",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3.0,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "PY3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "verticals": [
+      {
+        "name": "Vertical I: Drug Design & Development",
+        "courses": [
+          {"code": "PY3001", "name": "Medicinal Chemistry", "credits": 3},
+          {"code": "PY3002", "name": "Bioinformatics and Cheminformatics", "credits": 3},
+          {"code": "PY3003", "name": "Protein Structure, Function and Proteomics", "credits": 3},
+          {"code": "CPY331", "name": "Computer Aided Drug Design", "credits": 3},
+          {"code": "PY3004", "name": "Regulatory Toxicology", "credits": 3},
+          {"code": "PY3005", "name": "Clinical Research and Pharmacovigilance", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical II: Formulation and Manufacturing Technology",
+        "courses": [
+          {"code": "PY3006", "name": "Technology of Fine Chemicals and Bulk drugs", "credits": 3},
+          {"code": "PY3007", "name": "Pre formulation Technology", "credits": 3},
+          {"code": "PY3008", "name": "Manufacturing Technology of Dosage Forms", "credits": 3},
+          {"code": "PY3009", "name": "Industrial Process and Scale up Techniques", "credits": 3},
+          {"code": "PY3010", "name": "Novel Drug Delivery Systems", "credits": 3},
+          {"code": "PY3011", "name": "Pharmaceutical Packaging Technology", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical III: Quality Control and Quality Assurance",
+        "courses": [
+          {"code": "PY3012", "name": "Biological spectroscopic techniques", "credits": 3},
+          {"code": "PY3013", "name": "Quality Assurance in Pharmaceutical Industries", "credits": 3},
+          {"code": "PY3014", "name": "Audits and regulatory compliance", "credits": 3},
+          {"code": "PY3015", "name": "Validation in Pharmaceutical Industries", "credits": 3},
+          {"code": "PY3016", "name": "Quality Management systems", "credits": 3},
+          {"code": "PY3017", "name": "Product Development and Technology Transfer", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical IV: Pharmaceutical Industrial Management",
+        "courses": [
+          {"code": "PY3018", "name": "Pharmaceutical Production Management", "credits": 3},
+          {"code": "PY3019", "name": "Pharmaceutical Supply Chain Management", "credits": 3},
+          {"code": "PY3020", "name": "Safety and Disaster Management", "credits": 3},
+          {"code": "PY3021", "name": "Management Information System", "credits": 3},
+          {"code": "PY3022", "name": "Industrial Psychology And Human Resource Management", "credits": 3},
+          {"code": "PY3023", "name": "Project Management for Pharmaceutical Technology", "credits": 3}
+        ]
+      }
+    ]
+  },
+  "open_electives": {
+    "OE_I_II": "Emerging Technologies",
+    "OE_III": "From list of Open Electives III",
+    "OE_IV": "From list of Open Electives IV"
+  },
+  "management_electives": [
+    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
+    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
+    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
+    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
+    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
+    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
+  ]
+}

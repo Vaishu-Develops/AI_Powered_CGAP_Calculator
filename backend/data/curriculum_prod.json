@@ -1,0 +1,492 @@
+{
+  "branch": "B.E. Production Engineering",
+  "branch_code": "PROD",
+  "regulation": "R2021",
+  "total_credits": 165,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர் மரபு/ Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3254",
+          "name": "Physics for Manufacturing Science",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3254",
+          "name": "Basic Electrical Engineering",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் தொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3274",
+          "name": "Basic Electrical Engineering Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "ME3351",
+          "name": "Engineering Mechanics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "ME3391",
+          "name": "Engineering Thermodynamics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MF3391",
+          "name": "Mechanics of Materials",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "PR3301",
+          "name": "Materials Science and Metallurgy",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MF3393",
+          "name": "Machining Processes",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MF3361",
+          "name": "Machining Processes Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3311",
+          "name": "Materials Science and Metallurgy Laboratory",
+          "credits": 1.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "ME3491",
+          "name": "Fluid Mechanics and Machinery",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ME3492",
+          "name": "Kinematics of Machinery",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ME3493",
+          "name": "Manufacturing Technology",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3401",
+          "name": "Metal Casting Processes",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3402",
+          "name": "Metal Joining Processes",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PR3411",
+          "name": "Metal Casting Processes Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3412",
+          "name": "Metal Joining Processes Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3413",
+          "name": "CAD Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 24
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "PR3501",
+          "name": "Metrology and Measurements",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3511",
+          "name": "Metrology and Measurements Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3513",
+          "name": "Summer Internship",
+          "credits": 2.0,
+          "category": "EEC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC504",
+          "name": "Professional Elective IV",
+          "credits": 4.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "PR3601",
+          "name": "Metal Forming Processes",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3611",
+          "name": "Metal Forming Processes Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PR3612",
+          "name": "CAM Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective V",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective VI",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VII",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 19
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "MR3691",
+          "name": "Mechatronics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "ME3792",
+          "name": "Computer Integrated Manufacturing",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3752",
+          "name": "Total Quality Management",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "PR3711",
+          "name": "Mechatronics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3.0,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "PR3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "verticals": [
+      {
+        "name": "Vertical 1: Robotics and Automation",
+        "courses": [
+          {"code": "MR3491", "name": "Sensors and Instrumentation", "credits": 3},
+          {"code": "MR3392", "name": "Electrical Drives and Actuators", "credits": 3},
+          {"code": "MR3492", "name": "Embedded Systems and Programming", "credits": 3},
+          {"code": "MR3691", "name": "Robotics", "credits": 3},
+          {"code": "CMR338", "name": "Smart mobility and Intelligent Vehicles", "credits": 3},
+          {"code": "CME345", "name": "Haptics and Immersive Technologies", "credits": 3},
+          {"code": "CRA332", "name": "Drone Technologies", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 2: Operations and Supply Chain Management",
+        "courses": [
+          {"code": "CIE331", "name": "Project Management", "credits": 3},
+          {"code": "CIE332", "name": "Product Design and Value Engineering", "credits": 3},
+          {"code": "CIE333", "name": "Facility Design", "credits": 3},
+          {"code": "CIE334", "name": "Business Process Re-Engineering", "credits": 3},
+          {"code": "CIE335", "name": "Enterprise Resource Planning", "credits": 3},
+          {"code": "CIE336", "name": "Cost Estimation and Control", "credits": 3},
+          {"code": "CIE337", "name": "Supply Chain Risk Management", "credits": 3},
+          {"code": "CIE338", "name": "Logistics Management", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 3: Materials Processing Techniques",
+        "courses": [
+          {"code": "PR3001", "name": "Processing and Properties of Composites", "credits": 3},
+          {"code": "PR3002", "name": "Smart Materials for Manufacturing", "credits": 3},
+          {"code": "PR3003", "name": "MEMS and Nanotechnology", "credits": 3},
+          {"code": "PR3004", "name": "Micromachining and Fabrication", "credits": 3},
+          {"code": "CME339", "name": "Additive Manufacturing", "credits": 3},
+          {"code": "PR3005", "name": "Material Testing and Characterization", "credits": 3},
+          {"code": "CME397", "name": "Surface Engineering", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 4: Tool Engineering",
+        "courses": [
+          {"code": "CMF331", "name": "Design of Jigs and Fixtures", "credits": 3},
+          {"code": "CMF332", "name": "Design of Press Tools", "credits": 3},
+          {"code": "CMF333", "name": "Design of Cutting Tools", "credits": 3},
+          {"code": "CMF334", "name": "Design of Tooling for Thermoplastics", "credits": 3},
+          {"code": "CMF335", "name": "Design of Tooling for Die Casting", "credits": 3},
+          {"code": "CMF336", "name": "Design of Tooling for Thermosets", "credits": 3},
+          {"code": "CMF337", "name": "Design of Gauges", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 5: Diversified Courses Group 1",
+        "courses": [
+          {"code": "CPR331", "name": "Elements of Green Manufacturing", "credits": 3},
+          {"code": "CMF339", "name": "Unconventional Machining Processes", "credits": 3},
+          {"code": "CMF338", "name": "Non Destructive Testing and Evaluation", "credits": 3},
+          {"code": "PR3006", "name": "Production of Automotive Components", "credits": 3},
+          {"code": "PR3007", "name": "Robotic Technology", "credits": 3},
+          {"code": "PR3008", "name": "Machine Vision", "credits": 3},
+          {"code": "PR3009", "name": "Instrumentation and Control", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 6: Diversified Courses Group 2",
+        "courses": [
+          {"code": "PR3010", "name": "Surface Modifications and Analytical Techniques", "credits": 3},
+          {"code": "PR3011", "name": "Processing of Composites", "credits": 3},
+          {"code": "PR3012", "name": "Computer Aided Product Design", "credits": 3},
+          {"code": "CPR332", "name": "Finite Element Analysis", "credits": 3},
+          {"code": "MF3491", "name": "CNC Machining Technology", "credits": 3},
+          {"code": "PR3013", "name": "Quality Control and Reliability Engineering", "credits": 3},
+          {"code": "CPR333", "name": "Machine Design", "credits": 3}
+        ]
+      }
+    ]
+  },
+  "open_electives": {
+    "OE_I_II": "Emerging Technologies",
+    "OE_III": "From list of Open Electives III",
+    "OE_IV": "From list of Open Electives IV"
+  },
+  "management_electives": [
+    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
+    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
+    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
+    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
+    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
+    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
+  ]
+}

@@ -1,0 +1,508 @@
+{
+  "branch": "B.E. Robotics and Automation",
+  "branch_code": "ROBOTICS",
+  "regulation": "R2021",
+  "total_credits": 165,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "தமிழர் மரபு/ Heritage of Tamils",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3259",
+          "name": "Applied Materials Science",
+          "credits": 3.0,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3253",
+          "name": "Basic Electrical, Electronics Engineering and Measurements",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "தமிழரும் தொழில்நுட்பமும் / Tamils and Technology",
+          "credits": 1.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3273",
+          "name": "Basic Electrical, Electronics Engineering and Measurements Laboratory",
+          "credits": 2.0,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4.0,
+          "category": "BSC"
+        },
+        {
+          "code": "RA3301",
+          "name": "Robot Kinematics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3391",
+          "name": "Digital Electronics and Microprocessor",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3392",
+          "name": "Electrical Drives and Actuators",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3302",
+          "name": "Engineering Mechanics and Mechanisms",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MF3391",
+          "name": "Mechanics of Materials",
+          "credits": 3.0,
+          "category": "ESC"
+        },
+        {
+          "code": "MR3361",
+          "name": "Electrical Drives and Actuators Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3311",
+          "name": "Robot Design and Programming Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 25
+    },
+    "4": {
+      "subjects": [
+        {
+          "code": "RA3401",
+          "name": "Design of Robot Elements",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3452",
+          "name": "Control Systems Engineering",
+          "credits": 4.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MR3491",
+          "name": "Sensors and Instrumentation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3402",
+          "name": "Fundamentals of Manufacturing Processes",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3403",
+          "name": "Fluid Power Automation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2.0,
+          "category": "BSC"
+        },
+        {
+          "code": "MR3461",
+          "name": "Sensors and Instrumentation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3411",
+          "name": "CAD / CAM Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "5": {
+      "subjects": [
+        {
+          "code": "MR3492",
+          "name": "Embedded Systems and Programming",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3501",
+          "name": "Robot Path Planning and Trajectory Generation",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3511",
+          "name": "Robot Programming Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC504",
+          "name": "Professional Elective IV",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {
+          "code": "RA3601",
+          "name": "Robot Dynamics and Control",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3611",
+          "name": "Industrial Automation Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3612",
+          "name": "Mini Project",
+          "credits": 1.0,
+          "category": "EEC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective I",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "PEC601",
+          "name": "Professional Elective V",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC602",
+          "name": "Professional Elective VI",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC603",
+          "name": "Professional Elective VII",
+          "credits": 3.0,
+          "category": "PEC"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective VIII",
+          "credits": 3.0,
+          "category": "PEC"
+        }
+      ],
+      "total_credits": 21
+    },
+    "7": {
+      "subjects": [
+        {
+          "code": "RA3701",
+          "name": "Robotic Vision",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "RA3702",
+          "name": "Mobile Robotics",
+          "credits": 3.0,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "RA3711",
+          "name": "Robotics Laboratory",
+          "credits": 2.0,
+          "category": "PCC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3.0,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEC701",
+          "name": "Open Elective II",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective III",
+          "credits": 3.0,
+          "category": "OEC"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective IV",
+          "credits": 3.0,
+          "category": "OEC"
+        }
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {
+          "code": "RA3811",
+          "name": "Project Work / Internship",
+          "credits": 10.0,
+          "category": "EEC"
+        }
+      ],
+      "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "verticals": [
+      {
+        "name": "Vertical 1: Applied Robotics",
+        "courses": [
+          {"code": "CRA331", "name": "Robots and Systems in Smart Manufacturing", "credits": 3},
+          {"code": "CRA332", "name": "Drone Technologies", "credits": 3},
+          {"code": "CRA333", "name": "Microrobotics", "credits": 3},
+          {"code": "CRA334", "name": "Agricultural Robotics and Automation", "credits": 3},
+          {"code": "CRA335", "name": "Collaborative Robotics", "credits": 3},
+          {"code": "CRA336", "name": "Robot Operating Systems", "credits": 3},
+          {"code": "CRA337", "name": "Medical Robotics", "credits": 3},
+          {"code": "CRA338", "name": "Humanoid Robotics", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 2: Design and Manufacturing",
+        "courses": [
+          {"code": "CRA339", "name": "Robot and Machine Elements Design", "credits": 3},
+          {"code": "CME341", "name": "Design for X", "credits": 3},
+          {"code": "CMR331", "name": "CNC Machine Tools and Programming", "credits": 3},
+          {"code": "ME3792", "name": "Computer Integrated Manufacturing", "credits": 3},
+          {"code": "CMR332", "name": "Advanced Manufacturing Systems", "credits": 3},
+          {"code": "CME339", "name": "Additive Manufacturing", "credits": 3},
+          {"code": "CMR350", "name": "Electronics Manufacturing Technology", "credits": 3},
+          {"code": "CMR333", "name": "Computer Aided Inspection and Testing", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 3: Smart Mobility Systems",
+        "courses": [
+          {"code": "CME380", "name": "Automobile Engineering", "credits": 3},
+          {"code": "AU3791", "name": "Electric and Hybrid Vehicles", "credits": 3},
+          {"code": "CMR334", "name": "Automotive Mechatronics", "credits": 3},
+          {"code": "CMR335", "name": "Automotive System Modelling and Simulation", "credits": 3},
+          {"code": "CMR336", "name": "Vehicle Dynamics and Controls", "credits": 3},
+          {"code": "CMR337", "name": "Aircraft Mechatronics", "credits": 3},
+          {"code": "CMR338", "name": "Smart Mobility and Intelligent Vehicles", "credits": 3},
+          {"code": "CMR339", "name": "Advanced Driver Assistance Systems", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 4: Intelligence Systems",
+        "courses": [
+          {"code": "CRA340", "name": "Applied Signal Processing", "credits": 3},
+          {"code": "CRA341", "name": "Applied Image Processing", "credits": 3},
+          {"code": "CRA342", "name": "Machine Learning for Intelligent Systems", "credits": 3},
+          {"code": "CMR340", "name": "Condition Monitoring and Fault Diagnostics", "credits": 3},
+          {"code": "CMR341", "name": "Systems Modelling and Simulation Methods", "credits": 3},
+          {"code": "CMR342", "name": "Optimization Techniques", "credits": 3},
+          {"code": "CMR343", "name": "Immersive Technologies and Haptics", "credits": 3},
+          {"code": "CMR344", "name": "Computer Vision and Deep Learning", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 5: Automation",
+        "courses": [
+          {"code": "CMR345", "name": "Object Oriented Programming in C++", "credits": 3},
+          {"code": "EE3591", "name": "Power Electronics", "credits": 3},
+          {"code": "CMR358", "name": "Computer Architecture and Organisation", "credits": 3},
+          {"code": "CMR359", "name": "Virtual Instrumentation", "credits": 3},
+          {"code": "CMR346", "name": "Industrial Network Protocols", "credits": 3},
+          {"code": "CMR347", "name": "Motion Control System", "credits": 3},
+          {"code": "CMR348", "name": "Total integrated Automation", "credits": 3},
+          {"code": "CMR349", "name": "Digital Twin and Industry 5.0", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 6: Avionics and Drone Technology",
+        "courses": [
+          {"code": "CAE347", "name": "Avionics", "credits": 3},
+          {"code": "CAE348", "name": "Control Engineering", "credits": 3},
+          {"code": "CAE349", "name": "Guidance and Control", "credits": 3},
+          {"code": "CAE350", "name": "Navigation and Communication System", "credits": 3},
+          {"code": "CAE351", "name": "Design of UAV systems", "credits": 3},
+          {"code": "CAE352", "name": "Aerodynamics of Drones", "credits": 3}
+        ]
+      },
+      {
+        "name": "Vertical 7: Diversified Courses Group 1",
+        "courses": [
+          {"code": "CMR351", "name": "Linear Integrated Circuits", "credits": 3},
+          {"code": "CMR352", "name": "Single Board Computers", "credits": 3},
+          {"code": "CMR353", "name": "Reliability and Maintenance Engineering", "credits": 3},
+          {"code": "CMR354", "name": "Integrated Product Development", "credits": 3},
+          {"code": "CMR355", "name": "Medical Mechatronics", "credits": 3},
+          {"code": "CMR356", "name": "Micro Electro Mechanical Systems", "credits": 3},
+          {"code": "CME396", "name": "Process Planning and Cost Estimation", "credits": 3},
+          {"code": "CMR357", "name": "VLSI and FPGA", "credits": 3}
+        ]
+      }
+    ]
+  },
+  "open_electives": {
+    "OE_I_II": "Emerging Technologies",
+    "OE_III": "From list of Open Electives III",
+    "OE_IV": "From list of Open Electives IV"
+  },
+  "management_electives": [
+    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
+    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
+    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
+    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
+    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
+    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
+  ]
+}

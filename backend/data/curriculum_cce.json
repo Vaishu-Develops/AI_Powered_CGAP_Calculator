@@ -1,0 +1,253 @@
+{
+  "branch": "Computer and Communication Engineering",
+  "branch_code": "CCE",
+  "regulation": "2021",
+  "total_credits": 165,
+  "semesters": [
+    {
+      "semester": 1,
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    {
+      "semester": 2,
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "PH3256", "name": "Physics for Information Science", "credits": 3, "category": "BSC"},
+        {"code": "BE3251", "name": "Basic Electrical and Electronics Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "CS3251", "name": "Programming in C", "credits": 3, "category": "PCC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "CS3271", "name": "Programming in C Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 26
+    },
+    {
+      "semester": 3,
+      "subjects": [
+        {"code": "MA3354", "name": "Discrete Mathematics", "credits": 4, "category": "BSC"},
+        {"code": "CS3352", "name": "Foundations of Data Science", "credits": 3, "category": "PCC"},
+        {"code": "EC3354", "name": "Signals and Systems", "credits": 4, "category": "PCC"},
+        {"code": "CD3291", "name": "Data Structures and Algorithms", "credits": 3, "category": "PCC"},
+        {"code": "CS3351", "name": "Digital Principles and Computer Organization", "credits": 4, "category": "PCC"},
+        {"code": "CD3281", "name": "Data Structures and Algorithms Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "CS3361", "name": "Data Science Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 23
+    },
+    {
+      "semester": 4,
+      "subjects": [
+        {"code": "EC3491", "name": "Communication Systems", "credits": 3, "category": "PCC"},
+        {"code": "CS3491", "name": "Artificial Intelligence and Machine Learning", "credits": 4, "category": "PCC"},
+        {"code": "AL3452", "name": "Operating Systems", "credits": 4, "category": "PCC"},
+        {"code": "CS3492", "name": "Database Management Systems", "credits": 3, "category": "PCC"},
+        {"code": "CS3391", "name": "Object Oriented Programming", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "EC3461", "name": "Communication Systems Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "CS3481", "name": "Database Management Systems Laboratory", "credits": 1.5, "category": "PCC"},
+        {"code": "CS3381", "name": "Object Oriented Programming Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 23.5
+    },
+    {
+      "semester": 5,
+      "subjects": [
+        {"code": "EC3492", "name": "Digital Signal Processing", "credits": 4, "category": "PCC"},
+        {"code": "CS3591", "name": "Computer Networks", "credits": 4, "category": "PCC"},
+        {"code": "CS3551", "name": "Distributed Computing", "credits": 3, "category": "PCC"},
+        {"code": "CB3491", "name": "Cryptography and Cyber Security", "credits": 3, "category": "PCC"},
+        {"code": "CCSXXX", "name": "Professional Elective I", "credits": 3, "category": "PEC"},
+        {"code": "CCSXXX", "name": "Professional Elective II", "credits": 3, "category": "PEC"},
+        {"code": "IT3681", "name": "Mobile Application Development Laboratory", "credits": 1.5, "category": "PCC"}
+      ],
+      "total_credits": 21.5
+    },
+    {
+      "semester": 6,
+      "subjects": [
+        {"code": "CCS356", "name": "Object Oriented Software Engineering", "credits": 4, "category": "PCC"},
+        {"code": "ET3491", "name": "Embedded Systems and IoT Design", "credits": 4, "category": "PCC"},
+        {"code": "OECXXX", "name": "Open Elective - I", "credits": 3, "category": "OEC"},
+        {"code": "CCSXXX", "name": "Professional Elective III", "credits": 3, "category": "PEC"},
+        {"code": "CCSXXX", "name": "Professional Elective IV", "credits": 3, "category": "PEC"},
+        {"code": "CCSXXX", "name": "Professional Elective V", "credits": 3, "category": "PEC"},
+        {"code": "CCSXXX", "name": "Professional Elective VI", "credits": 3, "category": "PEC"}
+      ],
+      "total_credits": 23
+    },
+    {
+      "semester": 7,
+      "subjects": [
+        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
+        {"code": "GEXXXX", "name": "Elective - Management", "credits": 3, "category": "HSMC"},
+        {"code": "OECXXX", "name": "Open Elective - II", "credits": 3, "category": "OEC"},
+        {"code": "OECXXX", "name": "Open Elective - III", "credits": 3, "category": "OEC"},
+        {"code": "OECXXX", "name": "Open Elective - IV", "credits": 3, "category": "OEC"},
+        {"code": "CO3711", "name": "Summer Internship", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 16
+    },
+    {
+      "semester": 8,
+      "subjects": [
+        {"code": "CO3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  ],
+  "professional_electives": {
+    "vertical_1": {
+      "name": "Data Science",
+      "courses": [
+        {"code": "CCS346", "name": "Exploratory Data Analysis", "credits": 3},
+        {"code": "CCS360", "name": "Recommender Systems", "credits": 3},
+        {"code": "CCS355", "name": "Neural Networks and Deep Learning", "credits": 3},
+        {"code": "CCS369", "name": "Text and Speech Analysis", "credits": 3},
+        {"code": "CCW331", "name": "Business Analytics", "credits": 3},
+        {"code": "CCS349", "name": "Image and Video Analytics", "credits": 3},
+        {"code": "CCS338", "name": "Computer Vision", "credits": 3},
+        {"code": "CCS334", "name": "Big Data Analytics", "credits": 3}
+      ]
+    },
+    "vertical_2": {
+      "name": "Full Stack Development",
+      "courses": [
+        {"code": "CCS375", "name": "Web Technologies", "credits": 3},
+        {"code": "CCS332", "name": "App Development", "credits": 3},
+        {"code": "CCS336", "name": "Cloud Services Management", "credits": 3},
+        {"code": "CCS370", "name": "UI and UX Design", "credits": 3},
+        {"code": "CCS366", "name": "Software Testing and Automation", "credits": 3},
+        {"code": "CCS374", "name": "Web Application Security", "credits": 3},
+        {"code": "CCS342", "name": "DevOps", "credits": 3},
+        {"code": "CCS358", "name": "Principles of Programming Languages", "credits": 3}
+      ]
+    },
+    "vertical_3": {
+      "name": "Cloud Computing and Data Center Technologies",
+      "courses": [
+        {"code": "CCS335", "name": "Cloud Computing", "credits": 3},
+        {"code": "CCS372", "name": "Virtualization", "credits": 3},
+        {"code": "CCS336", "name": "Cloud Services Management", "credits": 3},
+        {"code": "CCS341", "name": "Data Warehousing", "credits": 3},
+        {"code": "CCS367", "name": "Storage Technologies", "credits": 3},
+        {"code": "CCS365", "name": "Software Defined Networks", "credits": 3},
+        {"code": "CCS368", "name": "Stream Processing", "credits": 3},
+        {"code": "CCS362", "name": "Security and Privacy in Cloud", "credits": 3}
+      ]
+    },
+    "vertical_4": {
+      "name": "Cyber Security and Data Privacy",
+      "courses": [
+        {"code": "CCS344", "name": "Ethical Hacking", "credits": 3},
+        {"code": "CCS343", "name": "Digital and Mobile Forensics", "credits": 3},
+        {"code": "CCS363", "name": "Social Network Security", "credits": 3},
+        {"code": "CCS351", "name": "Modern Cryptography", "credits": 3},
+        {"code": "CB3591", "name": "Engineering Secure Software Systems", "credits": 3},
+        {"code": "CCS339", "name": "Cryptocurrency and Blockchain Technologies", "credits": 3},
+        {"code": "CCS354", "name": "Network Security", "credits": 3},
+        {"code": "CCS362", "name": "Security and Privacy in Cloud", "credits": 3}
+      ]
+    },
+    "vertical_5": {
+      "name": "Creative Media",
+      "courses": [
+        {"code": "CCS333", "name": "Augmented Reality/Virtual Reality", "credits": 3},
+        {"code": "CCS352", "name": "Multimedia and Animation", "credits": 3},
+        {"code": "CCS371", "name": "Video Creation and Editing", "credits": 3},
+        {"code": "CCS370", "name": "UI and UX Design", "credits": 3},
+        {"code": "CCW332", "name": "Digital Marketing", "credits": 3},
+        {"code": "CCS373", "name": "Visual Effects", "credits": 3},
+        {"code": "CCS347", "name": "Game Development", "credits": 3},
+        {"code": "CCS353", "name": "Multimedia Data Compression and Storage", "credits": 3}
+      ]
+    },
+    "vertical_6": {
+      "name": "Emerging Technologies",
+      "courses": [
+        {"code": "CCS333", "name": "Augmented Reality/Virtual Reality", "credits": 3},
+        {"code": "CCS361", "name": "Robotic Process Automation", "credits": 3},
+        {"code": "CCS355", "name": "Neural Networks and Deep Learning", "credits": 3},
+        {"code": "CCS340", "name": "Cyber Security", "credits": 3},
+        {"code": "CCS359", "name": "Quantum Computing", "credits": 3},
+        {"code": "CCS339", "name": "Cryptocurrency and Blockchain Technologies", "credits": 3},
+        {"code": "CCS347", "name": "Game Development", "credits": 3},
+        {"code": "CCS331", "name": "3D Printing and Design", "credits": 3}
+      ]
+    },
+    "vertical_7": {
+      "name": "Communications",
+      "courses": [
+        {"code": "CO3001", "name": "Digital Communication", "credits": 3},
+        {"code": "CEC364", "name": "Wireless Broad Band Networks", "credits": 3},
+        {"code": "CEC331", "name": "4G/5G Communication Networks", "credits": 3},
+        {"code": "CEC347", "name": "Radar Technologies", "credits": 3},
+        {"code": "ET3001", "name": "Mobile Communication", "credits": 3},
+        {"code": "ET3002", "name": "Telecommunication Switching and Networks", "credits": 3},
+        {"code": "CEC345", "name": "Optical Communication & Networks", "credits": 3},
+        {"code": "CEC352", "name": "Satellite Communication", "credits": 3}
+      ]
+    },
+    "vertical_8": {
+      "name": "High Speed Communications",
+      "courses": [
+        {"code": "CEC345", "name": "Optical Communication & Networks", "credits": 3},
+        {"code": "CEC364", "name": "Wireless Broad Band Networks", "credits": 3},
+        {"code": "CEC331", "name": "4G/5G Communication Networks", "credits": 3},
+        {"code": "CEC354", "name": "Software Defined Networks", "credits": 3},
+        {"code": "CEC371", "name": "Massive MIMO Networks", "credits": 3},
+        {"code": "CEC333", "name": "Advanced Wireless Communication Techniques", "credits": 3},
+        {"code": "CCS354", "name": "Network Security", "credits": 3},
+        {"code": "CEC352", "name": "Satellite Communication", "credits": 3}
+      ]
+    }
+  },
+  "open_electives": {
+    "open_elective_1": {
+      "name": "Open Electives I",
+      "courses": [
+        {"code": "OAS351", "name": "Space Science", "credits": 3},
+        {"code": "OIE351", "name": "Introduction to Industrial Engineering", "credits": 3},
+        {"code": "OBT351", "name": "Food, Nutrition and Health", "credits": 3},
+        {"code": "OCE351", "name": "Environment and Social Impact Assessment", "credits": 3},
+        {"code": "OEE351", "name": "Renewable Energy System", "credits": 3},
+        {"code": "OEI351", "name": "Introduction to Industrial Instrumentation and Control", "credits": 3},
+        {"code": "OMA351", "name": "Graph Theory", "credits": 3}
+      ]
+    },
+    "open_elective_2": {
+      "name": "Open Electives II",
+      "courses": [
+        {"code": "OIE352", "name": "Resource Management Techniques", "credits": 3},
+        {"code": "OMG351", "name": "Fintech Regulation", "credits": 3},
+        {"code": "OFD351", "name": "Holistic Nutrition", "credits": 3},
+        {"code": "AI3021", "name": "IT in Agricultural System", "credits": 3},
+        {"code": "OEI352", "name": "Introduction to Control Engineering", "credits": 3},
+        {"code": "OPY351", "name": "Pharmaceutical Nanotechnology", "credits": 3},
+        {"code": "OAE351", "name": "Aviation Management", "credits": 3}
+      ]
+    }
+  },
+  "management_electives": [
+    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
+    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
+    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
+    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
+    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
+    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
+  ]
+}

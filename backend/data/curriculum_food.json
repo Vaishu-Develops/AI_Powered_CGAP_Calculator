@@ -1,0 +1,107 @@
+{
+  "branch": "Food Technology",
+  "branch_code": "FT",
+  "regulation": "R2021",
+  "total_credits": 167,
+  "semesters": {
+    "1": {
+      "subjects": [
+        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
+        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
+        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
+        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
+        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
+        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
+        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
+        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "2": {
+      "subjects": [
+        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
+        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
+        {"code": "PH3258", "name": "Physics of Materials", "credits": 3, "category": "BSC"},
+        {"code": "BE3252", "name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "category": "ESC"},
+        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
+        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
+        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "BE3272", "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 23
+    },
+    "3": {
+      "subjects": [
+        {"code": "MA3351", "name": "Transforms and Partial Differential Equations", "credits": 4, "category": "BSC"},
+        {"code": "FD3301", "name": "Fluid Mechanics and Mechanical Operations", "credits": 4, "category": "PCC"},
+        {"code": "FD3302", "name": "Food Chemistry", "credits": 3, "category": "PCC"},
+        {"code": "FD3303", "name": "Food Microbiology", "credits": 3, "category": "PCC"},
+        {"code": "FD3304", "name": "Food Process Calculations", "credits": 4, "category": "PCC"},
+        {"code": "FD3305", "name": "Post Harvest Engineering", "credits": 3, "category": "PCC"},
+        {"code": "FD3311", "name": "Food Chemistry Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "FD3312", "name": "Food Microbiology Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 26
+    },
+    "4": {
+      "subjects": [
+        {"code": "MA3401", "name": "Probability and Operations Research", "credits": 4, "category": "BSC"},
+        {"code": "FD3401", "name": "Biochemistry and Nutrition", "credits": 3, "category": "PCC"},
+        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
+        {"code": "FD3402", "name": "Food Additives and Flavours", "credits": 3, "category": "PCC"},
+        {"code": "FD3403", "name": "Heat and Mass Transfer in Food Processes", "credits": 4, "category": "PCC"},
+        {"code": "FD3404", "name": "Principles of Thermodynamics", "credits": 3, "category": "PCC"},
+        {"code": "FD3411", "name": "Biochemistry and Nutrition Laboratory", "credits": 2, "category": "ESC"},
+        {"code": "FD3412", "name": "Unit Operations Laboratory", "credits": 2, "category": "PCC"}
+      ],
+      "total_credits": 23
+    },
+    "5": {
+      "subjects": [
+        {"code": "FD3501", "name": "Food Processing and Preservation", "credits": 3, "category": "PCC"},
+        {"code": "FD3502", "name": "Food Analysis", "credits": 3, "category": "PCC"},
+        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
+        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
+        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
+        {"code": "FD3511", "name": "Food Processing and Preservation Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "FD3512", "name": "Food Analysis Laboratory", "credits": 2, "category": "PCC"},
+        {"code": "FD3513", "name": "Industrial Training / Internship I", "credits": 1, "category": "EEC"}
+      ],
+      "total_credits": 20
+    },
+    "6": {
+      "subjects": [
+        {"code": "FD3601", "name": "Food Process Engineering", "credits": 4, "category": "PCC"},
+        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
+        {"code": "PEC604", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
+        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
+        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
+        {"code": "PEC607", "name": "Professional Elective VII", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE7"},
+        {"code": "FD3611", "name": "Food Process Engineering Laboratory", "credits": 2, "category": "PCC"}
+      ],
+      "total_credits": 21
+    },
+    "7": {
+      "subjects": [
+        {"code": "FD3701", "name": "Refrigeration and Cold Chain Management", "credits": 3, "category": "PCC"},
+        {"code": "FD3702", "name": "Food Plant Equipment Design", "credits": 3, "category": "PCC"},
+        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
+        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
+        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
+        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
+        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
+        {"code": "FD3711", "name": "Industrial Training / Internship II", "credits": 2, "category": "EEC"}
+      ],
+      "total_credits": 22
+    },
+    "8": {
+      "subjects": [
+        {"code": "FD3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+      ],
+      "total_credits": 10
+    }
+  }
+}
