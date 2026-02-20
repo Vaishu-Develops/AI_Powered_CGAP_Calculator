@@ -1,0 +1,34 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+*.egg
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test outputs
+backend/test/*.json
+backend/test/*.txt
+backend/PDF/
+
+# Node modules (already in frontend/.gitignore)
+node_modules/
