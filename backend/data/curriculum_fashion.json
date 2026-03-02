@@ -6,105 +6,1149 @@
   "semesters": {
     "1": {
       "subjects": [
-        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
-        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
-        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
-        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
-        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
-        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
-        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
-        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "Heritage of Tamils",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     "2": {
       "subjects": [
-        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
-        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
-        {"code": "FT3201", "name": "Fibre Science", "credits": 3, "category": "PCC"},
-        {"code": "BE3252", "name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "category": "ESC"},
-        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
-        {"code": "CY3252", "name": "Chemistry for Textile Technologists", "credits": 3, "category": "BSC"},
-        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
-        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "BE3272", "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "FT3201",
+          "name": "Fibre Science",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "BE3252",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4,
+          "category": "ESC"
+        },
+        {
+          "code": "CY3252",
+          "name": "Chemistry for Textile Technologists",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3252",
+          "name": "Tamils and Technology",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3272",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 26
     },
     "3": {
       "subjects": [
-        {"code": "MA3357", "name": "Probability and Statistical Methods", "credits": 4, "category": "BSC"},
-        {"code": "FT3301", "name": "Characteristics of Textile Fibres", "credits": 3, "category": "PCC"},
-        {"code": "FT3302", "name": "Technology of Spinning Processes", "credits": 2, "category": "PCC"},
-        {"code": "FT3303", "name": "Fabric Manufacturing", "credits": 3, "category": "PCC"},
-        {"code": "FT3304", "name": "Fabric Structures", "credits": 3, "category": "PCC"},
-        {"code": "FT3305", "name": "Concepts and Evolution of Fashion and Design", "credits": 3, "category": "PCC"},
-        {"code": "FT3311", "name": "Fabric Structure Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "FT3312", "name": "Fashion Illustration Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+        {
+          "code": "MA3357",
+          "name": "Probability and Statistical Methods",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "FT3301",
+          "name": "Characteristics of Textile Fibres",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3302",
+          "name": "Technology of Spinning Processes",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3303",
+          "name": "Fabric Manufacturing",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3304",
+          "name": "Fabric Structures",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3305",
+          "name": "Concepts and Evolution of Fashion and Design",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3311",
+          "name": "Fabric Structure Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3312",
+          "name": "Fashion Illustration Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     "4": {
       "subjects": [
-        {"code": "FT3401", "name": "Apparel Production Machinery", "credits": 3, "category": "PCC"},
-        {"code": "FT3402", "name": "Fabric and Garment Quality Evaluation", "credits": 4, "category": "PCC"},
-        {"code": "FT3403", "name": "Fundamentals of Garment Manufacturing", "credits": 3, "category": "PCC"},
-        {"code": "FT3404", "name": "Pattern Engineering", "credits": 3, "category": "PCC"},
-        {"code": "FT3405", "name": "Textile Chemical Processing", "credits": 3, "category": "PCC"},
-        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
-        {"code": "FT3411", "name": "Computer Aided Fashion Designing Laboratory", "credits": 1, "category": "PCC"},
-        {"code": "FT3412", "name": "Basics of Pattern Engineering and Garment Construction Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "FT3413", "name": "Textile Chemical Processing Laboratory", "credits": 1.5, "category": "PCC"}
+        {
+          "code": "FT3401",
+          "name": "Apparel Production Machinery",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3402",
+          "name": "Fabric and Garment Quality Evaluation",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3403",
+          "name": "Fundamentals of Garment Manufacturing",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3404",
+          "name": "Pattern Engineering",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3405",
+          "name": "Textile Chemical Processing",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "FT3411",
+          "name": "Computer Aided Fashion Designing Laboratory",
+          "credits": 1,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3412",
+          "name": "Basics of Pattern Engineering and Garment Construction Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3413",
+          "name": "Textile Chemical Processing Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        }
       ],
       "total_credits": 22
     },
     "5": {
       "subjects": [
-        {"code": "FT3501", "name": "Garment Construction", "credits": 3, "category": "PCC"},
-        {"code": "FT3591", "name": "Apparel Production Planning and Process Control", "credits": 3, "category": "PCC"},
-        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
-        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
-        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
-        {"code": "FT3511", "name": "Garment Construction Laboratory - I", "credits": 1.5, "category": "PCC"},
-        {"code": "FT3512", "name": "Computer Aided Garment Designing Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "FT3513", "name": "Industrial Training / Internship I", "credits": 2, "category": "EEC"}
+        {
+          "code": "FT3501",
+          "name": "Garment Construction",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3591",
+          "name": "Apparel Production Planning and Process Control",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE1"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE2"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE3"
+        },
+        {
+          "code": "FT3511",
+          "name": "Garment Construction Laboratory - I",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3512",
+          "name": "Computer Aided Garment Designing Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3513",
+          "name": "Industrial Training / Internship I",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 20
     },
     "6": {
       "subjects": [
-        {"code": "FT3691", "name": "Apparel Marketing and Merchandising", "credits": 3, "category": "PCC"},
-        {"code": "FT3692", "name": "Industrial Engineering in Garment Manufacturing", "credits": 3, "category": "PCC"},
-        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
-        {"code": "PEC604", "name": "Professional Elective IV", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE4"},
-        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
-        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
-        {"code": "FT3611", "name": "Garment Construction Laboratory - II", "credits": 1.5, "category": "PCC"},
-        {"code": "FT3612", "name": "Design Collection / Portfolio", "credits": 1.5, "category": "PCC"}
+        {
+          "code": "FT3691",
+          "name": "Apparel Marketing and Merchandising",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3692",
+          "name": "Industrial Engineering in Garment Manufacturing",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective - I",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE1"
+        },
+        {
+          "code": "PEC604",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE4"
+        },
+        {
+          "code": "PEC605",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE5"
+        },
+        {
+          "code": "PEC606",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE6"
+        },
+        {
+          "code": "FT3611",
+          "name": "Garment Construction Laboratory - II",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3612",
+          "name": "Design Collection / Portfolio",
+          "credits": 1.5,
+          "category": "PCC"
+        }
       ],
       "total_credits": 21
     },
     "7": {
       "subjects": [
-        {"code": "FT3701", "name": "Fundamentals of Economics and Apparel Costing", "credits": 3, "category": "PCC"},
-        {"code": "GE3751", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
-        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
-        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
-        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
-        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
-        {"code": "FT3711", "name": "Apparel Product Engineering Laboratory", "credits": 2, "category": "PCC"},
-        {"code": "FT3712", "name": "Industrial Training / Internship II", "credits": 2, "category": "EEC"}
+        {
+          "code": "FT3701",
+          "name": "Fundamentals of Economics and Apparel Costing",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3751",
+          "name": "Human Values and Ethics",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC",
+          "is_elective": true,
+          "elective_group": "MGT"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective - II",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE2"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective - III",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE3"
+        },
+        {
+          "code": "OEC704",
+          "name": "Open Elective - IV",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE4"
+        },
+        {
+          "code": "FT3711",
+          "name": "Apparel Product Engineering Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "FT3712",
+          "name": "Industrial Training / Internship II",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 21
     },
     "8": {
       "subjects": [
-        {"code": "FT3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+        {
+          "code": "FT3811",
+          "name": "Project Work / Internship",
+          "credits": 10,
+          "category": "EEC"
+        }
       ],
       "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_apparel_marketing": {
+      "name": "Apparel Marketing",
+      "subjects": {
+        "FT3001": {
+          "name": "Fashion Forecasting",
+          "credits": 3
+        },
+        "FT3002": {
+          "name": "Visual Merchandising",
+          "credits": 3
+        },
+        "FT3003": {
+          "name": "Textile Heritage",
+          "credits": 3
+        },
+        "FT3004": {
+          "name": "Apparel Retail Management",
+          "credits": 3
+        },
+        "CFT331": {
+          "name": "Apparel Brand Management",
+          "credits": 3
+        },
+        "FT3005": {
+          "name": "Digital Marketing and E-Business",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_2_apparel_product_development": {
+      "name": "Apparel Product Development",
+      "subjects": {
+        "FT3006": {
+          "name": "Apparel Product Development",
+          "credits": 3
+        },
+        "FT3007": {
+          "name": "Clothing Fit and Comfort",
+          "credits": 3
+        },
+        "FT3008": {
+          "name": "Apparel Trims, Accessories and Embellishments",
+          "credits": 3
+        },
+        "FT3009": {
+          "name": "Garment Finishing and Care",
+          "credits": 3
+        },
+        "CTT339": {
+          "name": "Home Textiles",
+          "credits": 3
+        },
+        "FT3010": {
+          "name": "Knit Product Development",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_garment_manufacturing": {
+      "name": "Garment Manufacturing",
+      "subjects": {
+        "FT3011": {
+          "name": "Automations in Apparel Manufacture",
+          "credits": 3
+        },
+        "FT3012": {
+          "name": "Lean Manufacturing",
+          "credits": 3
+        },
+        "FT3013": {
+          "name": "Supply Chain Management for Apparel Industry",
+          "credits": 3
+        },
+        "FT3014": {
+          "name": "Social Compliances and Quality Assurance in Apparel Industry",
+          "credits": 3
+        },
+        "FT3015": {
+          "name": "Advanced Technologies for Apparel Industry",
+          "credits": 3
+        },
+        "FT3016": {
+          "name": "Computer Applications In Apparel Manufacturing",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_management": {
+      "name": "Management",
+      "subjects": {
+        "FT3017": {
+          "name": "Operation Research in Apparel Industry",
+          "credits": 3
+        },
+        "FT3018": {
+          "name": "Enterprise Resource Planning in Apparel Industry",
+          "credits": 3
+        },
+        "FT3019": {
+          "name": "International Textile and Apparel Business Management",
+          "credits": 3
+        },
+        "CFT332": {
+          "name": "Entrepreneurship in Apparel Manufacture",
+          "credits": 3
+        },
+        "FT3020": {
+          "name": "Sustainable Apparel Business Management",
+          "credits": 3
+        },
+        "FT3021": {
+          "name": "Human Resources Management",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_5_specialty_apparel": {
+      "name": "Specialty Apparel",
+      "subjects": {
+        "TT3691": {
+          "name": "Technology of Nonwoven",
+          "credits": 3
+        },
+        "FT3022": {
+          "name": "Protective Garments",
+          "credits": 3
+        },
+        "FT3023": {
+          "name": "Intimate Apparels",
+          "credits": 3
+        },
+        "FT3024": {
+          "name": "Smart Textiles and Garments",
+          "credits": 3
+        },
+        "FT3025": {
+          "name": "Sports Textiles and Garments",
+          "credits": 3
+        },
+        "FT3026": {
+          "name": "Medical Textiles and Garments",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
+  },
+  "open_electives": {
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicle",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI351": {
+          "name": "Urban Agriculture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE351": {
+          "name": "Introduction to Petroleum Refining and Petrochemicals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT351": {
+          "name": "Basics of Plastics Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC351": {
+          "name": "Signals and Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC352": {
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA352": {
+          "name": "Operations Research",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA353": {
+          "name": "Algebra and Number Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA354": {
+          "name": "Linear Algebra",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT352": {
+          "name": "Basics of Microbial Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT353": {
+          "name": "Basics of Biomolecules",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT354": {
+          "name": "Fundamentals of Cell and Molecular Biology",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME343": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3002": {
+          "name": "Batteries and Management System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3008": {
+          "name": "Sensors and Actuators",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS353": {
+          "name": "Space Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM352": {
+          "name": "Management Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM353": {
+          "name": "Production Planning and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE353": {
+          "name": "Operations Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF352": {
+          "name": "Industrial Hygiene",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF353": {
+          "name": "Chemical Process Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML352": {
+          "name": "Electrical, Electronic and Magnetic Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML353": {
+          "name": "Nanomaterials and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR352": {
+          "name": "Hydraulics and Pneumatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR353": {
+          "name": "Sensors",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA352": {
+          "name": "Concepts in Mobile Robots",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MV3501": {
+          "name": "Marine Propulsion",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV351": {
+          "name": "Marine Merchant Vessels",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV352": {
+          "name": "Elements of Marine Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI352": {
+          "name": "Geographical Information System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI352": {
+          "name": "Agriculture Entrepreneurship Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN352": {
+          "name": "Biodiversity Conservation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE353": {
+          "name": "Introduction to Control Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI354": {
+          "name": "Introduction to Industrial Automation Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY353": {
+          "name": "Nutraceuticals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH353": {
+          "name": "Energy Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH354": {
+          "name": "Surface Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT354": {
+          "name": "Basics of Dyeing and Printing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "FT3201": {
+          "name": "Fibre Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT355": {
+          "name": "Garment Manufacturing Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE353": {
+          "name": "Industrial Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE354": {
+          "name": "Unit Operations in Petro Chemical Industries",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT352": {
+          "name": "Plastic Materials for Engineers",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT353": {
+          "name": "Properties and Testing of Plastics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC353": {
+          "name": "VLSI Design",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT355": {
+          "name": "Biotechnology for Waste Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT356": {
+          "name": "Lifestyle Diseases",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT357": {
+          "name": "Biotechnology in Health Care",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
     }
   }
 }

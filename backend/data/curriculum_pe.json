@@ -7,186 +7,812 @@
     {
       "semester": 1,
       "subjects": [
-        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
-        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
-        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
-        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
-        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
-        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
-        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
-        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "Heritage of Tamils",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     {
       "semester": 2,
       "subjects": [
-        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
-        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
-        {"code": "PH3253", "name": "Materials Science for Technologists", "credits": 3, "category": "BSC"},
-        {"code": "BE3252", "name": "Basic Electrical, Electronics and Instrumentation Engineering", "credits": 3, "category": "ESC"},
-        {"code": "PE3201", "name": "Introduction to Petroleum Engineering", "credits": 3, "category": "PCC"},
-        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
-        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
-        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "BE3272", "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3253",
+          "name": "Materials Science for Technologists",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3252",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "PE3201",
+          "name": "Introduction to Petroleum Engineering",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3252",
+          "name": "Tamils and Technology",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "BE3272",
+          "name": "Basic Electrical, Electronics and Instrumentation Engineering Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 26
     },
     {
       "semester": 3,
       "subjects": [
-        {"code": "MA3351", "name": "Transforms and Partial Differential Equations", "credits": 4, "category": "BSC"},
-        {"code": "PE3301", "name": "Geophysics", "credits": 3, "category": "PCC"},
-        {"code": "PE3351", "name": "Process Calculations", "credits": 3, "category": "PCC"},
-        {"code": "PE3302", "name": "Fluid Mechanics and Solid Operations", "credits": 4, "category": "PCC"},
-        {"code": "PE3303", "name": "Reservoir Rocks and Fluid Properties", "credits": 3, "category": "PCC"},
-        {"code": "PE3361", "name": "Fluid Mechanics and Solid Operations Laboratory", "credits": 2, "category": "PCC"},
-        {"code": "PE3311", "name": "Geology and Surveying Laboratory", "credits": 2, "category": "PCC"},
-        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+        {
+          "code": "MA3351",
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PE3301",
+          "name": "Geophysics",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3351",
+          "name": "Process Calculations",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3302",
+          "name": "Fluid Mechanics and Solid Operations",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3303",
+          "name": "Reservoir Rocks and Fluid Properties",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3361",
+          "name": "Fluid Mechanics and Solid Operations Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3311",
+          "name": "Geology and Surveying Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     {
       "semester": 4,
       "subjects": [
-        {"code": "PE3401", "name": "Drilling Fluids and Cementing Techniques", "credits": 3, "category": "PCC"},
-        {"code": "PE3402", "name": "Chemical Engineering Thermodynamics", "credits": 4, "category": "PCC"},
-        {"code": "CH3491", "name": "Heat Transfer", "credits": 3, "category": "PCC"},
-        {"code": "PE3403", "name": "Reservoir Engineering", "credits": 3, "category": "PCC"},
-        {"code": "PE3404", "name": "Well Drilling Equipment and Operations", "credits": 3, "category": "PCC"},
-        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
-        {"code": "PE3481", "name": "Heat Transfer Laboratory", "credits": 2, "category": "PCC"},
-        {"code": "PE3411", "name": "Petroleum Testing Laboratory", "credits": 2, "category": "PCC"}
+        {
+          "code": "PE3401",
+          "name": "Drilling Fluids and Cementing Techniques",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3402",
+          "name": "Chemical Engineering Thermodynamics",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "CH3491",
+          "name": "Heat Transfer",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3403",
+          "name": "Reservoir Engineering",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3404",
+          "name": "Well Drilling Equipment and Operations",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "PE3481",
+          "name": "Heat Transfer Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3411",
+          "name": "Petroleum Testing Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        }
       ],
       "total_credits": 22
     },
     {
       "semester": 5,
       "subjects": [
-        {"code": "PE3591", "name": "Petroleum Equipment Design", "credits": 3, "category": "PCC"},
-        {"code": "PEXXXX", "name": "Professional Elective I", "credits": 3, "category": "PEC"},
-        {"code": "PE3501", "name": "Onshore Engineering", "credits": 3, "category": "PCC"},
-        {"code": "PEXXXX", "name": "Professional Elective II", "credits": 3, "category": "PEC"},
-        {"code": "PEXXXX", "name": "Professional Elective III", "credits": 3, "category": "PEC"},
-        {"code": "PE3511", "name": "Drilling Fluids and Cementing Techniques Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "PE3512", "name": "Computational Petroleum Engineering Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "PE3513", "name": "Industrial Training/Internship I", "credits": 2, "category": "EEC"}
+        {
+          "code": "PE3591",
+          "name": "Petroleum Equipment Design",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PE3501",
+          "name": "Onshore Engineering",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PE3511",
+          "name": "Drilling Fluids and Cementing Techniques Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3512",
+          "name": "Computational Petroleum Engineering Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3513",
+          "name": "Industrial Training/Internship I",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 20
     },
     {
       "semester": 6,
       "subjects": [
-        {"code": "PE3601", "name": "Process Control and Instrumentation", "credits": 3, "category": "PCC"},
-        {"code": "OEXXXX", "name": "Open Elective - I", "credits": 3, "category": "OEC"},
-        {"code": "PE3602", "name": "Offshore Engineering", "credits": 3, "category": "PCC"},
-        {"code": "PEXXXX", "name": "Professional Elective IV", "credits": 3, "category": "PEC"},
-        {"code": "PEXXXX", "name": "Professional Elective V", "credits": 3, "category": "PEC"},
-        {"code": "PEXXXX", "name": "Professional Elective VI", "credits": 3, "category": "PEC"},
-        {"code": "PE3611", "name": "Process Control and Instrumentation Laboratory", "credits": 2, "category": "PCC"},
-        {"code": "PE3612", "name": "Oil Field Equipment Design and Drawing", "credits": 2, "category": "PCC"}
+        {
+          "code": "PE3601",
+          "name": "Process Control and Instrumentation",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "OEXXXX",
+          "name": "Open Elective - I",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PE3602",
+          "name": "Offshore Engineering",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective IV",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PEXXXX",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC"
+        },
+        {
+          "code": "PE3611",
+          "name": "Process Control and Instrumentation Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3612",
+          "name": "Oil Field Equipment Design and Drawing",
+          "credits": 2,
+          "category": "PCC"
+        }
       ],
       "total_credits": 22
     },
     {
       "semester": 7,
       "subjects": [
-        {"code": "PE3701", "name": "Process Safety in Oil and Gas Industries", "credits": 3, "category": "PCC"},
-        {"code": "PE3702", "name": "Well Completion Testing and Work Over", "credits": 3, "category": "PCC"},
-        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
-        {"code": "GEXXXX", "name": "Elective - Management", "credits": 3, "category": "HSMC"},
-        {"code": "OEXXXX", "name": "Open Elective - II", "credits": 3, "category": "OEC"},
-        {"code": "OEXXXX", "name": "Open Elective - III", "credits": 3, "category": "OEC"},
-        {"code": "OEXXXX", "name": "Open Elective - IV", "credits": 3, "category": "OEC"},
-        {"code": "PE3711", "name": "Industrial Training/Internship II", "credits": 2, "category": "EEC"}
+        {
+          "code": "PE3701",
+          "name": "Process Safety in Oil and Gas Industries",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PE3702",
+          "name": "Well Completion Testing and Work Over",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "GEXXXX",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "OEXXXX",
+          "name": "Open Elective - II",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEXXXX",
+          "name": "Open Elective - III",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "OEXXXX",
+          "name": "Open Elective - IV",
+          "credits": 3,
+          "category": "OEC"
+        },
+        {
+          "code": "PE3711",
+          "name": "Industrial Training/Internship II",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     {
       "semester": 8,
       "subjects": [
-        {"code": "PE3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+        {
+          "code": "PE3811",
+          "name": "Project Work / Internship",
+          "credits": 10,
+          "category": "EEC"
+        }
       ],
       "total_credits": 10
     }
   ],
   "professional_electives": {
-    "vertical_1": {
+    "vertical_1_upstream_processing": {
       "name": "Upstream Processing",
-      "courses": [
-        {"code": "PE3001", "name": "Well Logging", "credits": 3},
-        {"code": "PE3002", "name": "Numerical Reservoir Simulation", "credits": 3},
-        {"code": "PE3003", "name": "Enhanced Oil Recovery Technologies", "credits": 3},
-        {"code": "PE3004", "name": "Reservoir Characterizations and Modelling", "credits": 3},
-        {"code": "PE3005", "name": "Flow Assurance in Petroleum Industries", "credits": 3},
-        {"code": "PE3006", "name": "Petroleum Formation and Evaluation", "credits": 3}
-      ]
+      "subjects": {
+        "PE3001": {
+          "name": "Well Logging",
+          "credits": 3
+        },
+        "PE3002": {
+          "name": "Numerical Reservoir Simulation",
+          "credits": 3
+        },
+        "PE3003": {
+          "name": "Enhanced Oil Recovery Technologies",
+          "credits": 3
+        },
+        "PE3004": {
+          "name": "Reservoir Characterizations and Modelling",
+          "credits": 3
+        },
+        "PE3005": {
+          "name": "Flow Assurance in Petroleum Industries",
+          "credits": 3
+        },
+        "PE3006": {
+          "name": "Petroleum Formation and Evaluation",
+          "credits": 3
+        }
+      }
     },
-    "vertical_2": {
+    "vertical_2_petroleum_refining": {
       "name": "Petroleum Refining",
-      "courses": [
-        {"code": "EL3491", "name": "Mass Transfer", "credits": 3},
-        {"code": "PE3007", "name": "Petroleum Refining and Petrochemicals", "credits": 3},
-        {"code": "CPE331", "name": "Chemical Reaction Engineering", "credits": 3},
-        {"code": "CPE335", "name": "Fluidization Engineering", "credits": 3},
-        {"code": "CPE341", "name": "Petroleum Corrosion Technology", "credits": 3},
-        {"code": "PE3008", "name": "Process Plant Utilities", "credits": 3}
-      ]
+      "subjects": {
+        "EL3491": {
+          "name": "Mass Transfer",
+          "credits": 3
+        },
+        "PE3007": {
+          "name": "Petroleum Refining and Petrochemicals",
+          "credits": 3
+        },
+        "CPE331": {
+          "name": "Chemical Reaction Engineering",
+          "credits": 3
+        },
+        "CPE335": {
+          "name": "Fluidization Engineering",
+          "credits": 3
+        },
+        "CPE341": {
+          "name": "Petroleum Corrosion Technology",
+          "credits": 3
+        },
+        "PE3008": {
+          "name": "Process Plant Utilities",
+          "credits": 3
+        }
+      }
     },
-    "vertical_3": {
+    "vertical_3_hydrocarbon_transport": {
       "name": "Hydrocarbon Transportation and Storage",
-      "courses": [
-        {"code": "CPE343", "name": "Piping Engineering", "credits": 3},
-        {"code": "CPE345", "name": "Storage Transportation of Crude Oil and Natural Gas", "credits": 3},
-        {"code": "CPE340", "name": "Product Design and Development for Petrochemical Engineers", "credits": 3},
-        {"code": "CPE332", "name": "Design of Pressure Vessels and Storage Vessels", "credits": 3},
-        {"code": "CPE339", "name": "Natural Gas and LNG Processing", "credits": 3},
-        {"code": "CPE342", "name": "Petroleum Economics", "credits": 3}
-      ]
+      "subjects": {
+        "CPE343": {
+          "name": "Piping Engineering",
+          "credits": 3
+        },
+        "CPE345": {
+          "name": "Storage Transportation of Crude Oil and Natural Gas",
+          "credits": 3
+        },
+        "CPE340": {
+          "name": "Product Design and Development for Petrochemical Engineers",
+          "credits": 3
+        },
+        "CPE332": {
+          "name": "Design of Pressure Vessels and Storage Vessels",
+          "credits": 3
+        },
+        "CPE339": {
+          "name": "Natural Gas and LNG Processing",
+          "credits": 3
+        },
+        "CPE342": {
+          "name": "Petroleum Economics",
+          "credits": 3
+        }
+      }
     },
-    "vertical_4": {
+    "vertical_4_health_safety_environment": {
       "name": "Health, Safety and Environment",
-      "courses": [
-        {"code": "CPE336", "name": "Health Safety and Environmental Management", "credits": 3},
-        {"code": "CPE344", "name": "Plant Safety and Risk Management", "credits": 3},
-        {"code": "CPC331", "name": "Fire and Explosion Control", "credits": 3},
-        {"code": "CPE338", "name": "Industrial Hygiene", "credits": 3},
-        {"code": "CPE346", "name": "Transportation Safety", "credits": 3},
-        {"code": "CPC333", "name": "Process Hazard Analysis Studies", "credits": 3}
-      ]
+      "subjects": {
+        "CPE336": {
+          "name": "Health Safety and Environmental Management",
+          "credits": 3
+        },
+        "CPE344": {
+          "name": "Plant Safety and Risk Management",
+          "credits": 3
+        },
+        "CPC331": {
+          "name": "Fire and Explosion Control",
+          "credits": 3
+        },
+        "CPE338": {
+          "name": "Industrial Hygiene",
+          "credits": 3
+        },
+        "CPE346": {
+          "name": "Transportation Safety",
+          "credits": 3
+        },
+        "CPC333": {
+          "name": "Process Hazard Analysis Studies",
+          "credits": 3
+        }
+      }
     },
-    "vertical_5": {
+    "vertical_5_energy_engineering": {
       "name": "Energy Engineering",
-      "courses": [
-        {"code": "CPE349", "name": "Renewable and Non-renewable Energy", "credits": 3},
-        {"code": "CPE334", "name": "Energy Conservation and Management", "credits": 3},
-        {"code": "CPE333", "name": "Energy Auditing and Demand Side Management", "credits": 3},
-        {"code": "CPE337", "name": "Hydrogen and Microbial Fuel Cells", "credits": 3},
-        {"code": "CPE348", "name": "Biofuels", "credits": 3},
-        {"code": "CPE347", "name": "Unconventional Hydrocarbon Sources", "credits": 3}
-      ]
+      "subjects": {
+        "CPE349": {
+          "name": "Renewable and Non-renewable Energy",
+          "credits": 3
+        },
+        "CPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3
+        },
+        "CPE333": {
+          "name": "Energy Auditing and Demand Side Management",
+          "credits": 3
+        },
+        "CPE337": {
+          "name": "Hydrogen and Microbial Fuel Cells",
+          "credits": 3
+        },
+        "CPE348": {
+          "name": "Biofuels",
+          "credits": 3
+        },
+        "CPE347": {
+          "name": "Unconventional Hydrocarbon Sources",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
     }
   },
   "open_electives": {
-    "open_elective_1_2": {
-      "name": "Emerging Technologies",
-      "courses": [
-        {"code": "OCS351", "name": "Artificial Intelligence and Machine Learning Fundamentals", "credits": 3},
-        {"code": "OCS352", "name": "IoT Concepts and Applications", "credits": 3},
-        {"code": "OCS353", "name": "Data Science Fundamentals", "credits": 3},
-        {"code": "CCS333", "name": "Augmented Reality / Virtual Reality", "credits": 3}
-      ]
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME356": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
     }
-  },
-  "management_electives": [
-    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
-    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
-    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
-    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
-    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
-    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
-  ]
+  }
 }

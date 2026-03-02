@@ -400,64 +400,366 @@
     }
   },
   "professional_electives": {
-    "verticals": [
-      {
-        "name": "Vertical I: Petrochemical Process Technology",
-        "courses": [
-          {"code": "PC3001", "name": "Petrochemical Unit processes", "credits": 3},
-          {"code": "PC3002", "name": "Petroleum Exploration and Exploitation Techniques", "credits": 3},
-          {"code": "PC3003", "name": "Process equipment auxiliaries and Utilities", "credits": 3},
-          {"code": "CPC332", "name": "Polymer Technology", "credits": 3},
-          {"code": "PC3004", "name": "Fertilizer Technology", "credits": 3},
-          {"code": "PC3005", "name": "Petrochemical Derivatives", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical II: Hydrocarbon Transportation and Storage",
-        "courses": [
-          {"code": "CPE345", "name": "Storage Transportation of Crude Oil and Natural Gas", "credits": 3},
-          {"code": "CPE341", "name": "Petroleum Corrosion Technology", "credits": 3},
-          {"code": "CPE343", "name": "Piping Engineering", "credits": 3},
-          {"code": "CPE347", "name": "Unconventional Hydrocarbon sources", "credits": 3},
-          {"code": "CPE332", "name": "Design of Pressure Vessels and storage Vessels", "credits": 3},
-          {"code": "CPE339", "name": "Natural Gas and LNG Processing", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical III: Health, Safety and Environment",
-        "courses": [
-          {"code": "CPC331", "name": "Fire and Explosion Control", "credits": 3},
-          {"code": "CPE338", "name": "Industrial Hygiene", "credits": 3},
-          {"code": "CPE346", "name": "Transportation Safety", "credits": 3},
-          {"code": "CPC333", "name": "Process Hazard Analysis Studies", "credits": 3},
-          {"code": "CPE336", "name": "Health Safety and Environmental Management", "credits": 3},
-          {"code": "CPE344", "name": "Plant Safety and Risk Management", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical IV: Process Intensification",
-        "courses": [
-          {"code": "PC3006", "name": "Multi component Distillation", "credits": 3},
-          {"code": "CCH331", "name": "Process modelling and simulation", "credits": 3},
-          {"code": "PC3007", "name": "Optimization of chemical Processes", "credits": 3},
-          {"code": "PC3008", "name": "Modern Separation Techniques", "credits": 3},
-          {"code": "CPE335", "name": "Fluidization Engineering", "credits": 3},
-          {"code": "CPC334", "name": "Process Instrumentation", "credits": 3}
-        ]
+    "vertical_1_petrochemical_process": {
+      "name": "Petrochemical Process Technology",
+      "subjects": {
+        "PC3001": {
+          "name": "Petrochemical Unit Processes",
+          "credits": 3
+        },
+        "PC3002": {
+          "name": "Petroleum Exploration and Exploitation Techniques",
+          "credits": 3
+        },
+        "PC3003": {
+          "name": "Process Equipment Auxiliaries and Utilities",
+          "credits": 3
+        },
+        "CPC332": {
+          "name": "Polymer Technology",
+          "credits": 3
+        },
+        "PC3004": {
+          "name": "Fertilizer Technology",
+          "credits": 3
+        },
+        "PC3005": {
+          "name": "Petrochemical Derivatives",
+          "credits": 3
+        }
       }
-    ]
+    },
+    "vertical_2_hydrocarbon_transport": {
+      "name": "Hydrocarbon Transportation and Storage",
+      "subjects": {
+        "CPE345": {
+          "name": "Storage Transportation of Crude Oil and Natural Gas",
+          "credits": 3
+        },
+        "CPE341": {
+          "name": "Petroleum Corrosion Technology",
+          "credits": 3
+        },
+        "CPE343": {
+          "name": "Piping Engineering",
+          "credits": 3
+        },
+        "CPE347": {
+          "name": "Unconventional Hydrocarbon Sources",
+          "credits": 3
+        },
+        "CPE332": {
+          "name": "Design of Pressure Vessels and Storage Vessels",
+          "credits": 3
+        },
+        "CPE339": {
+          "name": "Natural Gas and LNG Processing",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_health_safety_environment": {
+      "name": "Health, Safety and Environment",
+      "subjects": {
+        "CPC331": {
+          "name": "Fire and Explosion Control",
+          "credits": 3
+        },
+        "CPE338": {
+          "name": "Industrial Hygiene",
+          "credits": 3
+        },
+        "CPE346": {
+          "name": "Transportation Safety",
+          "credits": 3
+        },
+        "CPC333": {
+          "name": "Process Hazard Analysis Studies",
+          "credits": 3
+        },
+        "CPE336": {
+          "name": "Health Safety and Environmental Management",
+          "credits": 3
+        },
+        "CPE344": {
+          "name": "Plant Safety and Risk Management",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_process_intensification": {
+      "name": "Process Intensification",
+      "subjects": {
+        "PC3006": {
+          "name": "Multi Component Distillation",
+          "credits": 3
+        },
+        "CCH331": {
+          "name": "Process Modelling and Simulation",
+          "credits": 3
+        },
+        "PC3007": {
+          "name": "Optimization of Chemical Processes",
+          "credits": 3
+        },
+        "PC3008": {
+          "name": "Modern Separation Techniques",
+          "credits": 3
+        },
+        "CPE335": {
+          "name": "Fluidization Engineering",
+          "credits": 3
+        },
+        "CPC334": {
+          "name": "Process Instrumentation",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
   },
   "open_electives": {
-    "OE_I_II": "Emerging Technologies",
-    "OE_III": "From list of Open Electives III",
-    "OE_IV": "From list of Open Electives IV"
-  },
-  "management_electives": [
-    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
-    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
-    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
-    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
-    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
-    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
-  ]
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME356": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    }
+  }
 }

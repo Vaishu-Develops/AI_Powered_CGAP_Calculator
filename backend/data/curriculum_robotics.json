@@ -400,109 +400,836 @@
     }
   },
   "professional_electives": {
-    "verticals": [
-      {
-        "name": "Vertical 1: Applied Robotics",
-        "courses": [
-          {"code": "CRA331", "name": "Robots and Systems in Smart Manufacturing", "credits": 3},
-          {"code": "CRA332", "name": "Drone Technologies", "credits": 3},
-          {"code": "CRA333", "name": "Microrobotics", "credits": 3},
-          {"code": "CRA334", "name": "Agricultural Robotics and Automation", "credits": 3},
-          {"code": "CRA335", "name": "Collaborative Robotics", "credits": 3},
-          {"code": "CRA336", "name": "Robot Operating Systems", "credits": 3},
-          {"code": "CRA337", "name": "Medical Robotics", "credits": 3},
-          {"code": "CRA338", "name": "Humanoid Robotics", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 2: Design and Manufacturing",
-        "courses": [
-          {"code": "CRA339", "name": "Robot and Machine Elements Design", "credits": 3},
-          {"code": "CME341", "name": "Design for X", "credits": 3},
-          {"code": "CMR331", "name": "CNC Machine Tools and Programming", "credits": 3},
-          {"code": "ME3792", "name": "Computer Integrated Manufacturing", "credits": 3},
-          {"code": "CMR332", "name": "Advanced Manufacturing Systems", "credits": 3},
-          {"code": "CME339", "name": "Additive Manufacturing", "credits": 3},
-          {"code": "CMR350", "name": "Electronics Manufacturing Technology", "credits": 3},
-          {"code": "CMR333", "name": "Computer Aided Inspection and Testing", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 3: Smart Mobility Systems",
-        "courses": [
-          {"code": "CME380", "name": "Automobile Engineering", "credits": 3},
-          {"code": "AU3791", "name": "Electric and Hybrid Vehicles", "credits": 3},
-          {"code": "CMR334", "name": "Automotive Mechatronics", "credits": 3},
-          {"code": "CMR335", "name": "Automotive System Modelling and Simulation", "credits": 3},
-          {"code": "CMR336", "name": "Vehicle Dynamics and Controls", "credits": 3},
-          {"code": "CMR337", "name": "Aircraft Mechatronics", "credits": 3},
-          {"code": "CMR338", "name": "Smart Mobility and Intelligent Vehicles", "credits": 3},
-          {"code": "CMR339", "name": "Advanced Driver Assistance Systems", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 4: Intelligence Systems",
-        "courses": [
-          {"code": "CRA340", "name": "Applied Signal Processing", "credits": 3},
-          {"code": "CRA341", "name": "Applied Image Processing", "credits": 3},
-          {"code": "CRA342", "name": "Machine Learning for Intelligent Systems", "credits": 3},
-          {"code": "CMR340", "name": "Condition Monitoring and Fault Diagnostics", "credits": 3},
-          {"code": "CMR341", "name": "Systems Modelling and Simulation Methods", "credits": 3},
-          {"code": "CMR342", "name": "Optimization Techniques", "credits": 3},
-          {"code": "CMR343", "name": "Immersive Technologies and Haptics", "credits": 3},
-          {"code": "CMR344", "name": "Computer Vision and Deep Learning", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 5: Automation",
-        "courses": [
-          {"code": "CMR345", "name": "Object Oriented Programming in C++", "credits": 3},
-          {"code": "EE3591", "name": "Power Electronics", "credits": 3},
-          {"code": "CMR358", "name": "Computer Architecture and Organisation", "credits": 3},
-          {"code": "CMR359", "name": "Virtual Instrumentation", "credits": 3},
-          {"code": "CMR346", "name": "Industrial Network Protocols", "credits": 3},
-          {"code": "CMR347", "name": "Motion Control System", "credits": 3},
-          {"code": "CMR348", "name": "Total integrated Automation", "credits": 3},
-          {"code": "CMR349", "name": "Digital Twin and Industry 5.0", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 6: Avionics and Drone Technology",
-        "courses": [
-          {"code": "CAE347", "name": "Avionics", "credits": 3},
-          {"code": "CAE348", "name": "Control Engineering", "credits": 3},
-          {"code": "CAE349", "name": "Guidance and Control", "credits": 3},
-          {"code": "CAE350", "name": "Navigation and Communication System", "credits": 3},
-          {"code": "CAE351", "name": "Design of UAV systems", "credits": 3},
-          {"code": "CAE352", "name": "Aerodynamics of Drones", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 7: Diversified Courses Group 1",
-        "courses": [
-          {"code": "CMR351", "name": "Linear Integrated Circuits", "credits": 3},
-          {"code": "CMR352", "name": "Single Board Computers", "credits": 3},
-          {"code": "CMR353", "name": "Reliability and Maintenance Engineering", "credits": 3},
-          {"code": "CMR354", "name": "Integrated Product Development", "credits": 3},
-          {"code": "CMR355", "name": "Medical Mechatronics", "credits": 3},
-          {"code": "CMR356", "name": "Micro Electro Mechanical Systems", "credits": 3},
-          {"code": "CME396", "name": "Process Planning and Cost Estimation", "credits": 3},
-          {"code": "CMR357", "name": "VLSI and FPGA", "credits": 3}
-        ]
+    "vertical_1_applied_robotics": {
+      "name": "Applied Robotics",
+      "subjects": {
+        "CRA331": {
+          "name": "Robots and Systems in Smart Manufacturing",
+          "credits": 3
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3
+        },
+        "CRA333": {
+          "name": "Microrobotics",
+          "credits": 3
+        },
+        "CRA334": {
+          "name": "Agricultural Robotics and Automation",
+          "credits": 3
+        },
+        "CRA335": {
+          "name": "Collaborative Robotics",
+          "credits": 3
+        },
+        "CRA336": {
+          "name": "Robot Operating Systems",
+          "credits": 3
+        },
+        "CRA337": {
+          "name": "Medical Robotics",
+          "credits": 3
+        },
+        "CRA338": {
+          "name": "Humanoid Robotics",
+          "credits": 3
+        }
       }
-    ]
+    },
+    "vertical_2_design_manufacturing": {
+      "name": "Design and Manufacturing",
+      "subjects": {
+        "CRA339": {
+          "name": "Robot and Machine Elements Design",
+          "credits": 3
+        },
+        "CME341": {
+          "name": "Design for X",
+          "credits": 3
+        },
+        "CMR331": {
+          "name": "CNC Machine Tools and Programming",
+          "credits": 3
+        },
+        "ME3792": {
+          "name": "Computer Integrated Manufacturing",
+          "credits": 3
+        },
+        "CMR332": {
+          "name": "Advanced Manufacturing Systems",
+          "credits": 3
+        },
+        "CME339": {
+          "name": "Additive Manufacturing",
+          "credits": 3
+        },
+        "CMR350": {
+          "name": "Electronics Manufacturing Technology",
+          "credits": 3
+        },
+        "CMR333": {
+          "name": "Computer Aided Inspection and Testing",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_smart_mobility": {
+      "name": "Smart Mobility Systems",
+      "subjects": {
+        "CME380": {
+          "name": "Automobile Engineering",
+          "credits": 3
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3
+        },
+        "CMR334": {
+          "name": "Automotive Mechatronics",
+          "credits": 3
+        },
+        "CMR335": {
+          "name": "Automotive System Modelling and Simulation",
+          "credits": 3
+        },
+        "CMR336": {
+          "name": "Vehicle Dynamics and Controls",
+          "credits": 3
+        },
+        "CMR337": {
+          "name": "Aircraft Mechatronics",
+          "credits": 3
+        },
+        "CMR338": {
+          "name": "Smart Mobility and Intelligent Vehicles",
+          "credits": 3
+        },
+        "CMR339": {
+          "name": "Advanced Driver Assistance Systems",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_intelligence_systems": {
+      "name": "Intelligence Systems",
+      "subjects": {
+        "CRA340": {
+          "name": "Applied Signal Processing",
+          "credits": 3
+        },
+        "CRA341": {
+          "name": "Applied Image Processing",
+          "credits": 3
+        },
+        "CRA342": {
+          "name": "Machine Learning for Intelligent Systems",
+          "credits": 3
+        },
+        "CMR340": {
+          "name": "Condition Monitoring and Fault Diagnostics",
+          "credits": 3
+        },
+        "CMR341": {
+          "name": "Systems Modelling and Simulation Methods",
+          "credits": 3
+        },
+        "CMR342": {
+          "name": "Optimization Techniques",
+          "credits": 3
+        },
+        "CMR343": {
+          "name": "Immersive Technologies and Haptics",
+          "credits": 3
+        },
+        "CMR344": {
+          "name": "Computer Vision and Deep Learning",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_5_automation": {
+      "name": "Automation",
+      "subjects": {
+        "CMR345": {
+          "name": "Object Oriented Programming in C++",
+          "credits": 3
+        },
+        "EE3591": {
+          "name": "Power Electronics",
+          "credits": 3
+        },
+        "CMR358": {
+          "name": "Computer Architecture and Organisation",
+          "credits": 3
+        },
+        "CMR359": {
+          "name": "Virtual Instrumentation",
+          "credits": 3
+        },
+        "CMR346": {
+          "name": "Industrial Network Protocols",
+          "credits": 3
+        },
+        "CMR347": {
+          "name": "Motion Control System",
+          "credits": 3
+        },
+        "CMR348": {
+          "name": "Total Integrated Automation",
+          "credits": 3
+        },
+        "CMR349": {
+          "name": "Digital Twin and Industry 5.0",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_6_avionics_drone": {
+      "name": "Avionics and Drone Technology",
+      "subjects": {
+        "CAE347": {
+          "name": "Avionics",
+          "credits": 3
+        },
+        "CAE348": {
+          "name": "Control Engineering",
+          "credits": 3
+        },
+        "CAE349": {
+          "name": "Guidance and Control",
+          "credits": 3
+        },
+        "CAE350": {
+          "name": "Navigation and Communication System",
+          "credits": 3
+        },
+        "CAE351": {
+          "name": "Design of UAV Systems",
+          "credits": 3
+        },
+        "CAE352": {
+          "name": "Aerodynamics of Drones",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_7_diversified_1": {
+      "name": "Diversified Courses Group 1",
+      "subjects": {
+        "CMR351": {
+          "name": "Linear Integrated Circuits",
+          "credits": 3
+        },
+        "CMR352": {
+          "name": "Single Board Computers",
+          "credits": 3
+        },
+        "CMR353": {
+          "name": "Reliability and Maintenance Engineering",
+          "credits": 3
+        },
+        "CMR354": {
+          "name": "Integrated Product Development",
+          "credits": 3
+        },
+        "CMR355": {
+          "name": "Medical Mechatronics",
+          "credits": 3
+        },
+        "CMR356": {
+          "name": "Micro Electro Mechanical Systems",
+          "credits": 3
+        },
+        "CME396": {
+          "name": "Process Planning and Cost Estimation",
+          "credits": 3
+        },
+        "CMR357": {
+          "name": "VLSI and FPGA",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
   },
   "open_electives": {
-    "OE_I_II": "Emerging Technologies",
-    "OE_III": "From list of Open Electives III",
-    "OE_IV": "From list of Open Electives IV"
-  },
-  "management_electives": [
-    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
-    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
-    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
-    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
-    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
-    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
-  ]
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI351": {
+          "name": "Urban Agriculture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT351": {
+          "name": "Basics of Textile Finishing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT352": {
+          "name": "Industrial Engineering for Garment Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT353": {
+          "name": "Basics of Textile Manufacture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE351": {
+          "name": "Introduction to Petroleum Refining and Petrochemicals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT351": {
+          "name": "Basics of Plastics Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC351": {
+          "name": "Signals and Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC352": {
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA352": {
+          "name": "Operations Research",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA353": {
+          "name": "Algebra and Number Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA354": {
+          "name": "Linear Algebra",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT352": {
+          "name": "Basics of Microbial Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT353": {
+          "name": "Basics of Biomolecules",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT354": {
+          "name": "Fundamentals of Cell and Molecular Biology",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME343": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3002": {
+          "name": "Batteries and Management System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAU352": {
+          "name": "Sensors and Actuators",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS353": {
+          "name": "Space Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM352": {
+          "name": "Management Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM353": {
+          "name": "Production Planning and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE353": {
+          "name": "Operations Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF352": {
+          "name": "Industrial Hygiene",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF353": {
+          "name": "Chemical Process Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML352": {
+          "name": "Electrical, Electronic and Magnetic Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML353": {
+          "name": "Nanomaterials and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR352": {
+          "name": "Hydraulics and Pneumatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR353": {
+          "name": "Sensors",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MV3501": {
+          "name": "Marine Propulsion",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV351": {
+          "name": "Marine Merchant Vessels",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV352": {
+          "name": "Elements of Marine Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI352": {
+          "name": "Geographical Information System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI352": {
+          "name": "Agriculture Entrepreneurship Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN352": {
+          "name": "Biodiversity Conservation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE353": {
+          "name": "Introduction to Control Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI354": {
+          "name": "Introduction to Industrial Automation Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH353": {
+          "name": "Energy Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH354": {
+          "name": "Surface Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD354": {
+          "name": "Fundamentals of Food Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD355": {
+          "name": "Food Safety and Quality Regulations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY353": {
+          "name": "Nutraceuticals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT354": {
+          "name": "Basics of Dyeing and Printing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "FT3201": {
+          "name": "Fibre Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT355": {
+          "name": "Garment Manufacturing Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE353": {
+          "name": "Industrial Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE354": {
+          "name": "Unit Operations in Petro Chemical Industries",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT352": {
+          "name": "Plastic Materials for Engineers",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT353": {
+          "name": "Properties and Testing of Plastics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC353": {
+          "name": "VLSI Design",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT355": {
+          "name": "Biotechnology for Waste Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT356": {
+          "name": "Lifestyle Diseases",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT357": {
+          "name": "Biotechnology in Health Care",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    }
+  }
 }

@@ -6,99 +6,1299 @@
   "semesters": {
     "1": {
       "subjects": [
-        {"code": "HS3152", "name": "Professional English - I", "credits": 3, "category": "HSMC"},
-        {"code": "MA3151", "name": "Matrices and Calculus", "credits": 4, "category": "BSC"},
-        {"code": "PH3151", "name": "Engineering Physics", "credits": 3, "category": "BSC"},
-        {"code": "CY3151", "name": "Engineering Chemistry", "credits": 3, "category": "BSC"},
-        {"code": "GE3151", "name": "Problem Solving and Python Programming", "credits": 3, "category": "ESC"},
-        {"code": "GE3152", "name": "Heritage of Tamils", "credits": 1, "category": "HSMC"},
-        {"code": "GE3171", "name": "Problem Solving and Python Programming Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "BS3171", "name": "Physics and Chemistry Laboratory", "credits": 2, "category": "BSC"},
-        {"code": "GE3172", "name": "English Laboratory", "credits": 1, "category": "EEC"}
+        {
+          "code": "HS3152",
+          "name": "Professional English - I",
+          "credits": 3,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3151",
+          "name": "Matrices and Calculus",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3151",
+          "name": "Engineering Physics",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "CY3151",
+          "name": "Engineering Chemistry",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3151",
+          "name": "Problem Solving and Python Programming",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3152",
+          "name": "Heritage of Tamils",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3171",
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "BS3171",
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "GE3172",
+          "name": "English Laboratory",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 22
     },
     "2": {
       "subjects": [
-        {"code": "HS3252", "name": "Professional English - II", "credits": 2, "category": "HSMC"},
-        {"code": "MA3251", "name": "Statistics and Numerical Methods", "credits": 4, "category": "BSC"},
-        {"code": "PH3254", "name": "Physics for Electronics Engineering", "credits": 3, "category": "BSC"},
-        {"code": "BE3254", "name": "Electrical and Instrumentation Engineering", "credits": 3, "category": "ESC"},
-        {"code": "GE3251", "name": "Engineering Graphics", "credits": 4, "category": "ESC"},
-        {"code": "EC3251", "name": "Circuit Analysis", "credits": 4, "category": "PCC"},
-        {"code": "GE3252", "name": "Tamils and Technology", "credits": 1, "category": "HSMC"},
-        {"code": "GE3271", "name": "Engineering Practices Laboratory", "credits": 2, "category": "ESC"},
-        {"code": "EC3271", "name": "Circuits Analysis Laboratory", "credits": 1, "category": "PCC"},
-        {"code": "GE3272", "name": "Communication Laboratory / Foreign Language", "credits": 2, "category": "EEC"}
+        {
+          "code": "HS3252",
+          "name": "Professional English - II",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "MA3251",
+          "name": "Statistics and Numerical Methods",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "PH3254",
+          "name": "Physics for Electronics Engineering",
+          "credits": 3,
+          "category": "BSC"
+        },
+        {
+          "code": "BE3254",
+          "name": "Electrical and Instrumentation Engineering",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "GE3251",
+          "name": "Engineering Graphics",
+          "credits": 4,
+          "category": "ESC"
+        },
+        {
+          "code": "EC3251",
+          "name": "Circuit Analysis",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3252",
+          "name": "Tamils and Technology",
+          "credits": 1,
+          "category": "HSMC"
+        },
+        {
+          "code": "GE3271",
+          "name": "Engineering Practices Laboratory",
+          "credits": 2,
+          "category": "ESC"
+        },
+        {
+          "code": "EC3271",
+          "name": "Circuits Analysis Laboratory",
+          "credits": 1,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3272",
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 26
     },
     "3": {
       "subjects": [
-        {"code": "MA3355", "name": "Random Processes and Linear Algebra", "credits": 4, "category": "BSC"},
-        {"code": "CS3353", "name": "C Programming and Data Structures", "credits": 3, "category": "ESC"},
-        {"code": "EC3354", "name": "Signals and Systems", "credits": 4, "category": "PCC"},
-        {"code": "EC3353", "name": "Electronic Devices and Circuits", "credits": 3, "category": "PCC"},
-        {"code": "EC3351", "name": "Control Systems", "credits": 3, "category": "PCC"},
-        {"code": "EC3352", "name": "Digital Systems Design", "credits": 4, "category": "PCC"},
-        {"code": "EC3361", "name": "Electronic Devices and Circuits Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "CS3362", "name": "C Programming and Data Structures Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "GE3361", "name": "Professional Development", "credits": 1, "category": "EEC"}
+        {
+          "code": "MA3355",
+          "name": "Random Processes and Linear Algebra",
+          "credits": 4,
+          "category": "BSC"
+        },
+        {
+          "code": "CS3353",
+          "name": "C Programming and Data Structures",
+          "credits": 3,
+          "category": "ESC"
+        },
+        {
+          "code": "EC3354",
+          "name": "Signals and Systems",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3353",
+          "name": "Electronic Devices and Circuits",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3351",
+          "name": "Control Systems",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3352",
+          "name": "Digital Systems Design",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3361",
+          "name": "Electronic Devices and Circuits Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "CS3362",
+          "name": "C Programming and Data Structures Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3361",
+          "name": "Professional Development",
+          "credits": 1,
+          "category": "EEC"
+        }
       ],
       "total_credits": 25
     },
     "4": {
       "subjects": [
-        {"code": "EC3452", "name": "Electromagnetic Fields", "credits": 3, "category": "PCC"},
-        {"code": "ET3491", "name": "Embedded Systems and IoT Design", "credits": 4, "category": "PCC"},
-        {"code": "EC3451", "name": "Linear Integrated Circuits", "credits": 3, "category": "PCC"},
-        {"code": "EC3492", "name": "Digital Signal Processing", "credits": 4, "category": "PCC"},
-        {"code": "EC3491", "name": "Communication Systems", "credits": 3, "category": "PCC"},
-        {"code": "GE3451", "name": "Environmental Sciences and Sustainability", "credits": 2, "category": "BSC"},
-        {"code": "EC3461", "name": "Communication Systems Laboratory", "credits": 1.5, "category": "PCC"},
-        {"code": "EC3462", "name": "Linear Integrated Circuits Laboratory", "credits": 1.5, "category": "PCC"}
+        {
+          "code": "EC3452",
+          "name": "Electromagnetic Fields",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "ET3491",
+          "name": "Embedded Systems and IoT Design",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3451",
+          "name": "Linear Integrated Circuits",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3492",
+          "name": "Digital Signal Processing",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3491",
+          "name": "Communication Systems",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "GE3451",
+          "name": "Environmental Sciences and Sustainability",
+          "credits": 2,
+          "category": "BSC"
+        },
+        {
+          "code": "EC3461",
+          "name": "Communication Systems Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3462",
+          "name": "Linear Integrated Circuits Laboratory",
+          "credits": 1.5,
+          "category": "PCC"
+        }
       ],
       "total_credits": 22
     },
     "5": {
       "subjects": [
-        {"code": "ET3501", "name": "Mobile Communication", "credits": 4, "category": "PCC"},
-        {"code": "EC3552", "name": "VLSI and Chip Design", "credits": 3, "category": "PCC"},
-        {"code": "EC3551", "name": "Transmission Lines and RF Systems", "credits": 3, "category": "PCC"},
-        {"code": "PEC501", "name": "Professional Elective I", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE1"},
-        {"code": "PEC502", "name": "Professional Elective II", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE2"},
-        {"code": "PEC503", "name": "Professional Elective III", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE3"},
-        {"code": "EC3561", "name": "VLSI Laboratory", "credits": 2, "category": "PCC"}
+        {
+          "code": "ET3501",
+          "name": "Mobile Communication",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3552",
+          "name": "VLSI and Chip Design",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "EC3551",
+          "name": "Transmission Lines and RF Systems",
+          "credits": 3,
+          "category": "PCC"
+        },
+        {
+          "code": "PEC501",
+          "name": "Professional Elective I",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE1"
+        },
+        {
+          "code": "PEC502",
+          "name": "Professional Elective II",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE2"
+        },
+        {
+          "code": "PEC503",
+          "name": "Professional Elective III",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE3"
+        },
+        {
+          "code": "EC3561",
+          "name": "VLSI Laboratory",
+          "credits": 2,
+          "category": "PCC"
+        }
       ],
       "total_credits": 21
     },
     "6": {
       "subjects": [
-        {"code": "ET3601", "name": "Telecommunication Switching and Transmission", "credits": 4, "category": "PCC"},
-        {"code": "CS3491", "name": "Artificial Intelligence and Machine Learning", "credits": 4, "category": "ESC"},
-        {"code": "OEC601", "name": "Open Elective - I", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE1"},
-        {"code": "PEC605", "name": "Professional Elective V", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE5"},
-        {"code": "PEC606", "name": "Professional Elective VI", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE6"},
-        {"code": "PEC607", "name": "Professional Elective VII", "credits": 3, "category": "PEC", "is_elective": true, "elective_group": "PE7"}
+        {
+          "code": "ET3601",
+          "name": "Telecommunication Switching and Transmission",
+          "credits": 4,
+          "category": "PCC"
+        },
+        {
+          "code": "CS3491",
+          "name": "Artificial Intelligence and Machine Learning",
+          "credits": 4,
+          "category": "ESC"
+        },
+        {
+          "code": "OEC601",
+          "name": "Open Elective - I",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE1"
+        },
+        {
+          "code": "PEC605",
+          "name": "Professional Elective V",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE5"
+        },
+        {
+          "code": "PEC606",
+          "name": "Professional Elective VI",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE6"
+        },
+        {
+          "code": "PEC607",
+          "name": "Professional Elective VII",
+          "credits": 3,
+          "category": "PEC",
+          "is_elective": true,
+          "elective_group": "PE7"
+        }
       ],
       "total_credits": 20
     },
     "7": {
       "subjects": [
-        {"code": "GE3791", "name": "Human Values and Ethics", "credits": 2, "category": "HSMC"},
-        {"code": "MGT701", "name": "Elective - Management", "credits": 3, "category": "HSMC", "is_elective": true, "elective_group": "MGT"},
-        {"code": "OEC702", "name": "Open Elective - II", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE2"},
-        {"code": "OEC703", "name": "Open Elective - III", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE3"},
-        {"code": "OEC704", "name": "Open Elective - IV", "credits": 3, "category": "OEC", "is_elective": true, "elective_group": "OE4"},
-        {"code": "ET3711", "name": "Summer Internship", "credits": 2, "category": "EEC"}
+        {
+          "code": "GE3791",
+          "name": "Human Values and Ethics",
+          "credits": 2,
+          "category": "HSMC"
+        },
+        {
+          "code": "MGT701",
+          "name": "Elective - Management",
+          "credits": 3,
+          "category": "HSMC",
+          "is_elective": true,
+          "elective_group": "MGT"
+        },
+        {
+          "code": "OEC702",
+          "name": "Open Elective - II",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE2"
+        },
+        {
+          "code": "OEC703",
+          "name": "Open Elective - III",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE3"
+        },
+        {
+          "code": "OEC704",
+          "name": "Open Elective - IV",
+          "credits": 3,
+          "category": "OEC",
+          "is_elective": true,
+          "elective_group": "OE4"
+        },
+        {
+          "code": "ET3711",
+          "name": "Summer Internship",
+          "credits": 2,
+          "category": "EEC"
+        }
       ],
       "total_credits": 16
     },
     "8": {
       "subjects": [
-        {"code": "ET3811", "name": "Project Work / Internship", "credits": 10, "category": "EEC"}
+        {
+          "code": "ET3811",
+          "name": "Project Work / Internship",
+          "credits": 10,
+          "category": "EEC"
+        }
       ],
       "total_credits": 10
+    }
+  },
+  "professional_electives": {
+    "vertical_1_semiconductor_chip_design": {
+      "name": "Semiconductor Chip Design and Testing",
+      "subjects": {
+        "CEC363": {
+          "name": "Wide Bandgap Devices",
+          "credits": 3
+        },
+        "CEC361": {
+          "name": "Validation and Testing Technology",
+          "credits": 3
+        },
+        "CEC370": {
+          "name": "Low Power IC Design",
+          "credits": 3
+        },
+        "CEC362": {
+          "name": "VLSI Testing and Design For Testability",
+          "credits": 3
+        },
+        "CEC342": {
+          "name": "Mixed Signal IC Design Testing",
+          "credits": 3
+        },
+        "CEC334": {
+          "name": "Analog IC Design",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_2_signal_processing": {
+      "name": "Signal Processing",
+      "subjects": {
+        "CEC332": {
+          "name": "Advanced Digital Signal Processing",
+          "credits": 3
+        },
+        "CEC366": {
+          "name": "Image Processing",
+          "credits": 3
+        },
+        "CEC356": {
+          "name": "Speech Processing",
+          "credits": 3
+        },
+        "CEC355": {
+          "name": "Software Defined Radio",
+          "credits": 3
+        },
+        "CEC337": {
+          "name": "DSP Architecture and Programming",
+          "credits": 3
+        },
+        "CCS338": {
+          "name": "Computer Vision",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_rf_technologies": {
+      "name": "RF Technologies",
+      "subjects": {
+        "CEC350": {
+          "name": "RF Transceivers",
+          "credits": 3
+        },
+        "CEC353": {
+          "name": "Signal Integrity",
+          "credits": 3
+        },
+        "CEC335": {
+          "name": "Antenna Design",
+          "credits": 3
+        },
+        "CEC341": {
+          "name": "MICs and RF System Design",
+          "credits": 3
+        },
+        "CEC338": {
+          "name": "EMI/EMC Pre Compliance Testing",
+          "credits": 3
+        },
+        "CEC349": {
+          "name": "RFID System Design and Testing",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_bio_medical_technologies": {
+      "name": "Bio Medical Technologies",
+      "subjects": {
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3
+        },
+        "CBM352": {
+          "name": "Human Assist Devices",
+          "credits": 3
+        },
+        "CBM368": {
+          "name": "Therapeutic Equipment",
+          "credits": 3
+        },
+        "CBM355": {
+          "name": "Medical Imaging Systems",
+          "credits": 3
+        },
+        "CBM342": {
+          "name": "Brain Computer Interface and Applications",
+          "credits": 3
+        },
+        "CBM341": {
+          "name": "Body Area Networks",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_5_underwater_technologies": {
+      "name": "Underwater Technologies",
+      "subjects": {
+        "CEC359": {
+          "name": "Underwater Instrumentation System",
+          "credits": 3
+        },
+        "CEC358": {
+          "name": "Underwater Imaging Systems and Image Processing",
+          "credits": 3
+        },
+        "CEC357": {
+          "name": "Underwater Communication",
+          "credits": 3
+        },
+        "CEC344": {
+          "name": "Ocean Observation Systems",
+          "credits": 3
+        },
+        "CEC360": {
+          "name": "Underwater Navigation Systems",
+          "credits": 3
+        },
+        "CEC343": {
+          "name": "Ocean Acoustics",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_6_sensor_technologies_iot": {
+      "name": "Sensor Technologies and IoT",
+      "subjects": {
+        "CEC369": {
+          "name": "IoT Processors",
+          "credits": 3
+        },
+        "CEC368": {
+          "name": "IoT Based Systems Design",
+          "credits": 3
+        },
+        "CEC365": {
+          "name": "Wireless Sensor Network Design",
+          "credits": 3
+        },
+        "CEC367": {
+          "name": "Industrial IoT and Industry 4.0",
+          "credits": 3
+        },
+        "CEC340": {
+          "name": "MEMS Design",
+          "credits": 3
+        },
+        "CEC339": {
+          "name": "Fundamentals of Nanoelectronics",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_7_space_technologies": {
+      "name": "Space Technologies",
+      "subjects": {
+        "CEC347": {
+          "name": "Radar Technologies",
+          "credits": 3
+        },
+        "CEC336": {
+          "name": "Avionics Systems",
+          "credits": 3
+        },
+        "CEC346": {
+          "name": "Positioning and Navigation Systems",
+          "credits": 3
+        },
+        "CEC352": {
+          "name": "Satellite Communication",
+          "credits": 3
+        },
+        "CEC348": {
+          "name": "Remote Sensing",
+          "credits": 3
+        },
+        "CEC351": {
+          "name": "Rocketry and Space Mechanics",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_8_high_speed_communications": {
+      "name": "High Speed Communications",
+      "subjects": {
+        "CEC345": {
+          "name": "Optical Communication and Networks",
+          "credits": 3
+        },
+        "CEC364": {
+          "name": "Wireless Broad Band Networks",
+          "credits": 3
+        },
+        "CEC331": {
+          "name": "4G/5G Communication Networks",
+          "credits": 3
+        },
+        "CEC354": {
+          "name": "Software Defined Networks",
+          "credits": 3
+        },
+        "CEC371": {
+          "name": "Massive MIMO Networks",
+          "credits": 3
+        },
+        "CEC333": {
+          "name": "Advanced Wireless Communication Techniques",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
+  },
+  "open_electives": {
+    "OE_I": {
+      "name": "Open Electives – I",
+      "subjects": {
+        "OAS351": {
+          "name": "Space Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE351": {
+          "name": "Introduction to Industrial Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT351": {
+          "name": "Food, Nutrition and Health",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE351": {
+          "name": "Environmental and Social Impact Assessment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE351": {
+          "name": "Renewable Energy System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI351": {
+          "name": "Introduction to Industrial Instrumentation and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA351": {
+          "name": "Graph Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS355": {
+          "name": "Neural Networks and Deep Learning",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCW332": {
+          "name": "Digital Marketing",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_II": {
+      "name": "Open Electives – II",
+      "subjects": {
+        "OIE352": {
+          "name": "Resource Management Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG351": {
+          "name": "Fintech Regulation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD351": {
+          "name": "Holistic Nutrition",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AI3021": {
+          "name": "IT in Agricultural System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI352": {
+          "name": "Introduction to Control Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY351": {
+          "name": "Pharmaceutical Nanotechnology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE351": {
+          "name": "Aviation Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS342": {
+          "name": "DevOps",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS361": {
+          "name": "Robotic Process Automation",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI351": {
+          "name": "Urban Agriculture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT351": {
+          "name": "Basics of Textile Finishing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT352": {
+          "name": "Industrial Engineering for Garment Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT353": {
+          "name": "Basics of Textile Manufacture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE351": {
+          "name": "Introduction to Petroleum Refining and Petrochemicals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT351": {
+          "name": "Basics of Plastics Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC351": {
+          "name": "Signals and Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC352": {
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA352": {
+          "name": "Operations Research",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA353": {
+          "name": "Algebra and Number Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA354": {
+          "name": "Linear Algebra",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT352": {
+          "name": "Basics of Microbial Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT353": {
+          "name": "Basics of Biomolecules",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT354": {
+          "name": "Fundamentals of Cell and Molecular Biology",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME343": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3002": {
+          "name": "Batteries and Management System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3008": {
+          "name": "Sensors and Actuators",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS353": {
+          "name": "Space Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM352": {
+          "name": "Management Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM353": {
+          "name": "Production Planning and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE353": {
+          "name": "Operations Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF352": {
+          "name": "Industrial Hygiene",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF353": {
+          "name": "Chemical Process Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML352": {
+          "name": "Electrical, Electronic and Magnetic Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML353": {
+          "name": "Nanomaterials and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR352": {
+          "name": "Hydraulics and Pneumatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR353": {
+          "name": "Sensors",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA352": {
+          "name": "Concepts in Mobile Robots",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MV3501": {
+          "name": "Marine Propulsion",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV351": {
+          "name": "Marine Merchant Vessels",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV352": {
+          "name": "Elements of Marine Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI352": {
+          "name": "Geographical Information System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI352": {
+          "name": "Agriculture Entrepreneurship Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN352": {
+          "name": "Biodiversity Conservation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE353": {
+          "name": "Introduction to Control Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI354": {
+          "name": "Introduction to Industrial Automation Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH353": {
+          "name": "Energy Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH354": {
+          "name": "Surface Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD354": {
+          "name": "Fundamentals of Food Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD355": {
+          "name": "Food Safety and Quality Regulations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY353": {
+          "name": "Nutraceuticals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT354": {
+          "name": "Basics of Dyeing and Printing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "FT3201": {
+          "name": "Fibre Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT355": {
+          "name": "Garment Manufacturing Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE353": {
+          "name": "Industrial Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE354": {
+          "name": "Unit Operations in Petro Chemical Industries",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT352": {
+          "name": "Plastic Materials for Engineers",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT353": {
+          "name": "Properties and Testing of Plastics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC353": {
+          "name": "VLSI Design",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT355": {
+          "name": "Biotechnology for Waste Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT356": {
+          "name": "Lifestyle Diseases",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT357": {
+          "name": "Biotechnology in Health Care",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
     }
   }
 }

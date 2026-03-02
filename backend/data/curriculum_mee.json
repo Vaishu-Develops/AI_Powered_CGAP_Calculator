@@ -386,5 +386,599 @@
       ],
       "total_credits": 10
     }
+  },
+  "professional_electives": {
+    "vertical_1_bio_engineering": {
+      "name": "Bio Engineering",
+      "subjects": {
+        "CBM337": {
+          "name": "Biomaterials",
+          "credits": 3
+        },
+        "CBM332": {
+          "name": "Artificial Organs and Implants",
+          "credits": 3
+        },
+        "CBM339": {
+          "name": "Biomedical Optics and Biophotonics",
+          "credits": 3
+        },
+        "CBM359": {
+          "name": "Neural Engineering",
+          "credits": 3
+        },
+        "CBM362": {
+          "name": "Principles of Tissue Engineering",
+          "credits": 3
+        },
+        "CBM349": {
+          "name": "Genetic Engineering",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_2_medical_device_innovation": {
+      "name": "Medical Device Innovation and Development",
+      "subjects": {
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3
+        },
+        "CBM353": {
+          "name": "Medical Device Design",
+          "credits": 3
+        },
+        "CBM360": {
+          "name": "Patient Safety, Standards and Ethics",
+          "credits": 3
+        },
+        "CBM357": {
+          "name": "Medical Device Regulations",
+          "credits": 3
+        },
+        "CBM372": {
+          "name": "Medical Innovation and Entrepreneurship",
+          "credits": 3
+        },
+        "CBM363": {
+          "name": "Rapid Prototyping",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_management_healthcare": {
+      "name": "Management (Healthcare)",
+      "subjects": {
+        "CBM343": {
+          "name": "Clinical Engineering",
+          "credits": 3
+        },
+        "CBM351": {
+          "name": "Hospital Planning and Management",
+          "credits": 3
+        },
+        "CBM358": {
+          "name": "Medical Waste Management",
+          "credits": 3
+        },
+        "CBM345": {
+          "name": "Economics and Management for Engineers",
+          "credits": 3
+        },
+        "CBM336": {
+          "name": "Biostatistics",
+          "credits": 3
+        },
+        "CBM347": {
+          "name": "Forensic Science in Healthcare",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_mechanics": {
+      "name": "Mechanics",
+      "subjects": {
+        "CBM338": {
+          "name": "Biomechanics",
+          "credits": 3
+        },
+        "CBM364": {
+          "name": "Rehabilitation Engineering",
+          "credits": 3
+        },
+        "CBM361": {
+          "name": "Physiological Modelling",
+          "credits": 3
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3
+        },
+        "CBM346": {
+          "name": "Ergonomics",
+          "credits": 3
+        },
+        "CBM350": {
+          "name": "Haptics",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_5_signal_image_processing": {
+      "name": "Signal and Image Processing",
+      "subjects": {
+        "CBM335": {
+          "name": "Bio Signal Processing",
+          "credits": 3
+        },
+        "CBM371": {
+          "name": "Computer Vision",
+          "credits": 3
+        },
+        "CBM366": {
+          "name": "Speech and Audio Signal Processing",
+          "credits": 3
+        },
+        "CBM355": {
+          "name": "Medical Imaging Systems",
+          "credits": 3
+        },
+        "CBM342": {
+          "name": "Brain Computer Interface and Applications",
+          "credits": 3
+        },
+        "CBM340": {
+          "name": "Biometric Systems",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_6_communication": {
+      "name": "Communication",
+      "subjects": {
+        "CBM354": {
+          "name": "Communication Systems",
+          "credits": 3
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3
+        },
+        "CBM341": {
+          "name": "Body Area Networks",
+          "credits": 3
+        },
+        "CBM369": {
+          "name": "Virtual Reality and Augmented Reality in Healthcare",
+          "credits": 3
+        },
+        "CBM367": {
+          "name": "Telehealth Technology",
+          "credits": 3
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_7_advanced_healthcare_devices": {
+      "name": "Advanced Healthcare Devices",
+      "subjects": {
+        "CBM334": {
+          "name": "Bio MEMS",
+          "credits": 3
+        },
+        "CBM344": {
+          "name": "Critical Care and Operation Theatre Equipment",
+          "credits": 3
+        },
+        "CBM352": {
+          "name": "Human Assist Devices",
+          "credits": 3
+        },
+        "CBM331": {
+          "name": "Advancements in Healthcare Technology",
+          "credits": 3
+        },
+        "CBM365": {
+          "name": "Robotics in Medicine",
+          "credits": 3
+        },
+        "CBM368": {
+          "name": "Therapeutic Equipment",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
+  },
+  "open_electives": {
+    "OE_I": {
+      "name": "Open Electives – I",
+      "subjects": {
+        "OAS351": {
+          "name": "Space Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE351": {
+          "name": "Introduction to Industrial Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT351": {
+          "name": "Food, Nutrition and Health",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE351": {
+          "name": "Environmental and Social Impact Assessment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE351": {
+          "name": "Renewable Energy System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI351": {
+          "name": "Introduction to Industrial Instrumentation and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA351": {
+          "name": "Graph Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS355": {
+          "name": "Neural Networks and Deep Learning",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCW332": {
+          "name": "Digital Marketing",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_II": {
+      "name": "Open Electives – II",
+      "subjects": {
+        "OIE352": {
+          "name": "Resource Management Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG351": {
+          "name": "Fintech Regulation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD351": {
+          "name": "Holistic Nutrition",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AI3021": {
+          "name": "IT in Agricultural System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI352": {
+          "name": "Introduction to Control Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY351": {
+          "name": "Pharmaceutical Nanotechnology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE351": {
+          "name": "Aviation Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS342": {
+          "name": "DevOps",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS361": {
+          "name": "Robotic Process Automation",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI351": {
+          "name": "Urban Agriculture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT351": {
+          "name": "Basics of Textile Finishing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT352": {
+          "name": "Industrial Engineering for Garment Industry",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME356": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    }
   }
 }

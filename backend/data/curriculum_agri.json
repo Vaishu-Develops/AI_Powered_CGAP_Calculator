@@ -7,95 +7,299 @@
   "semesters": {
     "1": {
       "subjects": {
-        "HS3152": {"name": "Professional English - I", "credits": 3, "type": "HSMC"},
-        "MA3151": {"name": "Matrices and Calculus", "credits": 4, "type": "BSC"},
-        "PH3151": {"name": "Engineering Physics", "credits": 3, "type": "BSC"},
-        "CY3151": {"name": "Engineering Chemistry", "credits": 3, "type": "BSC"},
-        "GE3151": {"name": "Problem Solving and Python Programming", "credits": 3, "type": "ESC"},
-        "GE3152": {"name": "Heritage of Tamils", "credits": 1, "type": "HSMC"},
-        "GE3171": {"name": "Problem Solving and Python Programming Laboratory", "credits": 2, "type": "ESC"},
-        "BS3171": {"name": "Physics and Chemistry Laboratory", "credits": 2, "type": "BSC"},
-        "GE3172": {"name": "English Laboratory", "credits": 1, "type": "EEC"}
+        "HS3152": {
+          "name": "Professional English - I",
+          "credits": 3,
+          "type": "HSMC"
+        },
+        "MA3151": {
+          "name": "Matrices and Calculus",
+          "credits": 4,
+          "type": "BSC"
+        },
+        "PH3151": {
+          "name": "Engineering Physics",
+          "credits": 3,
+          "type": "BSC"
+        },
+        "CY3151": {
+          "name": "Engineering Chemistry",
+          "credits": 3,
+          "type": "BSC"
+        },
+        "GE3151": {
+          "name": "Problem Solving and Python Programming",
+          "credits": 3,
+          "type": "ESC"
+        },
+        "GE3152": {
+          "name": "Heritage of Tamils",
+          "credits": 1,
+          "type": "HSMC"
+        },
+        "GE3171": {
+          "name": "Problem Solving and Python Programming Laboratory",
+          "credits": 2,
+          "type": "ESC"
+        },
+        "BS3171": {
+          "name": "Physics and Chemistry Laboratory",
+          "credits": 2,
+          "type": "BSC"
+        },
+        "GE3172": {
+          "name": "English Laboratory",
+          "credits": 1,
+          "type": "EEC"
+        }
       },
       "total_credits": 22
     },
     "2": {
       "subjects": {
-        "HS3252": {"name": "Professional English - II", "credits": 2, "type": "HSMC"},
-        "MA3251": {"name": "Statistics and Numerical Methods", "credits": 4, "type": "BSC"},
-        "PH3256": {"name": "Physics for Information Science", "credits": 3, "type": "BSC"},
-        "BE3251": {"name": "Basic Electrical and Electronics Engineering", "credits": 3, "type": "ESC"},
-        "GE3251": {"name": "Engineering Graphics", "credits": 4, "type": "ESC"},
-        "GE3252": {"name": "Tamils and Technology", "credits": 1, "type": "HSMC"},
-        "GE3271": {"name": "Engineering Practices Laboratory", "credits": 2, "type": "ESC"},
-        "BE3271": {"name": "Basic Electrical and Electronics Engineering Laboratory", "credits": 2, "type": "ESC"},
-        "GE3272": {"name": "Communication Laboratory / Foreign Language", "credits": 2, "type": "EEC"}
+        "HS3252": {
+          "name": "Professional English - II",
+          "credits": 2,
+          "type": "HSMC"
+        },
+        "MA3251": {
+          "name": "Statistics and Numerical Methods",
+          "credits": 4,
+          "type": "BSC"
+        },
+        "PH3256": {
+          "name": "Physics for Information Science",
+          "credits": 3,
+          "type": "BSC"
+        },
+        "BE3251": {
+          "name": "Basic Electrical and Electronics Engineering",
+          "credits": 3,
+          "type": "ESC"
+        },
+        "GE3251": {
+          "name": "Engineering Graphics",
+          "credits": 4,
+          "type": "ESC"
+        },
+        "GE3252": {
+          "name": "Tamils and Technology",
+          "credits": 1,
+          "type": "HSMC"
+        },
+        "GE3271": {
+          "name": "Engineering Practices Laboratory",
+          "credits": 2,
+          "type": "ESC"
+        },
+        "BE3271": {
+          "name": "Basic Electrical and Electronics Engineering Laboratory",
+          "credits": 2,
+          "type": "ESC"
+        },
+        "GE3272": {
+          "name": "Communication Laboratory / Foreign Language",
+          "credits": 2,
+          "type": "EEC"
+        }
       },
       "total_credits": 23
     },
     "3": {
       "subjects": {
-        "MA3351": {"name": "Transforms and Partial Differential Equations", "credits": 4, "type": "BSC"},
-        "AI3301": {"name": "Soil Science", "credits": 3, "type": "PCC"},
-        "AI3302": {"name": "Farm Machinery and Equipment", "credits": 4, "type": "PCC"},
-        "AI3303": {"name": "Surveying and Leveling", "credits": 3, "type": "PCC"},
-        "ME3351": {"name": "Engineering Mechanics", "credits": 4, "type": "ESC"},
-        "AI3304": {"name": "Mechanics of Solids", "credits": 4, "type": "ESC"},
-        "AI3311": {"name": "Farm Machinery Laboratory", "credits": 2, "type": "PCC"},
-        "AI3312": {"name": "Survey Practical", "credits": 2, "type": "PCC"},
-        "GE3361": {"name": "Professional Development", "credits": 1, "type": "EEC"}
+        "MA3351": {
+          "name": "Transforms and Partial Differential Equations",
+          "credits": 4,
+          "type": "BSC"
+        },
+        "AI3301": {
+          "name": "Soil Science",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "AI3302": {
+          "name": "Farm Machinery and Equipment",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3303": {
+          "name": "Surveying and Leveling",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "ME3351": {
+          "name": "Engineering Mechanics",
+          "credits": 4,
+          "type": "ESC"
+        },
+        "AI3304": {
+          "name": "Mechanics of Solids",
+          "credits": 4,
+          "type": "ESC"
+        },
+        "AI3311": {
+          "name": "Farm Machinery Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        },
+        "AI3312": {
+          "name": "Survey Practical",
+          "credits": 2,
+          "type": "PCC"
+        },
+        "GE3361": {
+          "name": "Professional Development",
+          "credits": 1,
+          "type": "EEC"
+        }
       },
       "total_credits": 27
     },
     "4": {
       "subjects": {
-        "CE3491": {"name": "Irrigation Engineering", "credits": 3, "type": "PCC"},
-        "AI3401": {"name": "Post Harvest and Process Engineering", "credits": 4, "type": "PCC"},
-        "AI3402": {"name": "Heat and Mass Transfer", "credits": 3, "type": "PCC"},
-        "AI3403": {"name": "Farm Power Utilization", "credits": 4, "type": "PCC"},
-        "CE3391": {"name": "Fluid Mechanics and Machinery", "credits": 4, "type": "ESC"},
-        "GE3451": {"name": "Environmental Science and Sustainability", "credits": 2, "type": "BSC"},
-        "AI3411": {"name": "Post Harvest Engineering Laboratory", "credits": 2, "type": "PCC"},
-        "AI3412": {"name": "Fluid Mechanics Laboratory", "credits": 2, "type": "PCC"}
+        "CE3491": {
+          "name": "Irrigation Engineering",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "AI3401": {
+          "name": "Post Harvest and Process Engineering",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3402": {
+          "name": "Heat and Mass Transfer",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "AI3403": {
+          "name": "Farm Power Utilization",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "CE3391": {
+          "name": "Fluid Mechanics and Machinery",
+          "credits": 4,
+          "type": "ESC"
+        },
+        "GE3451": {
+          "name": "Environmental Science and Sustainability",
+          "credits": 2,
+          "type": "BSC"
+        },
+        "AI3411": {
+          "name": "Post Harvest Engineering Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        },
+        "AI3412": {
+          "name": "Fluid Mechanics Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        }
       },
       "total_credits": 24
     },
     "5": {
       "subjects": {
-        "AI3501": {"name": "Groundwater and Well Engineering", "credits": 4, "type": "PCC"},
-        "AI3502": {"name": "Soil and Water Conservation Engineering", "credits": 4, "type": "PCC"},
-        "AI3503": {"name": "Protected Cultivation and Secondary Agriculture", "credits": 4, "type": "PCC"},
-        "AI3504": {"name": "Tractor System and Auto Electronics", "credits": 4, "type": "PCC"},
-        "AI3511": {"name": "Drip and Sprinkler Laboratory", "credits": 2, "type": "PCC"},
-        "AI3512": {"name": "Machine Design Laboratory", "credits": 2, "type": "PCC"}
+        "AI3501": {
+          "name": "Groundwater and Well Engineering",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3502": {
+          "name": "Soil and Water Conservation Engineering",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3503": {
+          "name": "Protected Cultivation and Secondary Agriculture",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3504": {
+          "name": "Tractor System and Auto Electronics",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3511": {
+          "name": "Drip and Sprinkler Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        },
+        "AI3512": {
+          "name": "Machine Design Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        }
       },
       "total_credits": 20,
       "notes": "Professional Elective I (3 credits)"
     },
     "6": {
       "subjects": {
-        "AI3601": {"name": "Watershed Management", "credits": 3, "type": "PCC"},
-        "AI3602": {"name": "Renewable Energy Engineering", "credits": 4, "type": "PCC"},
-        "AI3603": {"name": "Dairy and Food Engineering", "credits": 4, "type": "PCC"},
-        "AI3611": {"name": "Engine and Electrical System Repair Laboratory", "credits": 2, "type": "PCC"},
-        "AI3612": {"name": "Computer Applications in Agriculture Laboratory", "credits": 2, "type": "PCC"}
+        "AI3601": {
+          "name": "Watershed Management",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "AI3602": {
+          "name": "Renewable Energy Engineering",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3603": {
+          "name": "Dairy and Food Engineering",
+          "credits": 4,
+          "type": "PCC"
+        },
+        "AI3611": {
+          "name": "Engine and Electrical System Repair Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        },
+        "AI3612": {
+          "name": "Computer Applications in Agriculture Laboratory",
+          "credits": 2,
+          "type": "PCC"
+        }
       },
       "total_credits": 21,
       "notes": "Open Elective I (3 cr), Professional Elective II, III (3 cr each)"
     },
     "7": {
       "subjects": {
-        "AI3701": {"name": "Agri Business Management", "credits": 3, "type": "PCC"},
-        "GE3791": {"name": "Human Values and Ethics", "credits": 2, "type": "HSMC"},
-        "AI3711": {"name": "Agricultural Engineering Project-I", "credits": 2, "type": "EEC"}
+        "AI3701": {
+          "name": "Agri Business Management",
+          "credits": 3,
+          "type": "PCC"
+        },
+        "GE3791": {
+          "name": "Human Values and Ethics",
+          "credits": 2,
+          "type": "HSMC"
+        },
+        "AI3711": {
+          "name": "Agricultural Engineering Project-I",
+          "credits": 2,
+          "type": "EEC"
+        }
       },
       "total_credits": 19,
       "notes": "Elective Management (3 cr), Open Elective II, III, IV (3 cr each), Professional Elective IV (3 cr)"
     },
     "8": {
       "subjects": {
-        "AI3811": {"name": "Agricultural Engineering Project-II", "credits": 6, "type": "EEC"},
-        "AI3812": {"name": "Internship / Industrial Training", "credits": 3, "type": "EEC"}
+        "AI3811": {
+          "name": "Agricultural Engineering Project-II",
+          "credits": 6,
+          "type": "EEC"
+        },
+        "AI3812": {
+          "name": "Internship / Industrial Training",
+          "credits": 3,
+          "type": "EEC"
+        }
       },
       "total_credits": 9
     }
@@ -104,54 +308,714 @@
     "vertical_1_food_processing": {
       "name": "Food Processing",
       "subjects": {
-        "AI3001": {"name": "Food Process Engineering", "credits": 3},
-        "AI3002": {"name": "Dairy Technology", "credits": 3},
-        "AI3003": {"name": "Process Instrumentation and Control", "credits": 3},
-        "AI3004": {"name": "Transport Phenomena and Engineering", "credits": 3},
-        "AI3005": {"name": "Grain Processing Engineering", "credits": 3},
-        "AI3006": {"name": "Food Quality and Safety", "credits": 3}
+        "AI3001": {
+          "name": "Refrigeration and Cold Storage",
+          "credits": 3
+        },
+        "AI3002": {
+          "name": "Food and Dairy Engineering",
+          "credits": 3
+        },
+        "AI3003": {
+          "name": "Process Engineering of Fruits and Vegetables",
+          "credits": 3
+        },
+        "AI3004": {
+          "name": "Storage and Packaging Technology",
+          "credits": 3
+        },
+        "AI3005": {
+          "name": "Food Process Equipment and Design",
+          "credits": 3
+        },
+        "AI3006": {
+          "name": "Food Plant Design and Management",
+          "credits": 3
+        },
+        "AI3007": {
+          "name": "Emerging Technologies in Food Processing",
+          "credits": 3
+        }
       }
     },
     "vertical_2_farm_machinery_energy": {
       "name": "Farm Machinery and Energy",
       "subjects": {
-        "AI3007": {"name": "Design of Farm Implements", "credits": 3},
-        "AI3008": {"name": "Solar Energy Engineering", "credits": 3},
-        "AI3009": {"name": "Tractor System Engineering", "credits": 3},
-        "AI3010": {"name": "Bio Energy Sources and Utilization", "credits": 3},
-        "AI3011": {"name": "Testing and Evaluation of Agricultural Machinery", "credits": 3},
-        "AI3012": {"name": "Drying and Storage Engineering", "credits": 3}
+        "AI3008": {
+          "name": "Farm Power and Machinery Management",
+          "credits": 3
+        },
+        "AI3009": {
+          "name": "Testing and Evaluation of Farm Machinery and Equipment",
+          "credits": 3
+        },
+        "CAI331": {
+          "name": "Biochemical and Thermochemical Conversion of Biomass",
+          "credits": 3
+        },
+        "AI3010": {
+          "name": "Waste and By Product Utilization",
+          "credits": 3
+        },
+        "AI3011": {
+          "name": "Human Engineering and Safety in Farm Machinery Operations",
+          "credits": 3
+        },
+        "AI3012": {
+          "name": "Precision Farming Equipment",
+          "credits": 3
+        },
+        "CAI335": {
+          "name": "Solar and Wind Energy System",
+          "credits": 3
+        }
       }
     },
     "vertical_3_water_management": {
       "name": "Water Management and Protected Cultivation",
       "subjects": {
-        "AI3013": {"name": "Pressurized Irrigation System", "credits": 3},
-        "AI3014": {"name": "Crop and Livestock Environment Control", "credits": 3},
-        "AI3015": {"name": "Drainage Engineering", "credits": 3},
-        "AI3016": {"name": "Design of Agricultural Structures", "credits": 3},
-        "AI3017": {"name": "Groundwater Modeling", "credits": 3},
-        "AI3018": {"name": "Water Harvesting and Recycling", "credits": 3}
+        "AI3013": {
+          "name": "Watershed Planning and Management",
+          "credits": 3
+        },
+        "CAI333": {
+          "name": "Groundwater and Well Engineering",
+          "credits": 3
+        },
+        "AI3014": {
+          "name": "Design of Micro-Irrigation System",
+          "credits": 3
+        },
+        "AI3015": {
+          "name": "Protected Cultivation",
+          "credits": 3
+        },
+        "AI3016": {
+          "name": "On-farm Water Management",
+          "credits": 3
+        },
+        "CAI334": {
+          "name": "Irrigation Water Quality and Waste Water Management",
+          "credits": 3
+        },
+        "CAI332": {
+          "name": "Climate Change and Adaptation",
+          "credits": 3
+        }
       }
     },
     "vertical_4_it_agri_business": {
-      "name": "IT and Agricultural Business",
+      "name": "IT and Agricultural Business Management",
       "subjects": {
-        "AI3019": {"name": "Geographic Information System in Agriculture", "credits": 3},
-        "AI3020": {"name": "Smart Agriculture", "credits": 3},
-        "AI3021": {"name": "Agriculture Entrepreneurship Development", "credits": 3},
-        "AI3022": {"name": "Remote Sensing Technology", "credits": 3},
-        "AI3023": {"name": "Project Planning and Economics", "credits": 3},
-        "CAI331": {"name": "Soil Moisture Sensors and IOT in Agriculture", "credits": 3}
+        "AI3017": {
+          "name": "Integrated Farming System",
+          "credits": 3
+        },
+        "AI3018": {
+          "name": "Agricultural Business Management",
+          "credits": 3
+        },
+        "AI3019": {
+          "name": "Sustainable Agriculture and Food Security",
+          "credits": 3
+        },
+        "AI3020": {
+          "name": "Systems Analysis in Agricultural Engineering",
+          "credits": 3
+        },
+        "AI3021": {
+          "name": "IT in Agricultural System",
+          "credits": 3
+        },
+        "AI3022": {
+          "name": "Automation in Agriculture",
+          "credits": 3
+        },
+        "AI3023": {
+          "name": "Landscape Architecture",
+          "credits": 3
+        }
       }
     }
   },
   "elective_management": {
-    "GE3751": {"name": "Principles of Management", "credits": 3},
-    "GE3752": {"name": "Total Quality Management", "credits": 3},
-    "GE3753": {"name": "Engineering Economics and Financial Accounting", "credits": 3},
-    "GE3754": {"name": "Human Resource Management", "credits": 3},
-    "GE3755": {"name": "Knowledge Management", "credits": 3},
-    "GE3792": {"name": "Industrial Management", "credits": 3}
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
+  },
+  "open_electives": {
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF351": {
+          "name": "Fire Safety Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT351": {
+          "name": "Basics of Textile Finishing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT352": {
+          "name": "Industrial Engineering for Garment Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT353": {
+          "name": "Basics of Textile Manufacture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE351": {
+          "name": "Introduction to Petroleum Refining and Petrochemicals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT351": {
+          "name": "Basics of Plastics Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC351": {
+          "name": "Signals and Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC352": {
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA352": {
+          "name": "Operations Research",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA353": {
+          "name": "Algebra and Number Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA354": {
+          "name": "Linear Algebra",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT352": {
+          "name": "Basics of Microbial Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT353": {
+          "name": "Basics of Biomolecules",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT354": {
+          "name": "Fundamentals of Cell and Molecular Biology",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME343": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3002": {
+          "name": "Batteries and Management System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3008": {
+          "name": "Sensors and Actuators",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS353": {
+          "name": "Space Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM352": {
+          "name": "Management Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM353": {
+          "name": "Production Planning and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE353": {
+          "name": "Operations Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF352": {
+          "name": "Industrial Hygiene",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OSF353": {
+          "name": "Chemical Process Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML352": {
+          "name": "Electrical, Electronic and Magnetic Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML353": {
+          "name": "Nanomaterials and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR352": {
+          "name": "Hydraulics and Pneumatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR353": {
+          "name": "Sensors",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA352": {
+          "name": "Concepts in Mobile Robots",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MV3501": {
+          "name": "Marine Propulsion",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV351": {
+          "name": "Marine Merchant Vessels",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV352": {
+          "name": "Elements of Marine Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI352": {
+          "name": "Geographical Information System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN352": {
+          "name": "Biodiversity Conservation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE353": {
+          "name": "Introduction to Control Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI354": {
+          "name": "Introduction to Industrial Automation Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH353": {
+          "name": "Energy Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH354": {
+          "name": "Surface Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD354": {
+          "name": "Fundamentals of Food Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD355": {
+          "name": "Food Safety and Quality Regulations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY353": {
+          "name": "Nutraceuticals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT354": {
+          "name": "Basics of Dyeing and Printing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "FT3201": {
+          "name": "Fibre Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT355": {
+          "name": "Garment Manufacturing Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE353": {
+          "name": "Industrial Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE354": {
+          "name": "Unit Operations in Petro Chemical Industries",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT352": {
+          "name": "Plastic Materials for Engineers",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT353": {
+          "name": "Properties and Testing of Plastics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC353": {
+          "name": "VLSI Design",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT355": {
+          "name": "Biotechnology for Waste Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT356": {
+          "name": "Lifestyle Diseases",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT357": {
+          "name": "Biotechnology in Health Care",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    }
   }
 }

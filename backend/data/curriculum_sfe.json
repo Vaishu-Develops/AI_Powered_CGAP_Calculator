@@ -400,85 +400,765 @@
     }
   },
   "professional_electives": {
-    "verticals": [
-      {
-        "name": "Vertical 1: Hazard Management and Safety Standard",
-        "courses": [
-          {"code": "SF3001", "name": "Industrial Engineering", "credits": 3},
-          {"code": "SF3002", "name": "Safety Management", "credits": 3},
-          {"code": "SF3003", "name": "Advanced Safety Engineering and Management", "credits": 3},
-          {"code": "SF3004", "name": "Foundation Skills in Integrated Product Development", "credits": 3},
-          {"code": "SF3005", "name": "Hazard Analysis and Risk Assessment", "credits": 3},
-          {"code": "SF3006", "name": "Hazard Control in Manufacturing Industry", "credits": 3},
-          {"code": "SF3007", "name": "Advanced safety Systems in Industry", "credits": 3},
-          {"code": "SF3008", "name": "Fire Safety Codes and Standardization", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 2: Fire Safety Systems",
-        "courses": [
-          {"code": "SF3009", "name": "Fire Engineering", "credits": 3},
-          {"code": "SF3010", "name": "Fire Risk Analysis and Accident Investigation", "credits": 3},
-          {"code": "SF3011", "name": "Fire Fighting Installation and Automation", "credits": 3},
-          {"code": "SF3012", "name": "Fire Fighting and Safety Equipments", "credits": 3},
-          {"code": "SF3013", "name": "Fire Prevention and Protection Measures", "credits": 3},
-          {"code": "SF3014", "name": "Design of Fire Fighting and Protection System", "credits": 3},
-          {"code": "SF3015", "name": "Building Fire and Smoke Dynamics", "credits": 3},
-          {"code": "SF3016", "name": "Explosive Technology and Safety", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 3: Health and Radiation Safety",
-        "courses": [
-          {"code": "SF3017", "name": "Food and Industrial Bio Safety", "credits": 3},
-          {"code": "SF3018", "name": "Legal Aspects of Health Safety and Environment", "credits": 3},
-          {"code": "SF3019", "name": "First Aid and Emergency Procedures", "credits": 3},
-          {"code": "SF3020", "name": "Medical Waste Management", "credits": 3},
-          {"code": "SF3021", "name": "Heat and Mass Transfer", "credits": 3},
-          {"code": "SF3022", "name": "Radiation Protection", "credits": 3},
-          {"code": "SF3023", "name": "Nuclear Safety and Radioactive Materials", "credits": 3},
-          {"code": "CME357", "name": "Thermal and Fired Equipment design", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 4: Safety in Industries",
-        "courses": [
-          {"code": "SF3024", "name": "Facility Layout and Safety in Material Handling", "credits": 3},
-          {"code": "SF3025", "name": "Process Instrumentation and Control", "credits": 3},
-          {"code": "CME342", "name": "Ergonomics in Design", "credits": 3},
-          {"code": "SF3026", "name": "Safety Aspects of Integrated Product Development", "credits": 3},
-          {"code": "SF3027", "name": "Safety in Engineering Industry", "credits": 3},
-          {"code": "SF3028", "name": "Safety in Petroleum and Petrochemical Industries", "credits": 3},
-          {"code": "SF3029", "name": "Safety in Construction Industry and Town Planning", "credits": 3},
-          {"code": "SF3030", "name": "Safety in Automotive design and Control", "credits": 3}
-        ]
-      },
-      {
-        "name": "Vertical 5: Environmental Safety Engineering",
-        "courses": [
-          {"code": "CSF331", "name": "Disaster Management", "credits": 3},
-          {"code": "SF3031", "name": "Environmental Protection and Waste Management", "credits": 3},
-          {"code": "SF3032", "name": "Air and Water Pollution control and regulations", "credits": 3},
-          {"code": "SF3033", "name": "Energy Environment Ethics and Society", "credits": 3},
-          {"code": "SF3034", "name": "Epidemic control and Modelling", "credits": 3},
-          {"code": "SF3035", "name": "Remote Sensing in Environmental safety", "credits": 3},
-          {"code": "SF3036", "name": "Rescue Equipment and Techniques", "credits": 3},
-          {"code": "SF3037", "name": "Atmospheric Ground and Ocean Dispersion", "credits": 3}
-        ]
+    "vertical_1_hazard_management": {
+      "name": "Hazard Management and Safety Standard",
+      "subjects": {
+        "SF3001": {
+          "name": "Industrial Engineering",
+          "credits": 3
+        },
+        "SF3002": {
+          "name": "Safety Management",
+          "credits": 3
+        },
+        "SF3003": {
+          "name": "Advanced Safety Engineering and Management",
+          "credits": 3
+        },
+        "SF3004": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3
+        },
+        "SF3005": {
+          "name": "Hazard Analysis and Risk Assessment",
+          "credits": 3
+        },
+        "SF3006": {
+          "name": "Hazard Control in Manufacturing Industry",
+          "credits": 3
+        },
+        "SF3007": {
+          "name": "Advanced Safety Systems in Industry",
+          "credits": 3
+        },
+        "SF3008": {
+          "name": "Fire Safety Codes and Standardization",
+          "credits": 3
+        }
       }
-    ]
+    },
+    "vertical_2_fire_safety": {
+      "name": "Fire Safety Systems",
+      "subjects": {
+        "SF3009": {
+          "name": "Fire Engineering",
+          "credits": 3
+        },
+        "SF3010": {
+          "name": "Fire Risk Analysis and Accident Investigation",
+          "credits": 3
+        },
+        "SF3011": {
+          "name": "Fire Fighting Installation and Automation",
+          "credits": 3
+        },
+        "SF3012": {
+          "name": "Fire Fighting and Safety Equipments",
+          "credits": 3
+        },
+        "SF3013": {
+          "name": "Fire Prevention and Protection Measures",
+          "credits": 3
+        },
+        "SF3014": {
+          "name": "Design of Fire Fighting and Protection System",
+          "credits": 3
+        },
+        "SF3015": {
+          "name": "Building Fire and Smoke Dynamics",
+          "credits": 3
+        },
+        "SF3016": {
+          "name": "Explosive Technology and Safety",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_3_health_radiation": {
+      "name": "Health and Radiation Safety",
+      "subjects": {
+        "SF3017": {
+          "name": "Food and Industrial Bio Safety",
+          "credits": 3
+        },
+        "SF3018": {
+          "name": "Legal Aspects of Health Safety and Environment",
+          "credits": 3
+        },
+        "SF3019": {
+          "name": "First Aid and Emergency Procedures",
+          "credits": 3
+        },
+        "SF3020": {
+          "name": "Medical Waste Management",
+          "credits": 3
+        },
+        "SF3021": {
+          "name": "Heat and Mass Transfer",
+          "credits": 3
+        },
+        "SF3022": {
+          "name": "Radiation Protection",
+          "credits": 3
+        },
+        "SF3023": {
+          "name": "Nuclear Safety and Radioactive Materials",
+          "credits": 3
+        },
+        "CME357": {
+          "name": "Thermal and Fired Equipment Design",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_4_safety_industries": {
+      "name": "Safety in Industries",
+      "subjects": {
+        "SF3024": {
+          "name": "Facility Layout and Safety in Material Handling",
+          "credits": 3
+        },
+        "SF3025": {
+          "name": "Process Instrumentation and Control",
+          "credits": 3
+        },
+        "CME342": {
+          "name": "Ergonomics in Design",
+          "credits": 3
+        },
+        "SF3026": {
+          "name": "Safety Aspects of Integrated Product Development",
+          "credits": 3
+        },
+        "SF3027": {
+          "name": "Safety in Engineering Industry",
+          "credits": 3
+        },
+        "SF3028": {
+          "name": "Safety in Petroleum and Petrochemical Industries",
+          "credits": 3
+        },
+        "SF3029": {
+          "name": "Safety in Construction Industry and Town Planning",
+          "credits": 3
+        },
+        "SF3030": {
+          "name": "Safety in Automotive Design and Control",
+          "credits": 3
+        }
+      }
+    },
+    "vertical_5_environmental_safety": {
+      "name": "Environmental Safety Engineering",
+      "subjects": {
+        "CSF331": {
+          "name": "Disaster Management",
+          "credits": 3
+        },
+        "SF3031": {
+          "name": "Environmental Protection and Waste Management",
+          "credits": 3
+        },
+        "SF3032": {
+          "name": "Air and Water Pollution Control and Regulations",
+          "credits": 3
+        },
+        "SF3033": {
+          "name": "Energy Environment Ethics and Society",
+          "credits": 3
+        },
+        "SF3034": {
+          "name": "Epidemic Control and Modelling",
+          "credits": 3
+        },
+        "SF3035": {
+          "name": "Remote Sensing in Environmental Safety",
+          "credits": 3
+        },
+        "SF3036": {
+          "name": "Rescue Equipment and Techniques",
+          "credits": 3
+        },
+        "SF3037": {
+          "name": "Atmospheric Ground and Ocean Dispersion",
+          "credits": 3
+        }
+      }
+    }
+  },
+  "elective_management": {
+    "GE3751": {
+      "name": "Principles of Management",
+      "credits": 3
+    },
+    "GE3752": {
+      "name": "Total Quality Management",
+      "credits": 3
+    },
+    "GE3753": {
+      "name": "Engineering Economics and Financial Accounting",
+      "credits": 3
+    },
+    "GE3754": {
+      "name": "Human Resource Management",
+      "credits": 3
+    },
+    "GE3755": {
+      "name": "Knowledge Management",
+      "credits": 3
+    },
+    "GE3792": {
+      "name": "Industrial Management",
+      "credits": 3
+    }
+  },
+  "mandatory_courses": {
+    "mandatory_1": {
+      "MX3081": {
+        "name": "Introduction to Women and Gender Studies",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3082": {
+        "name": "Elements of Literature",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3083": {
+        "name": "Film Appreciation",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3084": {
+        "name": "Disaster Risk Reduction and Management",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    },
+    "mandatory_2": {
+      "MX3085": {
+        "name": "Well Being with Traditional Practices - Yoga, Ayurveda and Siddha",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3086": {
+        "name": "History of Science and Technology in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3087": {
+        "name": "Political and Economic Thought for a Humane Society",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3088": {
+        "name": "State, Nation Building and Politics in India",
+        "credits": 0,
+        "type": "mandatory"
+      },
+      "MX3089": {
+        "name": "Industrial Safety",
+        "credits": 0,
+        "type": "mandatory"
+      }
+    }
   },
   "open_electives": {
-    "OE_I_II": "Emerging Technologies",
-    "OE_III": "From list of Open Electives III",
-    "OE_IV": "From list of Open Electives IV"
-  },
-  "management_electives": [
-    {"code": "GE3751", "name": "Principles of Management", "credits": 3},
-    {"code": "GE3752", "name": "Total Quality Management", "credits": 3},
-    {"code": "GE3753", "name": "Engineering Economics and Financial Accounting", "credits": 3},
-    {"code": "GE3754", "name": "Human Resource Management", "credits": 3},
-    {"code": "GE3755", "name": "Knowledge Management", "credits": 3},
-    {"code": "GE3792", "name": "Industrial Management", "credits": 3}
-  ]
+    "OE_I_II": {
+      "name": "Open Electives I and II (Emerging Technologies)",
+      "note": "To be offered other than Faculty of Information and Communication Engineering",
+      "subjects": {
+        "OCS351": {
+          "name": "Artificial Intelligence and Machine Learning Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS352": {
+          "name": "IoT Concepts and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCS353": {
+          "name": "Data Science Fundamentals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CCS333": {
+          "name": "Augmented Reality/Virtual Reality",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_III": {
+      "name": "Open Electives – III",
+      "subjects": {
+        "OHS351": {
+          "name": "English for Competitive Examinations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG352": {
+          "name": "NGOs and Sustainable Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG353": {
+          "name": "Democracy and Good Governance",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE353": {
+          "name": "Lean Concepts, Tools and Practices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CME365": {
+          "name": "Renewable Energy Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME354": {
+          "name": "Applied Design Thinking",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3003": {
+          "name": "Reverse Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPR351": {
+          "name": "Sustainable Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3791": {
+          "name": "Electric and Hybrid Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS352": {
+          "name": "Space Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM351": {
+          "name": "Industrial Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE354": {
+          "name": "Quality Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML351": {
+          "name": "Introduction to Non-Destructive Testing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR351": {
+          "name": "Mechatronics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA351": {
+          "name": "Foundation of Robotics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAE352": {
+          "name": "Fundamentals of Aeronautical Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI351": {
+          "name": "Remote Sensing Concepts",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI351": {
+          "name": "Urban Agriculture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN351": {
+          "name": "Drinking Water Supply and Treatment",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE352": {
+          "name": "Electric Vehicle Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI353": {
+          "name": "Introduction to PLC Programming",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH351": {
+          "name": "Nano Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH352": {
+          "name": "Functional Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD352": {
+          "name": "Traditional Indian Foods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD353": {
+          "name": "Introduction to Food Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY352": {
+          "name": "IPR for Pharma Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT351": {
+          "name": "Basics of Textile Finishing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT352": {
+          "name": "Industrial Engineering for Garment Industry",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT353": {
+          "name": "Basics of Textile Manufacture",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE351": {
+          "name": "Introduction to Petroleum Refining and Petrochemicals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE334": {
+          "name": "Energy Conservation and Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT351": {
+          "name": "Basics of Plastics Processing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC351": {
+          "name": "Signals and Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC352": {
+          "name": "Fundamentals of Electronic Devices and Circuits",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM348": {
+          "name": "Foundation Skills in Integrated Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM333": {
+          "name": "Assistive Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA352": {
+          "name": "Operations Research",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA353": {
+          "name": "Algebra and Number Theory",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA354": {
+          "name": "Linear Algebra",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT352": {
+          "name": "Basics of Microbial Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT353": {
+          "name": "Basics of Biomolecules",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT354": {
+          "name": "Fundamentals of Cell and Molecular Biology",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    },
+    "OE_IV": {
+      "name": "Open Electives – IV",
+      "subjects": {
+        "OHS352": {
+          "name": "Project Report Writing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA355": {
+          "name": "Advanced Numerical Methods",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA356": {
+          "name": "Random Processes",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMA357": {
+          "name": "Queuing and Reliability Modelling",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG354": {
+          "name": "Production and Operations Management for Entrepreneurs",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCE354": {
+          "name": "Basics of Integrated Water Resources Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMG355": {
+          "name": "Multivariate Data Analysis",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME352": {
+          "name": "Additive Manufacturing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME343": {
+          "name": "New Product Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OME355": {
+          "name": "Industrial Design and Rapid Prototyping Techniques",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MF3010": {
+          "name": "Micro and Precision Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMF354": {
+          "name": "Cost Management of Engineering Projects",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3002": {
+          "name": "Batteries and Management System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "AU3008": {
+          "name": "Sensors and Actuators",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAS353": {
+          "name": "Space Vehicles",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM352": {
+          "name": "Management Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIM353": {
+          "name": "Production Planning and Control",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OIE353": {
+          "name": "Operations Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML352": {
+          "name": "Electrical, Electronic and Magnetic Materials",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OML353": {
+          "name": "Nanomaterials and Applications",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR352": {
+          "name": "Hydraulics and Pneumatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMR353": {
+          "name": "Sensors",
+          "credits": 3,
+          "type": "elective"
+        },
+        "ORA352": {
+          "name": "Concepts in Mobile Robots",
+          "credits": 3,
+          "type": "elective"
+        },
+        "MV3501": {
+          "name": "Marine Propulsion",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV351": {
+          "name": "Marine Merchant Vessels",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OMV352": {
+          "name": "Elements of Marine Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CRA332": {
+          "name": "Drone Technologies",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OGI352": {
+          "name": "Geographical Information System",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OAI352": {
+          "name": "Agriculture Entrepreneurship Development",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEN352": {
+          "name": "Biodiversity Conservation",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEE353": {
+          "name": "Introduction to Control Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEI354": {
+          "name": "Introduction to Industrial Automation Systems",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH353": {
+          "name": "Energy Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OCH354": {
+          "name": "Surface Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD354": {
+          "name": "Fundamentals of Food Engineering",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OFD355": {
+          "name": "Food Safety and Quality Regulations",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPY353": {
+          "name": "Nutraceuticals",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT354": {
+          "name": "Basics of Dyeing and Printing",
+          "credits": 3,
+          "type": "elective"
+        },
+        "FT3201": {
+          "name": "Fibre Science",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OTT355": {
+          "name": "Garment Manufacturing Technology",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE353": {
+          "name": "Industrial Safety",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPE354": {
+          "name": "Unit Operations in Petro Chemical Industries",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT352": {
+          "name": "Plastic Materials for Engineers",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OPT353": {
+          "name": "Properties and Testing of Plastics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OEC353": {
+          "name": "VLSI Design",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM370": {
+          "name": "Wearable Devices",
+          "credits": 3,
+          "type": "elective"
+        },
+        "CBM356": {
+          "name": "Medical Informatics",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT355": {
+          "name": "Biotechnology for Waste Management",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT356": {
+          "name": "Lifestyle Diseases",
+          "credits": 3,
+          "type": "elective"
+        },
+        "OBT357": {
+          "name": "Biotechnology in Health Care",
+          "credits": 3,
+          "type": "elective"
+        }
+      }
+    }
+  }
 }
