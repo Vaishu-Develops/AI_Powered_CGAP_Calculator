@@ -1,123 +1,213 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiUploadCloud, FiFile, FiCheck, FiAlertCircle } from 'react-icons/fi';
 
 interface UploadSectionProps {
-    onUploadSuccess: (data: any) => void;
-    onLoading: (isLoading: boolean) => void;
+    onFilesSelected: (files: File[]) => void;
+    isDisabled?: boolean;
 }
 
-export default function UploadSection({ onUploadSuccess, onLoading }: UploadSectionProps) {
+export default function UploadSection({ onFilesSelected, isDisabled }: UploadSectionProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [previews, setPreviews] = useState<{ url: string; name: string }[]>([]);
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (e.type === 'dragenter' || e.type === 'dragover') {
-            setIsDragging(true);
-        } else if (e.type === 'dragleave') {
-            setIsDragging(false);
-        }
+        if (e.type === 'dragenter' || e.type === 'dragover') setIsDragging(true);
+        else if (e.type === 'dragleave') setIsDragging(false);
     }, []);
 
     const handleDrop = useCallback(async (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setIsDragging(false);
-
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            await handleFiles(e.dataTransfer.files[0]);
-        }
+        if (e.dataTransfer.files?.length > 0) processFiles(Array.from(e.dataTransfer.files));
     }, []);
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            await handleFiles(e.target.files[0]);
-        }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files?.length) processFiles(Array.from(e.target.files));
     };
 
-    const handleFiles = async (file: File) => {
-        if (!file.type.startsWith('image/')) {
-            setError('Please upload an image file (JPG, PNG).');
+    const processFiles = (files: File[]) => {
+        const validFiles = files.filter(f =>
+            (f.type.startsWith('image/') || f.type === 'application/pdf') && f.size <= 20 * 1024 * 1024
+        );
+
+        if (validFiles.length === 0) {
+            setError('Please upload valid images or PDFs under 20MB.');
             return;
         }
-        setError(null);
-        onLoading(true);
 
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const response = await fetch('http://localhost:8000/calculate-cgpa/', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.detail || 'Failed to process image');
-            }
-
-            const data = await response.json();
-            onUploadSuccess(data);
-        } catch (err: any) {
-            setError(err.message || 'An unexpected error occurred.');
-        } finally {
-            onLoading(false);
+        if (validFiles.length < files.length) {
+            setError('Some files were ignored (invalid format or >20MB).');
+        } else {
+            setError(null);
         }
+
+        const newPreviews = validFiles.map(f => ({
+            url: f.type.startsWith('image/') ? URL.createObjectURL(f) : '',
+            name: f.name
+        }));
+
+        setPreviews(newPreviews);
+        onFilesSelected(validFiles);
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto mb-12">
-            <div
-                className={`
-          relative overflow-hidden rounded-3xl border-2 border-dashed p-10 text-center transition-all duration-300
-          ${isDragging
-                        ? 'border-blue-500 bg-blue-50/50 scale-[1.02]'
-                        : 'border-slate-300 hover:border-blue-400 bg-white/50'
-                    }
-          glass
-        `}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
+        <div className="w-full max-w-2xl mx-auto px-4">
+            <motion.div
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`relative group rounded-[32px] p-1 transition-all duration-500 bg-gradient-to-br ${isDragging
+                    ? 'from-primary via-accent-2 to-primary shadow-[0_0_40px_rgba(212,80,10,0.25)]'
+                    : 'from-border via-border/50 to-border'
+                    }`}
             >
-                <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
-                    <div className={`
-            p-4 rounded-full bg-blue-100 text-blue-600 mb-2 transition-transform duration-500
-            ${isDragging ? 'rotate-180 scale-110' : ''}
-          `}>
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
+                <div
+                    className="relative rounded-[31px] bg-bg-card p-8 md:p-12 flex flex-col items-center text-center overflow-hidden"
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                >
+                    {/* Animated Background Glow */}
+                    <AnimatePresence>
+                        {isDragging && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 bg-primary/5 backdrop-blur-[2px] z-0"
+                            />
+                        )}
+                    </AnimatePresence>
 
-                    <h3 className="text-2xl font-bold text-gray-800">
-                        Upload Marksheet
-                    </h3>
-                    <p className="text-gray-500 max-w-sm">
-                        Drag & drop your Anna University marksheet screenshot here, or click to browse.
-                    </p>
-
-                    <label className="mt-4 inline-flex cursor-pointer items-center justify-center rounded-xl bg-blue-600 px-8 py-3 font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95">
-                        <span>Select Image</span>
-                        <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handleChange}
+                    {/* Animated Border SVG */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+                        <rect
+                            x="2" y="2"
+                            width="calc(100% - 4px)"
+                            height="calc(100% - 4px)"
+                            rx="29"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeDasharray="8 12"
+                            className={`transition-colors duration-500 ${isDragging ? 'text-primary animate-[shimmer_2s_linear_infinite]' : 'text-border'
+                                }`}
+                            style={{
+                                strokeDashoffset: isDragging ? 0 : 40,
+                            }}
                         />
-                    </label>
+                    </svg>
 
-                    {error && (
-                        <div className="mt-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm font-medium animate-pulse">
-                            {error}
+                    <div className="relative z-20 flex flex-col items-center w-full">
+                        {/* Interactive Icon Container */}
+                        <motion.div
+                            animate={isDragging ? { scale: 1.1, y: -5 } : { scale: 1, y: 0 }}
+                            className={`w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors duration-500 ${isDragging ? 'bg-primary text-white shadow-lg' : 'bg-primary/10 text-primary'
+                                }`}
+                        >
+                            <FiUploadCloud className="w-10 h-10" />
+                        </motion.div>
+
+                        <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-2 tracking-tight">
+                            {isDragging ? 'Drop to start analysis' : 'Upload Marksheets'}
+                        </h3>
+                        <p className="text-text-muted max-w-sm mb-8 leading-relaxed">
+                            Drag & drop your semester results. We'll handle the calculation magic for you.
+                        </p>
+
+                        <div className="flex flex-wrap justify-center gap-3 mb-8">
+                            {['JPG', 'PNG', 'WEBP', 'PDF'].map((fmt) => (
+                                <span key={fmt} className="px-3 py-1 bg-bg-card-alt border border-border text-[10px] font-bold tracking-widest text-text-muted rounded-full uppercase">
+                                    {fmt}
+                                </span>
+                            ))}
                         </div>
-                    )}
+
+                        {/* File Previews */}
+                        <AnimatePresence>
+                            {previews.length > 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="flex flex-wrap justify-center gap-4 mb-8 w-full"
+                                >
+                                    {previews.slice(0, 3).map((file, idx) => (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            transition={{ delay: idx * 0.1 }}
+                                            className="relative w-16 h-16 rounded-xl border border-border overflow-hidden bg-bg-card-alt group/preview shadow-sm"
+                                        >
+                                            {file.url ? (
+                                                <img src={file.url} alt="" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <FiFile className="w-6 h-6 text-primary" />
+                                                </div>
+                                            )}
+                                            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
+                                                <FiCheck className="text-white w-6 h-6" />
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                    {previews.length > 3 && (
+                                        <div className="w-16 h-16 rounded-xl border border-dashed border-primary flex items-center justify-center font-bold text-primary bg-primary/5">
+                                            +{previews.length - 3}
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <label className="relative overflow-hidden group cursor-pointer">
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={`px-10 py-4 rounded-2xl font-bold flex items-center gap-3 transition-shadow duration-300 ${isDisabled
+                                    ? 'bg-neutral/20 text-text-muted cursor-not-allowed'
+                                    : 'bg-primary text-white shadow-[0_10px_30px_rgba(212,80,10,0.2)] hover:shadow-[0_15px_40px_rgba(212,80,10,0.3)]'
+                                    }`}
+                            >
+                                <FiUploadCloud className="w-5 h-5" />
+                                {previews.length > 0 ? 'Add more files' : 'Select Files'}
+                            </motion.div>
+                            <input
+                                type="file"
+                                className="hidden"
+                                accept="image/*,application/pdf"
+                                multiple
+                                onChange={handleChange}
+                                disabled={isDisabled}
+                            />
+                        </label>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
+
+            {/* Error Message */}
+            <AnimatePresence>
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="mt-6 p-4 rounded-2xl bg-accent-2/10 border border-accent-2/20 flex items-center gap-3 text-accent-2 font-medium"
+                    >
+                        <FiAlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-sm">{error}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
