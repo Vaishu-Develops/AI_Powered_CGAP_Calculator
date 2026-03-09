@@ -773,3 +773,39 @@ body {
 .delay-1500 {
   animation-delay: 1.5s;
 }
+
+/* ═══════════════════════════════════════════════════════
+   DROPDOWN MENUS (SELECT & OPTIONS)
+═══════════════════════════════════════════════════════ */
+select {
+  /* Prevent default focus outline to use our custom ring */
+  outline: none;
+}
+
+select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  padding: 12px;
+  font-size: 14px;
+}
+
+select option:checked,
+select option:hover,
+select option:focus {
+  background-color: var(--bg-card-alt);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* For dark mode consistency if needed */
+[data-theme="holographic"] select option {
+  background-color: #1A1A2E;
+  color: white;
+}
+
+[data-theme="holographic"] select option:checked {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: #A78BFA;
+}

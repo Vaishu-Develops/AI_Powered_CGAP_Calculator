@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   keywords: ["CGPA", "Anna University", "GPA Calculator", "Marksheet", "OCR"],
 };
 
+import { UserProvider } from "@/context/UserContext";
+import { CalcFlowProvider } from "@/context/CalcFlowContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +40,11 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        {children}
+        <UserProvider>
+          <CalcFlowProvider>
+            {children}
+          </CalcFlowProvider>
+        </UserProvider>
       </body>
     </html>
   );
