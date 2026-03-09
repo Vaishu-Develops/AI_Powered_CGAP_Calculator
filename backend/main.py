@@ -46,6 +46,86 @@ def read_root():
         }
     }
 
+from pydantic import BaseModel
+from typing import List, Optional
+
+class ManualSubject(BaseModel):
+    subject_code: str
+    grade: str
+    semester: Optional[int] = 1
+
+class CalculateRequest(BaseModel):
+    subjects: List[ManualSubject]
+    semester: int = 1
+    regulation: str = "2021"
+    branch: str = "CSE"
+
+@app.post("/calculate-from-data/")
+async def calculate_from_data(request: CalculateRequest):
+    """
+    Direct Calculation from provided JSON data (used for Manual Entry)
+    """
+    try:
+        print(f"Manual calculation requested for branch: {request.branch}, sem: {request.semester}, reg: {request.regulation}")
+        
+        # 1. Enrich subjects with credits from curriculum service using the provided branch
+        enriched_grades = []
+        for s in request.subjects:
+            # Normalize branch name to uppercase/code used in data files
+            branch_key = request.branch.upper()
+            
+            # get_credits returns a CreditResult object
+            credit_res = curriculum_service.get_credits(s.subject_code, branch_key, request.regulation)
+            credits = credit_res.credits
+            subject_semester = credit_res.semester
+            
+            # For manual entry, we trust the semester passed by the user or the curriculum
+            # If curriculum says 3, but user is in sem 5, it's an arrear.
+            is_arrear = False
+            if subject_semester is not None:
+                is_arrear = subject_semester != request.semester
+                
+            enriched_grade = {
+                'subject': s.subject_code,
+                'grade': s.grade,
+                'credits': credits,
+                'original_semester': subject_semester if subject_semester else (s.semester or request.semester),
+                'is_arrear': is_arrear
+            }
+            enriched_grades.append(enriched_grade)
+            
+        # 2. Calculate GPA/CGPA
+        calc_result = cgpa_calculator.calculate_cgpa_from_grades(enriched_grades, request.semester)
+        
+        gpa = calc_result.get('gpa', 0.0)
+        cgpa = calc_result.get('cgpa', 0.0)
+        details = calc_result.get('subjects', {})
+        
+        percentage = cgpa_calculator.calculate_percentage(cgpa)
+        class_div = calc_result.get('class', cgpa_calculator.get_class_division(cgpa))
+        
+        return {
+            "gpa": gpa,
+            "cgpa": cgpa,
+            "percentage": f"{percentage}%",
+            "class": class_div,
+            "passed_subjects": sum(1 for s in details.values() if s['grade_points'] > 0),
+            "total_subjects": len(details),
+            "subjects": details,
+            "status": "success",
+            "semester_info": {
+                "semester": request.semester,
+                "regulation": request.regulation,
+                "branch": request.branch
+            }
+        }
+        
+    except Exception as e:
+        import traceback
+        print(f"Manual Calculation Error: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/calculate-cgpa/")
 async def calculate_cgpa(file: UploadFile = File(...)):
     """
