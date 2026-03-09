@@ -135,17 +135,18 @@ export default function InputPage() {
   };
 
   // ── Manual Calculation Flow ──
-  const handleManualCalculate = async (customSubjects: any[]) => {
+  const handleManualCalculate = async (customSubjects: any[], metadata: { semester: number; branch: string; regulation: string }) => {
     setStage('calculating');
-    setStatusMsg('Computing Custom CGPA...');
+    setStatusMsg(`Computing ${metadata.branch.toUpperCase()} CGPA...`);
 
     try {
       await sleep(400);
 
       const payload = {
         subjects: customSubjects,
-        semester: 1, // Defaulting for simple manual entry
-        regulation: "2021" // Defaulting to 2021 for manual entry currently
+        semester: metadata.semester,
+        regulation: metadata.regulation,
+        branch: metadata.branch
       };
 
       const res = await fetch('http://localhost:8000/calculate-from-data/', {
@@ -217,39 +218,42 @@ export default function InputPage() {
   if (!state.inputMethod) return null; // Prevent flicker while redirecting
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        padding: '2rem 1rem',
-        background: 'var(--background)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
+    <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-1/5 rounded-full blur-[120px] pointer-events-none" />
+
       <ParticleBackground />
 
-      <div style={{ position: 'relative', zIndex: 10, maxWidth: 1200, margin: '0 auto' }}>
-
-        <header style={{ textAlign: 'center', paddingTop: '2rem', paddingBottom: '2rem' }}>
-          <div className="mb-4 text-xs font-black tracking-[0.2em] text-text-muted uppercase flex justify-center gap-2">
-            <span>{state.target === 'me' ? 'My Report' : `${state.friendName}'s Report`}</span>
-            <span>•</span>
-            <span className={state.mode === 'single_sem' ? 'text-success' : 'text-data'}>
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <header className="text-center py-12 mb-4">
+          <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bg-card border border-border text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-muted shadow-sm">
+            <span className="flex items-center gap-1.5 underline decoration-primary/30 decoration-2 underline-offset-2">
+              {state.target === 'me' ? 'My Report' : `${state.friendName}'s Report`}
+            </span>
+            <span className="opacity-30">•</span>
+            <span className={state.mode === 'single_sem' ? 'text-primary' : 'text-accent-1'}>
               {state.mode === 'single_sem' ? 'Single Sem' : 'Multi Sem CGPA'}
             </span>
-            <span>•</span>
-            <span className={state.inputMethod === 'ocr' ? 'text-primary' : 'text-accent-2'}>
-              {state.inputMethod === 'ocr' ? 'OCR' : 'Manual'}
+            <span className="opacity-30">•</span>
+            <span className="text-text-primary px-2 py-0.5 rounded-md bg-bg-card-alt border border-border/50">
+              {state.inputMethod === 'ocr' ? 'AI OCR' : 'Manual Entry'}
             </span>
           </div>
-          <h1 className="text-4xl font-black mb-2 tracking-tight">Provide Grades</h1>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4">
+            {state.inputMethod === 'ocr' ? 'Scan Marksheets' : 'Provide Grades'}
+          </h1>
+          <p className="text-text-muted font-medium text-lg max-w-xl mx-auto leading-relaxed">
+            {state.inputMethod === 'ocr'
+              ? 'Upload screenshots of your marksheets and let Saffron Engine extract the data.'
+              : 'Manually enter your subject codes and grades for a precise calculation.'}
+          </p>
         </header>
 
         {stage !== 'idle' && stage !== 'done' && <ProgressBar stage={stage} />}
 
         {/* Status Message */}
         {statusMsg && stage !== 'idle' && stage !== 'preview' && stage !== 'done' && (
-          <div className="text-center mb-8 font-bold text-text-muted">
+          <div className="text-center mb-10 font-bold text-text-primary bg-bg-card border border-border inline-block px-6 py-2 rounded-full mx-auto flex justify-center w-fit shadow-sm">
             {statusMsg}
           </div>
         )}
