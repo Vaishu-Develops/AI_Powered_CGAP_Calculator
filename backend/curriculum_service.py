@@ -767,6 +767,19 @@ class CurriculumService:
                     'semester': None
                 }
         
+        # Extract Naan Mudhalvan subjects
+        naan_mudhalvan = data.get('naan_mudhalvan', {})
+        if isinstance(naan_mudhalvan, dict):
+            for code, info in naan_mudhalvan.items():
+                code = code.upper()
+                subjects[code] = {
+                    'name': info.get('name', ''),
+                    'credits': info.get('credits', 3),
+                    'category': info.get('category', 'NM'),
+                    'type': info.get('type', 'mandatory'),
+                    'semester': info.get('semester')
+                }
+        
         return subjects
     
     def _determine_type(self, code: str, name: str) -> str:

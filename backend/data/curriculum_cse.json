@@ -1211,5 +1211,43 @@
         }
       }
     }
+  },
+  "naan_mudhalvan": {
+    "NM1022": {
+      "name": "Naan Mudhalvan - Industry Readiness I",
+      "credits": 0,
+      "type": "mandatory",
+      "category": "NM"
+    },
+    "NM1026": {
+      "name": "Naan Mudhalvan - Industry Readiness II",
+      "credits": 0,
+      "type": "mandatory",
+      "category": "NM"
+    },
+    "NM1086": {
+      "name": "Naan Mudhalvan - Open Elective I",
+      "credits": 3,
+      "type": "elective",
+      "category": "NM"
+    },
+    "NM1087": {
+      "name": "Naan Mudhalvan - Open Elective II",
+      "credits": 3,
+      "type": "elective",
+      "category": "NM"
+    },
+    "NM1088": {
+      "name": "Naan Mudhalvan - Open Elective III",
+      "credits": 3,
+      "type": "elective",
+      "category": "NM"
+    },
+    "NM1089": {
+      "name": "Naan Mudhalvan - Open Elective IV",
+      "credits": 3,
+      "type": "elective",
+      "category": "NM"
+    }
   }
 }
