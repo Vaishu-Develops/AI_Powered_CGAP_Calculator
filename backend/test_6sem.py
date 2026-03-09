@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Comprehensive test: Call the running OCR preview API for each of the 6 semester images
+Comprehensive test: Directly call the OCR service for each of the 6 semester images
 and compare extraction against manually-verified ground truth.
+No server needed — runs the OCR pipeline directly.
 """
-import requests, json, os, sys
-# Force UTF-8 output
-import io
+import sys, io, os, json
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-API_URL = "http://localhost:8000/preview-ocr/"
+from ocr_service_v3 import SevenLayerOCRService
+from curriculum_service import CurriculumService
+
+# Initialize services directly
+print("Loading curriculum service...")
+curriculum_service = CurriculumService()
+print("Initializing OCR service...")
+ocr_service = SevenLayerOCRService(curriculum_service=curriculum_service, debug=False)
 
 # Ground truth from visual inspection of each image
 GROUND_TRUTH = {
@@ -91,15 +97,21 @@ for filename, truth in GROUND_TRUTH.items():
     print(f"  {truth['label']} -- {filename}")
     print(f"{'='*70}")
     
+    # Read image and call OCR directly
     with open(filepath, 'rb') as f:
-        resp = requests.post(API_URL, files={"file": (filename, f, "image/png")})
+        image_bytes = f.read()
     
-    if resp.status_code != 200:
-        print(f"  [X] API Error: {resp.status_code} -- {resp.text[:200]}")
+    result, error = ocr_service.process_marksheet(image_bytes)
+    
+    if error:
+        print(f"  [X] OCR Error: {error}")
         continue
     
-    data = resp.json()
-    extracted = {s['subject_code']: s['grade'] for s in data.get('subjects', [])}
+    if not result:
+        print(f"  [X] No result returned")
+        continue
+    
+    extracted = {s['subject_code']: s['grade'] for s in result.get('subjects', [])}
     
     print(f"  Expected: {len(truth['subjects'])} subjects")
     print(f"  Extracted: {len(extracted)} subjects")
@@ -153,6 +165,12 @@ for filename, truth in GROUND_TRUTH.items():
             print(f"  [X] REVAL MISSING: {', '.join(reval_missing)}")
         else:
             print(f"  [OK] Revaluation subjects detected")
+    
+    # Processing info
+    proc = result.get('processing_info', {})
+    corrections = proc.get('corrections', [])
+    if corrections:
+        print(f"  [i] Auto-corrections: {corrections}")
     
     all_results[filename] = {
         "label": truth['label'], 
