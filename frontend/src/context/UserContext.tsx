@@ -6,6 +6,7 @@ type UserData = {
     id: string;
     name: string;
     email: string;
+    semestersCalculated?: number[]; // Array of semester numbers they have calculated 
 } | null;
 
 interface UserContextType {

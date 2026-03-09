@@ -12,7 +12,9 @@ import {
     FiCheck,
     FiX,
     FiInfo,
-    FiZap
+    FiZap,
+    FiPlus,
+    FiTrash2
 } from 'react-icons/fi';
 
 interface PreviewSubject {
@@ -83,6 +85,25 @@ export default function PreviewSection({
             subject_code: edits.subject_code.toUpperCase().trim() || updated[idx].subject_code,
         };
         setSubjects(updated);
+        cancelEdit(idx);
+    };
+
+    const addSubject = () => {
+        const newSub: PreviewSubject = {
+            subject_code: 'NEW101',
+            grade: 'O',
+            credits: 3
+        };
+        const updated = [...subjects, newSub];
+        setSubjects(updated);
+        // Automatically start editing the new subject
+        startEdit(updated.length - 1, newSub);
+    };
+
+    const removeSubject = (idx: number) => {
+        const updated = subjects.filter((_, i) => i !== idx);
+        setSubjects(updated);
+        // Also clear any editing state for this index
         cancelEdit(idx);
     };
 
@@ -222,8 +243,17 @@ export default function PreviewSection({
                                     </div>
                                     <h3 className="font-bold text-lg text-text-primary">Extracted Results</h3>
                                 </div>
-                                <div className="text-xs text-text-muted font-bold tracking-widest uppercase">
-                                    {subjects.length} Subjects Detected
+                                <div className="flex items-center gap-4">
+                                    <button
+                                        onClick={addSubject}
+                                        className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all"
+                                    >
+                                        <FiPlus />
+                                        Add Subject
+                                    </button>
+                                    <div className="text-xs text-text-muted font-bold tracking-widest uppercase">
+                                        {subjects.length} Subjects Detected
+                                    </div>
                                 </div>
                             </div>
 
@@ -292,7 +322,10 @@ export default function PreviewSection({
                                                                 <button onClick={() => cancelEdit(idx)} className="p-2 bg-bg-card-alt text-text-muted rounded-xl hover:text-accent-2 transition-colors"><FiX /></button>
                                                             </>
                                                         ) : (
-                                                            <button onClick={() => startEdit(idx, subj)} className="p-2 opacity-0 group-hover:opacity-100 bg-bg-card-alt text-text-muted rounded-xl hover:text-primary hover:bg-primary/5 transition-all"><FiEdit2 /></button>
+                                                            <>
+                                                                <button onClick={() => startEdit(idx, subj)} className="p-2 opacity-0 group-hover:opacity-100 bg-bg-card-alt text-text-muted rounded-xl hover:text-primary hover:bg-primary/5 transition-all outline-none" title="Edit"><FiEdit2 /></button>
+                                                                <button onClick={() => removeSubject(idx)} className="p-2 opacity-0 group-hover:opacity-100 bg-bg-card-alt text-text-muted rounded-xl hover:text-accent-2 hover:bg-accent-2/5 transition-all outline-none" title="Remove"><FiTrash2 /></button>
+                                                            </>
                                                         )}
                                                     </div>
                                                 </div>

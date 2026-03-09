@@ -161,7 +161,7 @@ export default function PlacementEligiblityCard({ cgpa }: { cgpa: number }) {
             <div className="p-4 rounded-2xl bg-bg-card-alt border border-border flex items-center gap-3">
                 <FiInfo className="text-primary flex-shrink-0" />
                 <p className="text-[10px] text-text-muted font-bold leading-relaxed">
-                    Eligibility criteria may vary by company and regulation. This is an average based on 2024 placement data. Ensure you maintain zero standing arrears.
+                    Eligibility criteria may vary by company and regulation. This is an average based on 2025 placement data. Ensure you maintain zero standing arrears.
                 </p>
             </div>
         </div>
