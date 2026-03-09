@@ -532,6 +532,9 @@ class SevenLayerOCRService:
                 # Skip fragments shorter than 6 chars - they are OCR artifacts
                 if len(code) < 6: continue
                 
+                # Must contain at least one letter (AU codes always have a prefix)
+                if not any(c.isalpha() for c in code): continue
+                
                 # FIX 3c: Fault-tolerant subject code token boundary detection
                 # Primary: exact match of code_raw in a single token
                 subject_tokens = [t for t in r.tokens if code_raw in t.text.upper().replace(' ', '')]
@@ -713,9 +716,21 @@ class SevenLayerOCRService:
         """
         if len(code) < 4: return code
         
+        # Safeguard: If the code is completely numeric, it's likely NOT a subject code
+        # (could be a register number or phone number fragment).
+        if code.isdigit():
+            return code
+            
         # 1. Fix prefix errors (Digits misread as Letters)
-        # Typical prefixes: HS, MA, PH, GE, BE, CS, IT, EC, EE, ME, CE, AD
-        prefix_fix = {'8': 'B', '5': 'S', '0': 'O'}
+        # Typical prefixes: HS, MA, PH, GE, BE, CS, IT, EC, EE, ME, CE, AD, CB, MX, NM
+        # Expanded map: covers all common OCR digit→letter confusions for prefix chars
+        prefix_fix = {
+            '8': 'B', '5': 'S', '0': 'O',
+            '6': 'G',   # G→6 is very common (GE→6E, GE3251→6E3251)
+            '1': 'I',   # I→1 (IT→1T)
+            '7': 'T',   # T→7 (possible but rare)
+            '2': 'Z',   # Z→2 (rare)
+        }
         code_chars = list(code)
         
         # If the first character is a digit, it's likely a misread letter
@@ -724,7 +739,7 @@ class SevenLayerOCRService:
         
         # If the second character is a digit and looks like a misread letter
         if len(code_chars) > 1 and code_chars[1].isdigit() and code_chars[1] in prefix_fix:
-             # If we have [Letter][Digit], the Digit is likely a misread Letter (e.g. M8 -> ME)
+             # If we have [Letter][Digit], the Digit is likely a misread Letter (e.g. M8 -> ME, C5 -> CS)
              if code_chars[0].isalpha():
                  code_chars[1] = prefix_fix[code_chars[1]]
         
@@ -999,7 +1014,7 @@ class SevenLayerOCRService:
                 if diff < best_diff:
                     best_diff = diff
                     best = c
-            if best and best_diff <= 2:
+            if best and best_diff <= 1:
                 return best, "corrected", max(0.5, 0.85 - best_diff * 0.15)
         
         # Strategy 5: Stripped prefix (OCR adds garbage char at start)
@@ -1048,7 +1063,7 @@ class SevenLayerOCRService:
             for s in sorted_subs:
                 is_dup = False
                 for existing in final_subs:
-                    if abs(s.row_index - existing.row_index) <= 1:
+                    if s.row_index == existing.row_index:
                         if s.subject_code == existing.subject_code:
                             is_dup = True; break
                         if (len(s.subject_code) >= 4 and len(existing.subject_code) >= 4 and
