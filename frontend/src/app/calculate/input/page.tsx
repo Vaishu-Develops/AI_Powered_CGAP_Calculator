@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import UploadSection from '@/components/UploadSection';
@@ -9,6 +10,9 @@ import ResultsSection from '@/components/ResultsSection';
 import PreviewSection from '@/components/PreviewSection';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import ManualEntryGrid from '@/components/ManualEntryGrid';
+import SemesterSelector, { SemSlot } from '@/components/SemesterSelector';
+import SlotMismatchModal, { SlotMismatch } from '@/components/SlotMismatchModal';
+import OcrScanScreen from '@/components/OcrScanScreen';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
@@ -31,26 +35,23 @@ export default function InputPage() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [statusMsg, setStatusMsg] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [semSlots, setSemSlots] = useState<SemSlot[]>([
+    { sem: 1, file: null, previewUrl: null },
+  ]);
+  const [mismatches, setMismatches] = useState<SlotMismatch[]>([]);
+  const [pendingOcrData, setPendingOcrData] = useState<any>(null);
   const filesRef = useRef<File[]>([]);
 
   // ── Step 1: Files Selected → Upload to /preview-ocr/ sequentially ──
-  const handleFilesSelected = async (files: File[]) => {
+  // slotMap: optional map of fileIndex → slotSem (for multi-sem mismatch detection)
+  const handleFilesSelected = async (files: File[], slotMap?: number[]) => {
     filesRef.current = files;
-
-    // Create preview URLs for all uploaded images
     const urls = files.map(f => URL.createObjectURL(f));
     setImageUrls(urls);
-
-    setError(null);
-    setResults(null);
-    setOcrData(null);
-
-    // Stage: uploading
+    setError(null); setResults(null); setOcrData(null);
     setStage('uploading');
     setStatusMsg(`Uploading ${files.length} marksheet(s)...`);
     await sleep(300);
-
-    // Stage: OCR
     setStage('ocr');
 
     try {
@@ -58,6 +59,7 @@ export default function InputPage() {
       let overallConfidence = 0;
       let highestSem = 0;
       let regulationStr = '';
+      const foundMismatches: SlotMismatch[] = [];
 
       for (let i = 0; i < files.length; i++) {
         setStatusMsg(`Scanning file ${i + 1} of ${files.length}...`);
@@ -68,69 +70,95 @@ export default function InputPage() {
           method: 'POST',
           body: formData,
         });
-
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.detail || `OCR failed for file ${i + 1}`);
         }
 
         const data = await res.json();
-        const newSubjects = data.subjects || [];
+        const detectedSem: number = data.semester_info?.semester || 0;
 
-        // Smart Merging Logic: Always keep the PASSING grade for duplicate subject codes
-        // This handles arrear-clearing across semesters regardless of file upload order
+        // ── Layer 2: Slot mismatch detection ──
+        if (slotMap && slotMap[i] && detectedSem > 0 && detectedSem !== slotMap[i]) {
+          const slot = semSlots.find(s => s.sem === slotMap[i]);
+          foundMismatches.push({
+            slotSem: slotMap[i],
+            detectedSem,
+            regNo: data.semester_info?.reg_no,
+            previewUrl: slot?.previewUrl ?? null,
+          });
+          // Don't merge subjects from a mismatched slot
+          continue;
+        }
+
+        const newSubjects = data.subjects || [];
         newSubjects.forEach((newSub: any) => {
           const existingIdx = combinedSubjects.findIndex(s => s.subject_code === newSub.subject_code);
           if (existingIdx > -1) {
-            const existingGrade = combinedSubjects[existingIdx].grade;
-            const newGrade = newSub.grade;
-
             const FAILING = ['U', 'RA', 'SA', 'W', 'AB', '-'];
-            const isExistingPassing = !FAILING.includes(existingGrade);
-            const isNewPassing = !FAILING.includes(newGrade);
-
-            // Always prefer the passing result
-            if (isNewPassing && !isExistingPassing) {
-              // New is pass, existing is fail → overwrite with pass
-              combinedSubjects[existingIdx] = newSub;
-            } else if (!isNewPassing && isExistingPassing) {
-              // New is fail, existing is pass → KEEP existing (don't overwrite)
-              // This is the key fix: don't let a later RA overwrite a pass
-            } else if (isNewPassing && isExistingPassing) {
-              // Both pass → keep existing (first occurrence is fine)
-            }
-            // Both fail → keep existing
+            const isExistingPassing = !FAILING.includes(combinedSubjects[existingIdx].grade);
+            const isNewPassing = !FAILING.includes(newSub.grade);
+            if (isNewPassing && !isExistingPassing) combinedSubjects[existingIdx] = newSub;
           } else {
             combinedSubjects.push(newSub);
           }
         });
 
         overallConfidence += data.confidence?.overall || 0;
-        const sem = data.semester_info?.semester || 0;
-        if (sem > highestSem) {
-          highestSem = sem;
+        if (detectedSem > highestSem) {
+          highestSem = detectedSem;
           if (data.semester_info?.regulation) regulationStr = data.semester_info.regulation;
         }
       }
 
       const avgConfidence = files.length > 0 ? overallConfidence / files.length : 0;
-
       const mergedData = {
         subjects: combinedSubjects,
-        semester_info: {
-          semester: highestSem > 0 ? highestSem : undefined,
-          regulation: regulationStr || undefined
-        },
+        semester_info: { semester: highestSem > 0 ? highestSem : undefined, regulation: regulationStr || undefined },
         confidence: { overall: avgConfidence },
-        status: "preview_ready"
+        status: 'preview_ready'
       };
 
-      setOcrData(mergedData);
-      setStage('preview');
-      setStatusMsg(`Review ${combinedSubjects.length} extracted subjects`);
+      if (foundMismatches.length > 0) {
+        // Pause — show mismatch modal before proceeding to preview
+        setPendingOcrData(mergedData);
+        setMismatches(foundMismatches);
+        setStage('idle');
+        setStatusMsg('');
+      } else {
+        setOcrData(mergedData);
+        setStage('preview');
+        setStatusMsg(`Review ${combinedSubjects.length} extracted subjects`);
+      }
     } catch (e: any) {
       setError(e.message || 'Failed to scan marksheets. Is the backend running?');
       setStage('idle');
+    }
+  };
+
+  // ── Mismatch handlers ──
+  const handleMismatchSkip = (slotSem: number) => {
+    const remaining = mismatches.filter(m => m.slotSem !== slotSem);
+    setMismatches(remaining);
+    if (remaining.length === 0 && pendingOcrData) {
+      setOcrData(pendingOcrData);
+      setPendingOcrData(null);
+      setStage('preview');
+      setStatusMsg(`Review ${pendingOcrData.subjects.length} extracted subjects`);
+    }
+  };
+
+  const handleMismatchReplace = (slotSem: number) => {
+    // Remove the mismatch from list; user will re-upload to the slot card and click Scan All again
+    const remaining = mismatches.filter(m => m.slotSem !== slotSem);
+    setMismatches(remaining);
+    // Clear the bad file from that slot so user is forced to re-upload
+    setSemSlots(prev => prev.map(s => s.sem === slotSem ? { ...s, file: null, previewUrl: null } : s));
+    if (remaining.length === 0 && pendingOcrData) {
+      setOcrData(pendingOcrData);
+      setPendingOcrData(null);
+      setStage('preview');
+      setStatusMsg(`Review ${pendingOcrData.subjects.length} extracted subjects`);
     }
   };
 
@@ -219,6 +247,22 @@ export default function InputPage() {
 
   return (
     <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden">
+      {/* Slot mismatch modal — rendered at top level to overlay everything */}
+      {mismatches.length > 0 && (
+        <SlotMismatchModal
+          mismatches={mismatches}
+          onReplace={handleMismatchReplace}
+          onSkip={handleMismatchSkip}
+          onProceed={() => {
+            if (pendingOcrData) {
+              setOcrData(pendingOcrData);
+              setPendingOcrData(null);
+              setStage('preview');
+            }
+            setMismatches([]);
+          }}
+        />
+      )}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-1/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -263,7 +307,45 @@ export default function InputPage() {
         {stage === 'idle' && (
           <div className="animate-fade-up">
             {state.inputMethod === 'ocr' ? (
-              <UploadSection onFilesSelected={handleFilesSelected} />
+              <>
+                {state.mode === 'multi_sem' ? (
+                  <>
+                    <SemesterSelector slots={semSlots} onSlotsChange={setSemSlots} />
+                    {/* Scan All button */}
+                    {semSlots.some(s => s.file) && (
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px', marginBottom: '16px' }}>
+                        <motion.button
+                          whileTap={{ scale: 0.97 }}
+                          whileHover={{ y: -2 }}
+                          onClick={() => {
+                            const uploadedSlots = semSlots.filter(s => s.file);
+                            const files = uploadedSlots.map(s => s.file!);
+                            const slotMap = uploadedSlots.map(s => s.sem);
+                            handleFilesSelected(files, slotMap);
+                          }}
+                          style={{
+                            padding: '14px 40px',
+                            borderRadius: '999px',
+                            background: '#D4500A',
+                            color: 'white',
+                            fontWeight: 800,
+                            fontSize: '15px',
+                            fontFamily: 'Outfit, sans-serif',
+                            border: 'none',
+                            cursor: 'pointer',
+                            boxShadow: '0 10px 30px rgba(212,80,10,0.25)',
+                            letterSpacing: '-0.01em',
+                          }}
+                        >
+                          Scan All {semSlots.filter(s => s.file).length} Marksheet{semSlots.filter(s => s.file).length > 1 ? 's' : ''} →
+                        </motion.button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <UploadSection onFilesSelected={handleFilesSelected} />
+                )}
+              </>
             ) : (
               <ManualEntryGrid onCalculate={handleManualCalculate} />
             )}
@@ -276,9 +358,16 @@ export default function InputPage() {
           </div>
         )}
 
-        {/* OCR Loading & Calculating states (hidden to save space in code block, existing spinners work fine) */}
+        {/* OCR Loading — The Reading Room split-layout animation */}
         {(stage === 'uploading' || stage === 'ocr') && (
-          <div className="text-center py-20 text-2xl font-bold animate-pulse text-primary">Scanning Document...</div>
+          <div className="animate-fade-up">
+            <OcrScanScreen
+              imageUrl={imageUrls[0] ?? null}
+              currentFile={filesRef.current ? Array.from(filesRef.current).findIndex((_, i) => i === 0) + 1 : 1}
+              totalFiles={filesRef.current?.length ?? 1}
+              statusMsg={statusMsg}
+            />
+          </div>
         )}
 
         {stage === 'calculating' && (
