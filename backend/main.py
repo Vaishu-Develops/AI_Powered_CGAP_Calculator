@@ -60,7 +60,58 @@ class CalculateRequest(BaseModel):
     regulation: str = "2021"
     branch: str = "CSE"
 
+@app.post("/preview-ocr/")
+async def preview_ocr(file: UploadFile = File(...)):
+    """
+    OCR Preview Endpoint — used by the frontend scan flow.
+    Returns raw extracted subjects before calculation, so the user can review/edit them.
+    Response format: { subjects, semester_info, confidence, status }
+    """
+    try:
+        print(f"[preview-ocr] Received: {file.filename}, type: {file.content_type}")
+
+        if not (file.content_type.startswith('image/') or file.content_type == 'application/pdf'):
+            raise HTTPException(status_code=400, detail="File must be an image or PDF")
+
+        contents = await file.read()
+        print(f"[preview-ocr] File size: {len(contents)} bytes")
+
+        # Run OCR pipeline
+        result, error = ocr_service.process_marksheet(contents)
+        if error:
+            raise HTTPException(status_code=500, detail=f"OCR Error: {error}")
+        if not result:
+            raise HTTPException(status_code=500, detail="OCR processing failed — no result returned")
+
+        # Build subject list in the format the frontend expects
+        raw_subjects = result.get('subjects', [])
+        subjects_out = []
+        for s in raw_subjects:
+            subjects_out.append({
+                "subject_code": s.get('subject_code', ''),
+                "grade": s.get('grade', ''),
+                "marks": s.get('marks'),
+                "confidence": s.get('confidence', 1.0),
+                "semester": result.get('semester_info', {}).get('semester'),
+            })
+
+        return {
+            "subjects": subjects_out,
+            "semester_info": result.get('semester_info', {}),
+            "confidence": result.get('confidence', {}),
+            "status": "preview_ready",
+        }
+
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        import traceback
+        print(f"[preview-ocr] Unexpected error: {e}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/calculate-from-data/")
+
 async def calculate_from_data(request: CalculateRequest):
     """
     Direct Calculation from provided JSON data (used for Manual Entry)
