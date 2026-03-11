@@ -780,6 +780,21 @@ class CurriculumService:
                     'semester': info.get('semester')
                 }
         
+        # Extract mandatory courses (MX codes etc)
+        mandatory = data.get('mandatory_courses', {})
+        if isinstance(mandatory, dict):
+            for group_key, group_data in mandatory.items():
+                if not isinstance(group_data, dict): continue
+                for code, info in group_data.items():
+                    code = code.upper()
+                    subjects[code] = {
+                        'name': info.get('name', ''),
+                        'credits': info.get('credits', 0),
+                        'category': info.get('category', 'MAND'),
+                        'type': 'mandatory',
+                        'semester': None
+                    }
+        
         return subjects
     
     def _determine_type(self, code: str, name: str) -> str:
