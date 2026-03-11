@@ -17,29 +17,24 @@ import {
     FiInfo,
     FiChevronUp,
     FiChevronDown,
-    FiRefreshCw
+    FiRefreshCw,
+    FiHome,
+    FiPlusSquare
 } from 'react-icons/fi';
-import {
-    ResponsiveContainer,
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    Tooltip
-} from 'recharts';
 import confetti from 'canvas-confetti';
 import WhatIfSimulator from './WhatIfSimulator';
-import PlacementEligiblityCard from './PlacementEligiblityCard';
 import Odometer from './Odometer';
 
+// Assuming subject type based on backend
 interface SubjectDetail {
     grade: string;
     grade_points: number;
     credits: number;
     weighted: number;
+    status: string;
     marks?: number;
     is_arrear?: boolean;
-    is_revaluation?: boolean;
+    original_semester?: number;
 }
 
 interface ResultsSectionProps {
@@ -49,30 +44,63 @@ interface ResultsSectionProps {
         percentage: string;
         class: string;
         passed_subjects: number;
+        failed_subjects?: number;
         total_subjects: number;
+        current_semester_subjects?: number;
+        arrear_subjects?: number;
+        semester_credits?: number;
+        total_credits?: number;
         subjects: Record<string, SubjectDetail>;
-        confidence?: { overall?: number };
         semester_info?: { semester?: number; regulation?: string };
     };
     onReset: () => void;
+    mode?: 'single_sem' | 'multi_sem';
+    context?: any;
 }
 
-const GRADE_THEMES: Record<string, { color: string; bg: string; border: string }> = {
-    'O': { color: 'var(--color-success)', bg: 'bg-success/10', border: 'border-success/20' },
-    'A+': { color: 'var(--color-primary)', bg: 'bg-primary/10', border: 'border-primary/20' },
-    'A': { color: 'var(--color-primary)', bg: 'bg-primary/10', border: 'border-primary/20' },
-    'B+': { color: 'var(--color-accent-1)', bg: 'bg-accent-1/10', border: 'border-accent-1/20' },
-    'B': { color: 'var(--color-accent-1)', bg: 'bg-accent-1/10', border: 'border-accent-1/20' },
-    'C': { color: 'var(--color-neutral)', bg: 'bg-neutral/10', border: 'border-neutral/20' },
-    'R': { color: 'var(--color-accent-2)', bg: 'bg-accent-2/10', border: 'border-accent-2/20' },
-    'U': { color: 'var(--color-accent-2)', bg: 'bg-accent-2/10', border: 'border-accent-2/20' },
-    'RA': { color: 'var(--color-accent-2)', bg: 'bg-accent-2/10', border: 'border-accent-2/20' },
+const GRADE_THEMES: Record<string, { color: string, bg: string, border: string }> = {
+    'O': { color: '#51A880', bg: 'bg-[#51A880]/10', border: 'border-[#51A880]/20' },
+    'A+': { color: '#51A880', bg: 'bg-[#51A880]/10', border: 'border-[#51A880]/20' },
+    'A': { color: '#4FA37D', bg: 'bg-[#4FA37D]/10', border: 'border-[#4FA37D]/20' },
+    'B+': { color: '#D25419', bg: 'bg-[#FADFD0]/40', border: 'border-[#FADFD0]' },
+    'B': { color: '#D25419', bg: 'bg-[#FADFD0]/30', border: 'border-[#FADFD0]/60' },
+    'C': { color: '#89858E', bg: 'bg-[#89858E]/10', border: 'border-[#89858E]/20' },
+    'U': { color: '#ef4444', bg: 'bg-red-50', border: 'border-red-100' },
+    'RA': { color: '#ef4444', bg: 'bg-red-50', border: 'border-red-100' },
+    'AB': { color: '#6b7280', bg: 'bg-gray-50', border: 'border-gray-100' },
 };
 
-export default function ResultsSection({ data, onReset }: ResultsSectionProps) {
+export default function ResultsSection({ data, onReset, mode = 'single_sem', context }: ResultsSectionProps) {
     const [mounted, setMounted] = useState(false);
-    const [isSimOpen, setIsSimOpen] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof SubjectDetail | 'code', direction: 'asc' | 'desc' } | null>(null);
+    const [isSimOpen, setIsSimOpen] = useState(false);
+    const [selectedSem, setSelectedSem] = useState<number | null>(null);
+
+    const isSingle = mode === 'single_sem';
+
+    const semesterGpas = useMemo(() => {
+        if (isSingle) return [];
+        const semData: Record<number, { weighted: number; credits: number }> = {};
+        Object.entries(data.subjects).forEach(([code, subj]) => {
+            const sem = subj.original_semester || data.semester_info?.semester || 1;
+            if (!semData[sem]) semData[sem] = { weighted: 0, credits: 0 };
+            // use base grade_points * credits
+            semData[sem].weighted += (subj.grade_points * subj.credits);
+            semData[sem].credits += subj.credits;
+        });
+        
+        const gpas: { sem: number; gpa: number; credits: number }[] = [];
+        Object.keys(semData).sort((a,b)=>Number(a)-Number(b)).forEach(k => {
+            const sem = Number(k);
+            const vals = semData[sem];
+            gpas.push({
+                sem,
+                gpa: vals.credits > 0 ? vals.weighted / vals.credits : 0,
+                credits: vals.credits
+            });
+        });
+        return gpas;
+    }, [data.subjects, isSingle, data.semester_info]);
 
     useEffect(() => {
         setMounted(true);
@@ -91,23 +119,17 @@ export default function ResultsSection({ data, onReset }: ResultsSectionProps) {
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
                 }, 250);
-            }, 3000); // Trigger after odometer roll
+            }, 1000); // Trigger shortly after render
         }
     }, [data.cgpa, data.class]);
 
-    const chartData = useMemo(() => {
-        // Mocking a growth trend based on the current CGPA for visualization
-        const base = data.cgpa * 0.8;
-        return [
-            { name: 'Sem 1', val: base },
-            { name: 'Sem 2', val: base + (data.cgpa - base) * 0.3 },
-            { name: 'Sem 3', val: base + (data.cgpa - base) * 0.6 },
-            { name: 'Current', val: data.cgpa },
-        ];
-    }, [data.cgpa]);
-
     const subjectEntries = useMemo(() => {
         let entries = Object.entries(data.subjects);
+        
+        if (selectedSem !== null) {
+            entries = entries.filter(([_, subj]) => (subj.original_semester || data.semester_info?.semester || 1) === selectedSem);
+        }
+
         if (sortConfig) {
             entries.sort((a, b) => {
                 const aVal = sortConfig.key === 'code' ? a[0] : (a[1] as any)[sortConfig.key];
@@ -121,419 +143,455 @@ export default function ResultsSection({ data, onReset }: ResultsSectionProps) {
             });
         }
         return entries;
-    }, [data.subjects, sortConfig]);
+    }, [data.subjects, sortConfig, selectedSem, data.semester_info]);
 
-    const highestWeightedCode = useMemo(() => {
-        let max = -1;
-        let code = '';
-        Object.entries(data.subjects).forEach(([c, d]) => {
-            if (d.weighted > max) {
-                max = d.weighted;
-                code = c;
+    const highestGrade = useMemo(() => {
+        let maxGradePoints = -1;
+        let count = 0;
+        let topGrade = 'C';
+        
+        Object.values(data.subjects).forEach((d) => {
+            if (selectedSem !== null && (d.original_semester || data.semester_info?.semester || 1) !== selectedSem) return;
+            if (d.grade_points > maxGradePoints) {
+                maxGradePoints = d.grade_points;
+                topGrade = d.grade;
+                count = 1;
+            } else if (d.grade_points === maxGradePoints) {
+                count++;
             }
         });
-        return code;
-    }, [data.subjects]);
+        return `${topGrade} × ${count}`;
+    }, [data.subjects, selectedSem, data.semester_info]);
 
-    const passedCount = Object.values(data.subjects).filter((d) => !['U', 'RA', 'SA', 'W', 'AB'].includes(d.grade)).length;
-    const passRate = (passedCount / (Object.keys(data.subjects).length || 1)) * 100;
+    const primaryValue = isSingle ? data.gpa : data.cgpa;
 
     if (!mounted) return null;
-
-    // 0.0s - Pearl Background fades in (implicit via CSS)
-    // 0.6s - Classification Banner drops
-    // 0.9s - CGPA Hero scales up
-    // 1.2s - Stats slide in
-    // 1.6s - Chart draws
-    // 2.0s - Action buttons fade up
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full max-w-7xl mx-auto px-4 pb-24 space-y-12"
+            className="w-full max-w-5xl mx-auto pb-24 space-y-12"
         >
-            {/* Top Toolbar (2.0s Fadeup) */}
+            {/* ── TOP NAV BAR ── */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 px-2">
+                <button
+                    onClick={onReset}
+                    className="flex items-center gap-2 text-text-muted hover:text-text-primary transition-colors font-bold uppercase tracking-widest text-xs"
+                >
+                    <FiArrowLeft className="text-lg" /> Back
+                </button>
+                <div className="text-center md:text-left">
+                    <h2 className="text-xl font-black text-text-primary tracking-tight">
+                        {isSingle ? `Semester ${data.semester_info?.semester || '?'} Result` : 'Cumulative Result'}
+                    </h2>
+                </div>
+                <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-xs">
+                    Share <FiShare2 className="text-lg" />
+                </button>
+            </div>
+
+            {/* ── BLOCK 1: THE REVEAL (Saffron Glass Redesign) ── */}
+            <div className="bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] rounded-[60px] pt-16 pb-24 px-8 md:px-16 shadow-[0_50px_100px_-20px_rgba(210,84,25,0.12),0_20px_40px_-15px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col items-center justify-center relative overflow-hidden text-center mx-auto max-w-5xl border border-[#FADFD0]/60 group">
+                {/* Texture Overlay */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#D4500A 0.5px, transparent 0.5px)`, backgroundSize: '24px 24px' }} />
+
+                {/* Glass Blobs */}
+                <motion.div 
+                    animate={{ 
+                        scale: [1, 1.3, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                        x: [0, 40, 0],
+                        y: [0, -30, 0]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-[#D4500A]/5 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" 
+                />
+                <motion.div 
+                    animate={{ 
+                        scale: [1.3, 1, 1.3],
+                        opacity: [0.2, 0.5, 0.2],
+                        x: [0, -50, 0],
+                        y: [0, 40, 0]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#fadfd0]/30 rounded-full blur-[150px] pointer-events-none mix-blend-multiply" 
+                />
+                
+                {data.class && (
+                    <motion.div
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="mb-16 px-6 py-2.5 bg-[#D4500A]/5 border border-[#D4500A]/20 rounded-full inline-flex items-center gap-2.5 text-[#D4500A] font-black uppercase tracking-[0.25em] text-[10px] shadow-[0_2px_10px_rgba(212,80,10,0.05)] backdrop-blur-sm"
+                    >
+                        <FiAward className="text-base text-[#D4500A]" /> {data.class.replace(' (WITH ARREAR HISTORY)', '').toUpperCase()}
+                    </motion.div>
+                )}
+
+                {isSingle ? (
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: 'spring' }} className="relative z-20">
+                        <div className="text-8xl md:text-[160px] font-black text-[#D4500A] tracking-tighter flex justify-center leading-none drop-shadow-[0_10px_30px_rgba(212,80,10,0.15)]">
+                            <Odometer value={data.gpa} delay={0.8} />
+                        </div>
+                        <div className="text-[#1E293B] font-black text-xs md:text-sm uppercase tracking-[0.4em] mt-10 opacity-80">
+                            Semester {data.semester_info?.semester || '?'} Performance
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: 'spring' }} className="w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-16 md:gap-28 relative z-20 px-8">
+                        <div className="text-center group">
+                            <div className="text-7xl md:text-[110px] font-black text-[#D4500A] tracking-tighter flex justify-center leading-none drop-shadow-[0_8px_20px_rgba(212,80,10,0.12)]">
+                                <Odometer value={data.cgpa} delay={0.8} />
+                            </div>
+                            <div className="mt-6">
+                                <span className="text-[#D4500A]/60 font-black text-[10px] uppercase tracking-[0.3em]">Cumulative GPA</span>
+                            </div>
+                        </div>
+
+                        {/* Grooved Divider */}
+                        <div className="flex items-center justify-center h-32 hidden md:flex">
+                            <div className="w-px h-full bg-[#1E293B]/10 shadow-[inner_0.5px_0_1px_rgba(0,0,0,0.05),_0.5px_0_1px_white] relative" />
+                        </div>
+                        <div className="w-48 h-px bg-[#1E293B]/10 shadow-[inner_0_0.5px_1px_rgba(0,0,0,0.05),_0_0.5px_1px_white] md:hidden relative" />
+
+                        <div className="text-center group">
+                            <div className="text-5xl md:text-6xl font-black text-[#1E293B] tracking-tight flex justify-center leading-none opacity-90">
+                                <Odometer value={data.gpa} delay={1.4} />
+                            </div>
+                            <div className="text-[#1E293B]/60 font-black text-[10px] uppercase tracking-[0.3em] mt-5">Semester GPA</div>
+                        </div>
+                    </motion.div>
+                )}
+
+                <div className="text-[10px] font-black text-[#1E293B]/60 uppercase tracking-[0.3em] mt-16 group cursor-default">
+                    Anna University <span className="mx-2 opacity-30">|</span> Regulation {data.semester_info?.regulation || '2021'}
+                </div>
+
+                {/* Monochrome Saffron Scale Bar */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.0 }}
+                    className="w-full max-w-[800px] mt-16 relative mx-auto"
+                >
+                    <div className="h-[12px] w-full rounded-full bg-gradient-to-r from-[#FEE2D5] via-[#FDBA94] to-[#D4500A] relative flex items-center shadow-inner">
+                        {/* Marker */}
+                        <motion.div
+                            initial={{ left: '0%' }}
+                            animate={{ left: `${(primaryValue / 10) * 100}%` }}
+                            transition={{ duration: 2, delay: 1.2, type: 'spring' }}
+                            className="absolute top-1/2 -translate-y-1/2 w-[22px] h-[22px] -ml-[11px] z-20"
+                        >
+                            <div className="w-full h-full bg-white rounded-full shadow-lg border-[2px] border-[#D4500A] transition-transform relative hover:scale-125 cursor-pointer">
+                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#D4500A] text-white font-black px-2 py-1 rounded text-[10px] whitespace-nowrap shadow-xl">
+                                    {primaryValue.toFixed(2)}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                    
+                     {/* Milestone Labels (High Contrast) */}
+                     <div className="relative w-full mt-6 h-10 text-[9px] font-black uppercase tracking-[0.25em]">
+                        {/* Dynamic Highlighting with Monochrome Saffron Scale */}
+                        <div className={`absolute left-0 transition-opacity duration-300 ${primaryValue < 5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Fail</div>
+                        
+                        <div className={`absolute left-[50%] -translate-x-1/2 transition-opacity duration-300 ${primaryValue >= 5 && primaryValue < 7 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>
+                            Pass
+                        </div>
+
+                        <div className={`absolute left-[70%] -translate-x-1/2 transition-opacity duration-300 ${primaryValue >= 7 && primaryValue < 8.5 ? 'text-[#D4500A] opacity-100 drop-shadow-sm' : 'text-[#1E293B] opacity-60'}`}>
+                            First
+                        </div>
+
+                        <div className={`absolute right-0 transition-opacity duration-300 ${primaryValue >= 8.5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>
+                            Distinction
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* ── INTERACTIVE SEMESTER JOURNEY (MULTI SEM ONLY) ── */}
+            {!isSingle && semesterGpas.length > 0 && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.1 }}
+                    className="bg-white rounded-[40px] p-8 md:p-10 border border-[#FADFD0]/30 shadow-[0_15px_50px_-12px_rgba(210,84,25,0.03)]"
+                >
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                        <div>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-[#FADFD0]/50 flex items-center justify-center text-[#D25419]">
+                                    <FiTrendingUp className="text-xl" />
+                                </div>
+                                <h3 className="font-black text-xl text-[#38352F] tracking-tight">Semester Journey</h3>
+                            </div>
+                            <p className="text-sm font-medium text-[#89858E] ml-13">Visualizing your performance across terms.</p>
+                        </div>
+                        {selectedSem && (
+                            <button 
+                                onClick={() => setSelectedSem(null)}
+                                className="text-[10px] font-black uppercase tracking-widest text-[#D25419] hover:bg-[#FADFD0]/40 transition-colors flex items-center gap-2 bg-[#FADFD0]/20 px-4 py-2 rounded-full border border-[#FADFD0]/50"
+                            >
+                                <FiRefreshCw /> Reset View
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex items-end justify-between gap-3 h-48 px-2">
+                        {semesterGpas.map((item, i) => {
+                            const isSelected = selectedSem === item.sem;
+                            const heightPct = Math.max((item.gpa / 10) * 100, 10);
+                            
+                            let barStyle = "";
+                            if (isSelected) {
+                                barStyle = "bg-gradient-to-t from-[#D25419] to-[#FAD6A5] shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)]";
+                            } else if (selectedSem === null) {
+                                if (item.gpa >= 8.5) barStyle = "bg-gradient-to-t from-[#4FA37D] to-[#A0D8B4]";
+                                else if (item.gpa >= 7.0) barStyle = "bg-gradient-to-t from-[#D25419] to-[#FAD6A5]";
+                                else barStyle = "bg-gradient-to-t from-[#89858E] to-[#C0BFC4]";
+                            } else {
+                                barStyle = "bg-[#F3F1EF]"; // Dimmed
+                            }
+
+                            return (
+                                <motion.div 
+                                    key={item.sem}
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: '100%', opacity: 1 }}
+                                    transition={{ delay: 1.2 + (i * 0.1) }}
+                                    className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
+                                    onClick={() => setSelectedSem(isSelected ? null : item.sem)}
+                                >
+                                    <div className={`absolute -top-10 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 font-black text-xs px-2 py-1 bg-[#38352F] text-white rounded-md z-10 whitespace-nowrap`}>
+                                        {item.gpa.toFixed(2)}
+                                    </div>
+                                    <div 
+                                        className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${barStyle}`} 
+                                        style={{ height: `${heightPct}%` }}
+                                    >
+                                        <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
+                                    </div>
+                                    <div className={`mt-4 text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${isSelected ? 'text-[#D25419]' : 'text-[#89858E]'}`}>
+                                        S{item.sem}
+                                    </div>
+                                </motion.div>
+                            )
+                        })}
+                    </div>
+                </motion.div>
+            )}
+
+            {/* ── BLOCK 2: STATS TILES ── */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.0 }}
-                className="flex flex-col md:flex-row items-center justify-between gap-6"
+                transition={{ delay: 1.2 }}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={onReset}
-                        className="p-3 bg-bg-card border border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary/30 transition-all shadow-sm group"
-                    >
-                        <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                    </button>
-                    <div>
-                        <h2 className="text-3xl font-black text-text-primary tracking-tighter">Academic <span className="text-primary">Intelligence</span></h2>
-                        <div className="flex items-center gap-2 text-xs font-bold text-text-muted uppercase tracking-widest mt-1">
-                            <FiPackage className="text-primary" />
-                            <span>Report Generated Successfully</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <button className="px-6 py-3 bg-bg-card border border-border rounded-2xl font-bold text-text-primary hover:bg-bg-card-alt transition-colors flex items-center gap-2">
-                        <FiDownload /> Export PDF
-                    </button>
-                    <button
-                        onClick={() => setIsSimOpen(true)}
-                        className="px-6 py-3 bg-bg-card border border-border rounded-2xl font-bold text-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2 group"
-                    >
-                        <FiSettings className="group-hover:rotate-180 transition-transform duration-500" /> Grade Simulator
-                    </button>
-                    <button className="px-6 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-                        <FiShare2 /> Share Result
-                    </button>
-                </div>
+                {isSingle ? (
+                    <>
+                        <StatTile label="Credits Earned" value={data.semester_credits?.toString() || '-'} sub="This Semester" />
+                        <StatTile label="Subjects" value={data.current_semester_subjects?.toString() || data.total_subjects.toString()} sub="Total Attempted" />
+                        <StatTile label="Arrears" value={data.arrear_subjects?.toString() || '0'} sub={data.arrear_subjects ? 'Needs Attention' : 'Clean!'} highlight={data.arrear_subjects === 0 ? 'success' : 'danger'} />
+                        <StatTile label="Highest" value={highestGrade} sub="Grade Achieved" highlight="primary" />
+                    </>
+                ) : (
+                    <>
+                        {selectedSem ? (
+                            <>
+                                <StatTile label="Sem Credits" value={semesterGpas.find(s=>s.sem===selectedSem)?.credits?.toString() || '-'} sub={`Semester ${selectedSem}`} />
+                                <StatTile label="Sem Subjects" value={subjectEntries.length.toString()} sub="Attempted" />
+                                <StatTile label="Sem Arrears" value={subjectEntries.filter(s=>['U','RA','AB'].includes(s[1].grade)).length.toString()} sub="Uncleared" highlight={subjectEntries.filter(s=>['U','RA','AB'].includes(s[1].grade)).length === 0 ? 'success' : 'danger'} />
+                                <StatTile label="Sem GPA" value={semesterGpas.find(s=>s.sem===selectedSem)?.gpa.toFixed(2) || '0.00'} sub="Achieved" highlight="primary" />
+                            </>
+                        ) : (
+                            <>
+                                <StatTile label="Total Credits" value={data.total_credits?.toString() || '-'} sub="Earned so far" />
+                                <StatTile label="Total Subjects" value={data.total_subjects.toString()} sub="Analyzed" />
+                                <StatTile label="Total Arrears" value={data.failed_subjects?.toString() || '0'} sub={data.failed_subjects ? 'Uncleared' : 'All Cleared!'} highlight={data.failed_subjects === 0 ? 'success' : 'danger'} />
+                                <StatTile label="Pass Rate" value={`${Math.round((data.passed_subjects / (data.total_subjects || 1)) * 100)}%`} sub="Overall Clearance" highlight="primary" />
+                            </>
+                        )}
+                    </>
+                )}
             </motion.div>
 
-            {/* 0.6s - Classification Banner (Ribbon Drop) */}
-            <div className="flex justify-center">
-                <motion.div
-                    initial={{ y: -100, opacity: 0, scale: 0.8 }}
-                    animate={{ y: 0, opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6, type: 'spring', damping: 15 }}
-                    className="relative px-12 py-4 bg-gradient-to-r from-primary to-accent-1 rounded-full shadow-2xl shadow-primary/20 flex items-center gap-4 overflow-hidden group"
-                >
-                    <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%)] bg-[length:250%_250%] animate-shimmer" />
-                    <FiAward className="text-white text-3xl animate-float" />
-                    <div className="relative">
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70 leading-none mb-1">Classification Unlock</p>
-                        <h3 className="text-xl md:text-2xl font-black text-white tracking-tight uppercase">{data.class}</h3>
-                    </div>
-                </motion.div>
-            </div>
-
-            {/* Main Bento Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[200px] gap-6">
-
-                {/* 0.9s - Hero CGPA Card (Variation: Odometer + Pulse) */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.9, type: 'spring', damping: 20 }}
-                    className="md:col-span-8 md:row-span-2 relative rounded-[48px] p-1 bg-gradient-to-br from-primary via-primary/50 to-accent-1 shadow-2xl shadow-primary/20"
-                >
-                    <div className="bg-bg-card w-full h-full rounded-[47px] overflow-hidden flex flex-col md:flex-row p-10 md:p-14 gap-12">
-                        <div className="flex-1 space-y-10">
-                            <div className="space-y-4">
-                                <div className="px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full w-fit flex items-center gap-2">
-                                    <FiTrendingUp className="text-primary" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cumulative Performance</span>
-                                </div>
-
-                                <div className="relative">
-                                    <div className="text-7xl md:text-9xl relative z-10 text-data">
-                                        <Odometer value={data.cgpa} delay={1.1} />
-                                    </div>
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: [0, 1, 0] }}
-                                        transition={{ delay: 3.1, duration: 2, repeat: Infinity }}
-                                        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-32 h-32 bg-primary/20 rounded-full blur-3xl"
-                                    />
-                                </div>
-
-                                <p className="text-text-muted font-bold text-xl ml-2">Overall CGPA Score</p>
-                            </div>
-
-                            <div className="pt-6 flex items-center gap-12">
-                                <div>
-                                    <div className="text-xs font-black text-text-muted uppercase tracking-widest mb-1.5">Percentage</div>
-                                    <div className="text-3xl font-black text-data tracking-tight">{data.percentage}%</div>
-                                </div>
-                                <div className="w-px h-12 bg-border"></div>
-                                <div>
-                                    <div className="text-xs font-black text-text-muted uppercase tracking-widest mb-1.5">Cleared</div>
-                                    <div className="text-3xl font-black text-success tracking-tight">{passedCount}/{subjectEntries.length}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 1.6s - Chart (Variation: Glow Line) */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 1.6 }}
-                            className="w-full md:w-[320px] h-full flex items-center justify-center bg-bg-card-alt/30 rounded-[32px] p-4 relative"
-                        >
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#D4500A" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#D4500A" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <XAxis dataKey="name" hide />
-                                    <YAxis hide domain={[0, 10]} />
-                                    <Tooltip
-                                        contentStyle={{ backgroundColor: '#fff', borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(124,58,237,0.15)' }}
-                                    />
-                                    <Area
-                                        type="monotone"
-                                        dataKey="val"
-                                        stroke="#D4500A"
-                                        strokeWidth={6}
-                                        fillOpacity={1}
-                                        fill="url(#colorVal)"
-                                        animationDuration={2500}
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                            <div className="absolute top-6 left-6 text-[10px] font-black text-primary uppercase tracking-widest bg-bg-card/80 backdrop-blur px-3 py-1 rounded-full border border-primary/20">
-                                Trend Analysis
-                            </div>
-                        </motion.div>
-                    </div>
-                </motion.div>
-
-                {/* 1.2s - Stat Cards (Staggered slide-in) */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.2 }}
-                    className="md:col-span-4 md:row-span-1 glass-glow rounded-[40px] p-8 border border-border flex flex-col justify-between group hover:border-primary/30 transition-all duration-500 overflow-hidden relative"
-                >
-                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700" />
-                    <div className="flex justify-between items-start">
-                        <div className="w-14 h-14 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-2xl shadow-inner group-hover:scale-110 transition-transform">
-                            <FiStar />
-                        </div>
-                        <div className="text-right">
-                            <div className="text-xs font-black text-text-muted uppercase tracking-widest mb-1.5">Semester GPA</div>
-                            <div className="text-5xl font-black text-text-primary tabular-nums">{data.gpa.toFixed(2)}</div>
-                        </div>
-                    </div>
-                </motion.div>
-
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.3 }}
-                    className="md:col-span-4 md:row-span-1 glass-glow rounded-[40px] p-8 border border-border flex flex-col justify-between group hover:border-success/30 transition-all duration-500 relative"
-                >
-                    <div className="flex justify-between items-center h-full">
-                        <div className="space-y-1">
-                            <div className="text-xs font-black text-text-muted uppercase tracking-widest">Clearance Rate</div>
-                            <div className="text-5xl font-black text-text-primary tabular-nums">{Math.round(passRate)}%</div>
-                            <div className="text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-1.5 pt-2">
-                                <FiCheckCircle /> Perfect Record
-                            </div>
-                        </div>
-                        <div className="relative w-24 h-24">
-                            <svg className="w-full h-full" viewBox="0 0 36 36">
-                                <path className="text-border" strokeDasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" />
-                                <motion.path
-                                    initial={{ strokeDasharray: "0, 100" }}
-                                    animate={{ strokeDasharray: `${passRate}, 100` }}
-                                    transition={{ duration: 2, delay: 1.5, ease: "easeOut" }}
-                                    className="text-success" strokeDasharray={`${passRate}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Performance Scale (The Journey) */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.7 }}
-                    className="md:col-span-12 md:row-span-1 glass-glow rounded-[40px] p-10 border border-border flex flex-col justify-center gap-8"
-                >
-                    <div className="flex items-center justify-between px-2">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl">
-                                <FiTrendingUp />
-                            </div>
-                            <div>
-                                <h4 className="font-black text-text-primary tracking-tight">Academic Journey Scale</h4>
-                                <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-0.5">Where you stand among regulations</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-text-muted">YOU ARE HERE</span>
-                            <div className="w-2 h-2 rounded-full bg-primary animate-ping-custom" />
-                        </div>
-                    </div>
-
-                    <div className="relative pt-6 pb-2">
-                        {/* Scale Track */}
-                        <div className="h-4 w-full rounded-full bg-gradient-to-r from-accent-2 via-accent-1 to-success relative overflow-hidden shadow-inner">
-                            <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)] animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
-                        </div>
-
-                        {/* Scale Marker */}
-                        <motion.div
-                            initial={{ left: '0%' }}
-                            animate={{ left: `${(data.cgpa / 10) * 100}%` }}
-                            transition={{ duration: 2, delay: 2, type: 'spring' }}
-                            className="absolute top-1/2 -translate-y-1/2 w-10 h-10 -ml-5 z-20 group"
-                        >
-                            <div className="w-full h-full bg-bg-card rounded-full p-2 shadow-xl border-4 border-primary group-hover:scale-125 transition-transform duration-300 relative">
-                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-md">
-                                    {data.cgpa.toFixed(2)}
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Labels */}
-                        <div className="flex justify-between mt-6 px-2 text-[10px] font-black text-text-muted uppercase tracking-wider">
-                            <div className="flex flex-col items-center"><span>0.0</span><span className="mt-1">NIL</span></div>
-                            <div className="flex flex-col items-center"><span>5.0</span><span className="mt-1 text-accent-1">PASS</span></div>
-                            <div className="flex flex-col items-center"><span>6.0</span><span className="mt-1">SECOND</span></div>
-                            <div className="flex flex-col items-center"><span>7.0</span><span className="mt-1 text-primary">FIRST</span></div>
-                            <div className="flex flex-col items-center"><span>9.0</span><span className="mt-1 text-success">HONORS</span></div>
-                            <div className="flex flex-col items-center"><span>10.0</span><span className="mt-1">MAX</span></div>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Career Eligibility & Table (Existing Bento) */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.9 }}
-                    className="md:col-span-12 md:row-span-2 glass-glow rounded-[40px] p-10 border border-border"
-                >
-                    <PlacementEligiblityCard cgpa={data.cgpa} />
-                </motion.div>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 2.1 }}
-                    className="md:col-span-12 md:row-span-3 glass-glow rounded-[40px] p-12 border border-border flex flex-col gap-10"
-                >
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                        <div className="flex items-center gap-6">
-                            <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center text-primary text-3xl">
-                                <FiAward />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-black text-text-primary tracking-tight">Academic Breakdown</h4>
-                                <p className="text-text-muted font-bold text-sm">Sorted by weighted performance score</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div className="px-5 py-2 rounded-2xl bg-bg-card-alt border border-border flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                <span className="text-[10px] font-black text-text-primary uppercase tracking-widest">GPA CONTRIBUTION</span>
-                            </div>
-                            <div className="px-5 py-2 rounded-2xl bg-bg-card-alt border border-border flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-accent-2" />
-                                <span className="text-[10px] font-black text-text-primary uppercase tracking-widest">CGPA Only</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="overflow-x-auto -mx-12 px-12 custom-scrollbar pb-4">
-                        <table className="w-full text-left min-w-[900px]">
-                            <thead>
-                                <tr className="border-b border-border">
-                                    <th className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted">Type</th>
-                                    <th
-                                        className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted cursor-pointer hover:text-primary transition-colors group"
-                                        onClick={() => setSortConfig({ key: 'code', direction: sortConfig?.key === 'code' && sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            Subject {sortConfig?.key === 'code' && (sortConfig.direction === 'asc' ? <FiChevronUp /> : <FiChevronDown />)}
-                                        </div>
-                                    </th>
-                                    <th className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted text-center">Grade</th>
-                                    <th className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted text-center">Points</th>
-                                    <th className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted text-center">Credits</th>
-                                    <th
-                                        className="pb-8 text-[11px] font-black uppercase tracking-[0.2em] text-text-muted text-right cursor-pointer hover:text-primary transition-colors pr-8 group"
-                                        onClick={() => setSortConfig({ key: 'weighted', direction: sortConfig?.key === 'weighted' && sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
-                                    >
-                                        <div className="flex items-center justify-end gap-2 text-primary">
-                                            Weighted Point {sortConfig?.key === 'weighted' && (sortConfig.direction === 'asc' ? <FiChevronUp /> : <FiChevronDown />)}
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-border/50">
-                                {subjectEntries.map(([code, det], idx) => {
-                                    const isGpaScope = !det.is_arrear && !det.is_revaluation;
-                                    const theme = GRADE_THEMES[det.grade as keyof typeof GRADE_THEMES] || GRADE_THEMES['C'];
-                                    const isBest = code === highestWeightedCode;
-
-                                    return (
-                                        <motion.tr
-                                            key={code}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 2.3 + idx * 0.05 }}
-                                            className={`group transition-all ${isBest ? 'bg-accent-1/5' : 'hover:bg-bg-card-alt/30'}`}
-                                        >
-                                            <td className="py-8">
-                                                <div className={`w-2 h-10 rounded-full ${isGpaScope ? 'bg-primary shadow-[0_0_12px_rgba(124,58,237,0.4)]' : 'bg-accent-2'}`} />
-                                            </td>
-                                            <td className="py-8 pr-6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="font-black text-text-primary text-lg tracking-tight">{code}</div>
-                                                    {isBest && <span className="px-2 py-0.5 bg-accent-1 text-white text-[9px] font-black rounded-md uppercase tracking-widest">HIGHEST</span>}
-                                                </div>
-                                                <div className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1.5 flex items-center gap-2">
-                                                    {isGpaScope ? <><FiCheckCircle className="text-primary" /> GPA CONTRIBUTION</> : <><FiInfo className="text-accent-2" /> CGPA ADJUSTMENT</>}
-                                                </div>
-                                            </td>
-                                            <td className="py-8 text-center">
-                                                <span className={`px-6 py-2 rounded-2xl border-2 text-xs font-black transition-all ${theme.bg} ${theme.border} group-hover:scale-110 group-hover:shadow-lg inline-block min-w-[3.5rem]`} style={{ color: theme.color }}>
-                                                    {det.grade}
-                                                </span>
-                                            </td>
-                                            <td className="py-8 text-center font-black text-text-primary font-mono text-lg">{det.grade_points}</td>
-                                            <td className="py-8 text-center font-black text-text-muted font-mono">{det.credits}</td>
-                                            <td className="py-8 text-right font-black text-data font-mono pr-8 text-2xl group-hover:scale-105 transition-transform">
-                                                {det.weighted}
-                                            </td>
-                                        </motion.tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </motion.div>
-            </div>
-
-            {/* Action Bar (Sticky Footer) */}
+            {/* ── BLOCK 3: SUBJECT BREAKDOWN TABLE ── */}
             <motion.div
-                initial={{ y: 100 }}
-                animate={{ y: 0 }}
-                transition={{ delay: 2.5, type: 'spring', damping: 20 }}
-                className="fixed bottom-8 left-1/2 -translate-x-1/2 w-fit px-8 py-4 bg-bg-card/80 backdrop-blur-2xl border border-primary/20 rounded-[32px] shadow-2xl z-[50] flex items-center gap-4 border-b-4 border-b-primary/40"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4 }}
+                className="bg-white border border-[#FADFD0]/40 rounded-[40px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(210,84,25,0.05)]"
             >
-                <div className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] px-4 border-r border-border mr-2">Results Finalized</div>
-                <button onClick={onReset} className="px-6 py-3 hover:bg-bg-card-alt rounded-2xl font-black text-text-primary transition-all flex items-center gap-2 text-sm group">
-                    <FiRefreshCw className="group-hover:rotate-180 transition-transform duration-500" /> NEW CALCULATION
-                </button>
-                <div className="w-px h-6 bg-border mx-2" />
-                <button className="px-8 py-3 bg-primary text-white rounded-2xl font-black shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all text-sm">
-                    DOWNLOAD PDF
+                <div className="p-8 border-b border-[#FADFD0]/40 flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-[#FADFD0]/40 flex items-center justify-center text-[#D25419] text-2xl shadow-sm">
+                        <FiPackage />
+                    </div>
+                    <div>
+                        <h3 className="font-black text-2xl text-[#38352F] tracking-tight">Subject Analysis</h3>
+                        <p className="text-[#89858E] text-sm font-medium">Detailed breakdown of your academic results.</p>
+                    </div>
+                </div>
+                
+                <div className="overflow-x-auto w-full custom-scrollbar">
+                    <table className="w-full text-left min-w-[800px] border-collapse">
+                        <thead>
+                            <tr className="bg-[#F3F1EF]/30 border-b border-[#FADFD0]/40">
+                                <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E]">No.</th>
+                                <th 
+                                    className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E] cursor-pointer hover:text-[#D25419] transition-colors"
+                                    onClick={() => setSortConfig({ key: 'code', direction: sortConfig?.key === 'code' && sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        Subject {sortConfig?.key === 'code' && (sortConfig.direction === 'asc' ? <FiChevronUp /> : <FiChevronDown />)}
+                                    </div>
+                                </th>
+                                <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E]">Grade</th>
+                                <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E] text-right">Points</th>
+                                <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E] text-right">Credits</th>
+                                <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E] text-right">Weighted</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#FADFD0]/20">
+                            {subjectEntries.map(([code, subj], i) => {
+                                const theme = GRADE_THEMES[subj.grade.toUpperCase()] || GRADE_THEMES['C'];
+                                return (
+                                    <tr key={code} className="hover:bg-[#FADFD0]/10 transition-colors group">
+                                        <td className="py-6 px-8 text-sm font-bold text-[#89858E]">{String(i + 1).padStart(2, '0')}</td>
+                                        <td className="py-6 px-8">
+                                            <div className="font-black text-[#38352F] text-lg group-hover:text-[#D25419] transition-colors">{code}</div>
+                                            {subj.is_arrear ? (
+                                                <div className="text-[10px] font-black text-[#D4500A]/70 tracking-[0.15em] uppercase mt-1">
+                                                    Arrear History
+                                                </div>
+                                            ) : (!isSingle && subj.original_semester) ? (
+                                                <div className="text-[10px] font-black text-[#1E293B]/50 tracking-[0.15em] uppercase mt-1">
+                                                    Semester {subj.original_semester}
+                                                </div>
+                                            ) : null}
+                                        </td>
+                                        <td className="py-6 px-8">
+                                            <span className={`px-4 py-1.5 rounded-full text-[11px] font-black tracking-[0.1em] ${theme.bg} ${theme.border} border uppercase inline-block shadow-sm`} style={{ color: theme.color }}>
+                                                {subj.grade}
+                                            </span>
+                                        </td>
+                                        <td className="py-6 px-8 text-right text-sm font-black text-[#89858E]">{subj.grade_points.toFixed(1)}</td>
+                                        <td className="py-6 px-8 text-right text-sm font-black text-[#89858E]">{subj.credits}</td>
+                                        <td className="py-6 px-8 text-right text-lg font-black text-[#38352F]">{subj.weighted.toFixed(1)}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </motion.div>
+
+            {/* ── BLOCK 4: WHAT-IF SIMULATOR ── */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.6 }}
+                className="bg-bg-card border border-border rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative group"
+            >
+                <div className="absolute -right-4 -top-4 w-32 h-32 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700" />
+                <div>
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">🧪</span>
+                        <h3 className="font-black text-xl text-text-primary tracking-tight">What if you had scored differently?</h3>
+                    </div>
+                    <p className="text-text-muted text-sm font-medium">Test hypothetical grades to see how your {isSingle ? 'GPA' : 'Overall CGPA'} would change.</p>
+                </div>
+                <button 
+                    onClick={() => setIsSimOpen(true)}
+                    className="px-6 py-3 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 shrink-0 relative z-10"
+                >
+                    <FiSettings className="text-lg" /> Launch Simulator
                 </button>
             </motion.div>
 
-            {/* Simulator Modal */}
             <AnimatePresence>
                 {isSimOpen && (
-                    <WhatIfSimulator
-                        isOpen={isSimOpen}
-                        initialSubjects={Object.fromEntries(
-                            Object.entries(data.subjects).map(([code, det]) => [code, { grade: det.grade, credits: det.credits }])
-                        )}
-                        onClose={() => setIsSimOpen(false)}
+                    <WhatIfSimulator 
+                        isOpen={isSimOpen} 
+                        initialSubjects={data.subjects} 
+                        currentGpa={isSingle ? data.gpa : data.cgpa}
+                        isSingle={isSingle}
+                        onClose={() => setIsSimOpen(false)} 
                     />
                 )}
             </AnimatePresence>
+
+            {/* ── BLOCK 5: SMART NEXT STEP ── */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.8 }}
+                className="bg-bg-card-alt border border-border rounded-[32px] p-8 md:p-12 text-center"
+            >
+                <h3 className="text-xl font-black text-text-primary tracking-tight mb-2">What would you like to do next?</h3>
+                
+                {isSingle ? (
+                    <p className="text-text-muted font-medium mb-8">Want to see your full CGPA? Add your other semesters to see the complete picture.</p>
+                ) : (
+                    <p className="text-text-muted font-medium mb-8">Your cumulative performance is saved. You can add more semesters or export your report.</p>
+                )}
+
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    {isSingle && (context?.files?.length === 1 || Object.keys(context?.gradesData || {}).length === 1) && (
+                         <button onClick={onReset} className="px-8 py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                            <FiPlusSquare className="text-lg" /> Add Another Semester
+                        </button>
+                    )}
+                    
+                    <button className="px-8 py-4 bg-bg-card border border-border text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
+                        <FiDownload className="text-lg" /> Export PDF
+                    </button>
+                    
+                    <button onClick={onReset} className="px-8 py-4 bg-bg-card border border-border text-text-muted hover:text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
+                        <FiHome className="text-lg" /> Go Home
+                    </button>
+                </div>
+            </motion.div>
+            
         </motion.div>
+    );
+}
+
+function StatTile({ label, value, sub, highlight }: { label: string, value: string, sub: string, highlight?: 'primary' | 'success' | 'danger' }) {
+    let textClass = "text-[#38352F]";
+    let dotColor = "bg-[#89858E]";
+    let bgTint = "bg-white";
+    let borderTint = "border-[#FADFD0]/40";
+
+    if (highlight === 'primary') {
+        textClass = "text-[#D25419]";
+        dotColor = "bg-[#D25419]";
+        bgTint = "bg-[#FADFD0]/10";
+        borderTint = "border-[#FADFD0]";
+    }
+    if (highlight === 'success') {
+        textClass = "text-[#4FA37D]";
+        dotColor = "bg-[#4FA37D]";
+    }
+    if (highlight === 'danger') {
+        textClass = "text-[#ef4444]";
+        dotColor = "bg-[#ef4444]";
+    }
+
+    return (
+        <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
+            <div className={`absolute top-0 right-0 w-24 h-24 ${highlight === 'primary' ? 'bg-[#D25419]/5' : 'bg-[#89858E]/5'} rounded-full -mr-12 -mt-12 transition-transform duration-700 group-hover:scale-150`} />
+            
+            <div className="flex items-center gap-2 mb-3">
+                <div className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+                <div className="text-[10px] font-black text-[#89858E] uppercase tracking-[0.2em]">{label}</div>
+            </div>
+            
+            <div className={`text-4xl md:text-5xl font-black tracking-tight mb-2 ${textClass} relative z-10`}>{value}</div>
+            
+            <div className="text-[10px] font-bold text-[#89858E]/60 uppercase tracking-[0.1em]">{sub}</div>
+        </div>
     );
 }
