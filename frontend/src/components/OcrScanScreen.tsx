@@ -1,511 +1,321 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiCpu, FiAlertTriangle } from 'react-icons/fi';
+import { useState, useEffect, useRef } from 'react';
+import { FiEdit3 } from 'react-icons/fi';
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+/* ─── helpers ─────────────────────────────────────────────────────────────── */
 const DEMO = [
-    { code: 'CS8601', grade: 'O', cr: 3, conf: 'high' as const },
-    { code: 'CS8602', grade: 'A+', cr: 3, conf: 'high' as const },
-    { code: 'CS8603', grade: 'A', cr: 3, conf: 'low' as const },
-    { code: 'CS8604', grade: 'B+', cr: 3, conf: 'high' as const },
-    { code: 'CS8651', grade: 'O', cr: 2, conf: 'high' as const },
-    { code: 'CS8691', grade: '?', cr: 2, conf: 'fail' as const },
-    { code: 'HS8581', grade: 'A+', cr: 3, conf: 'high' as const },
-    { code: 'MA8551', grade: 'O', cr: 4, conf: 'high' as const },
-    { code: 'GE8561', grade: 'A+', cr: 1, conf: 'high' as const },
-    { code: 'CS8611', grade: 'B+', cr: 2, conf: 'high' as const },
+    { subject_code: 'CS8601', grade: 'O',  credits: 3 },
+    { subject_code: 'CS8602', grade: 'A+', credits: 3 },
+    { subject_code: 'CS8603', grade: 'A',  credits: 3 },
+    { subject_code: 'CS8604', grade: 'B+', credits: 3 },
+    { subject_code: 'CS8651', grade: 'O',  credits: 2 },
+    { subject_code: 'CS8691', grade: 'U',  credits: 2 },
+    { subject_code: 'HS8581', grade: 'A+', credits: 3 },
+    { subject_code: 'MA8551', grade: 'O',  credits: 4 },
 ];
 
-const GP: Record<string, number> = { 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, '?': 0 };
-const GCLR: Record<string, string> = {
-    'O': '#D4500A', 'A+': '#7C3AED', 'A': '#D97706', 'B+': '#0EA5E9',
-    'B': '#14B8A6', 'C': '#F97316', 'U': '#EF4444', '?': '#F59E0B',
-};
-
-// Scatter positions — deliberately spread across the full container
-const SCATTER = [
-    { x: 5, y: 6, r: -7 },
-    { x: 70, y: 4, r: 5 },
-    { x: 33, y: 3, r: -12 },
-    { x: 86, y: 10, r: 8 },
-    { x: 14, y: 18, r: 4 },
-    { x: 53, y: 12, r: -6 },
-    { x: 76, y: 22, r: 10 },
-    { x: 2, y: 28, r: -9 },
-    { x: 40, y: 24, r: 7 },
-    { x: 60, y: 28, r: -4 },
-];
-
-const COPY = [
-    "Scanning document...",
-    "Subject codes detected.",
-    "Pulling subjects into position...",
-    "Reading grade data...",
-    "Credits confirmed.",
-    "Snapping next subject...",
-    "Almost there...",
-    "Final subjects locking in...",
-    "All subjects extracted!",
-];
-
+/* ─── props ──────────────────────────────────────────────────────────────── */
 interface OcrScanScreenProps {
     imageUrl: string | null;
     currentFile: number;
     totalFiles: number;
     statusMsg: string;
+    ocrData?: any;
+    onComplete?: () => void;
 }
 
-type Phase = 'floating' | 'pulling' | 'snapped';
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ───────────────────────────────────────────────────────────────────────────
+   1. Pencil loops continuously: draw left→right, erase, repeat.
+   2. Row counter advances each cycle — "Reading row 3 — CS8603" text types in.
+   3. When OCR data arrives, remaining rows are processed then onComplete fires.
+   4. No table. Just the pencil + typewriter text.
+═══════════════════════════════════════════════════════════════════════════ */
+export default function OcrScanScreen({
+    imageUrl, currentFile, totalFiles, statusMsg, ocrData, onComplete,
+}: OcrScanScreenProps) {
 
-// ─── Grade Pill ───────────────────────────────────────────────────────────────
-function Pill({ grade }: { grade: string }) {
-    const c = GCLR[grade] || '#D4500A';
-    return (
-        <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '2px 9px', borderRadius: 6,
-            background: c + '15', border: `1px solid ${c}35`,
-            fontSize: 12, fontWeight: 800, fontFamily: 'Outfit, sans-serif', color: c,
-        }}>
-            <span style={{ width: 5, height: 5, borderRadius: '50%', background: c }} />
-            {grade}
-        </span>
-    );
-}
+    // rAF-driven draw progress 0→1
+    const [drawPct, setDrawPct]     = useState(0);
+    // true while the erase phase runs
+    const [erasing, setErasing]     = useState(false);
+    // which row index the pencil is currently on
+    const [rowIndex, setRowIndex]   = useState(0);
+    // typewriter display text
+    const [typeText, setTypeText]   = useState('');
 
-// ─── Odometer ─────────────────────────────────────────────────────────────────
-function Odo({ ch }: { ch: string }) {
-    return (
-        <span style={{ display: 'inline-block', overflow: 'hidden', height: '1.05em', verticalAlign: 'bottom' }}>
-            <AnimatePresence mode="popLayout">
-                <motion.span key={ch} initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '-100%' }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    style={{ display: 'inline-block' }}>{ch}</motion.span>
-            </AnimatePresence>
-        </span>
-    );
-}
+    const subjects   = ocrData?.subjects?.length > 0 ? ocrData.subjects : DEMO;
+    const totalRows  = subjects.length;
 
-// ─── Single floating chip ─────────────────────────────────────────────────────
-function FloatingChip({ subj, idx, phase }: {
-    subj: typeof DEMO[0]; idx: number; phase: Phase;
-}) {
-    const sc = SCATTER[idx];
-    const isWarn = subj.conf !== 'high';
+    const rafRef       = useRef<number | null>(null);
+    const timers       = useRef<ReturnType<typeof setTimeout>[]>([]);
+    const rowRef       = useRef(0);           // mutable mirror of rowIndex for closures
+    const doneRef      = useRef(false);       // have we fired onComplete?
+    const ocrReadyRef  = useRef(false);       // ocrData has arrived
+    const typeTimers   = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-    // Each chip gets unique bob timing so they feel organic
-    const bobDuration = 2.5 + (idx % 3) * 0.5;
-    const bobY = 6 + (idx % 4) * 2;
-    const bobX = 3 + (idx % 3) * 1.5;
-
-    // Target position when pulled — toward the table at the bottom center
-    const tableTargetY = 56 + idx * 3.6;
-
-    if (phase === 'snapped') {
-        // Fading ghost at original position
-        return (
-            <motion.div
-                key={`ghost-${subj.code}`}
-                initial={{ opacity: 0.5 }}
-                animate={{ opacity: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                style={{
-                    position: 'absolute', left: `${sc.x}%`, top: `${sc.y}%`,
-                    transform: `rotate(${sc.r}deg)`, zIndex: 1, pointerEvents: 'none',
-                }}
-            >
-                <span style={{
-                    fontSize: 15, fontWeight: 800, fontFamily: 'Outfit',
-                    color: 'rgba(212,80,10,0.1)', letterSpacing: '0.06em',
-                }}>{subj.code}</span>
-            </motion.div>
-        );
-    }
-
-    if (phase === 'pulling') {
-        // Flying toward the table row
-        return (
-            <motion.div
-                key={`pull-${subj.code}`}
-                initial={{
-                    left: `${sc.x}%`, top: `${sc.y}%`, rotate: sc.r, scale: 1,
-                }}
-                animate={{
-                    left: '50%', top: `${tableTargetY}%`,
-                    rotate: 0, scale: 0.85, opacity: [1, 1, 0.3],
-                }}
-                transition={{
-                    type: 'spring', stiffness: 120, damping: 14, mass: 0.8,
-                }}
-                style={{
-                    position: 'absolute', zIndex: 25, pointerEvents: 'none',
-                    transform: 'translate(-50%, -50%)',
-                }}
-            >
-                <div style={{
-                    background: '#FFF', border: `1.5px solid rgba(212,80,10,0.3)`,
-                    borderRadius: 10, padding: '5px 13px',
-                    display: 'flex', alignItems: 'center', gap: 7,
-                    boxShadow: '0 8px 30px rgba(212,80,10,0.2)',
-                }}>
-                    <span style={{
-                        fontSize: 15, fontWeight: 800, letterSpacing: '0.05em',
-                        fontFamily: 'Outfit', color: '#D4500A'
-                    }}>{subj.code}</span>
-                </div>
-                {/* Trail streak */}
-                <motion.div
-                    initial={{ width: 0, opacity: 0.5 }}
-                    animate={{ width: 80, opacity: 0 }}
-                    transition={{ duration: 0.4 }}
-                    style={{
-                        position: 'absolute', right: '100%', top: '40%', height: 2,
-                        background: 'linear-gradient(to left, rgba(212,80,10,0.3), transparent)',
-                        borderRadius: 2,
-                    }}
-                />
-            </motion.div>
-        );
-    }
-
-    // Floating — continuous gentle bob
-    return (
-        <motion.div
-            key={subj.code}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{
-                opacity: 1, scale: 1,
-                x: [0, bobX, -bobX, 0],
-                y: [0, -bobY, bobY * 0.5, 0],
-                rotate: [sc.r, sc.r + 3, sc.r - 2, sc.r],
-            }}
-            transition={{
-                opacity: { duration: 0.5, delay: idx * 0.12 },
-                scale: { duration: 0.4, delay: idx * 0.12 },
-                x: { repeat: Infinity, duration: bobDuration, ease: 'easeInOut' },
-                y: { repeat: Infinity, duration: bobDuration * 1.1, ease: 'easeInOut' },
-                rotate: { repeat: Infinity, duration: bobDuration * 1.3, ease: 'easeInOut' },
-            }}
-            style={{
-                position: 'absolute',
-                left: `${sc.x}%`, top: `${sc.y}%`,
-                zIndex: 10, cursor: 'default',
-            }}
-        >
-            <motion.div
-                whileHover={{ scale: 1.08 }}
-                style={{
-                    background: isWarn ? 'rgba(245,158,11,0.07)' : '#FFFFFF',
-                    border: `1.5px solid ${isWarn ? 'rgba(245,158,11,0.3)' : 'rgba(212,80,10,0.18)'}`,
-                    borderRadius: 10, padding: '5px 13px',
-                    display: 'flex', alignItems: 'center', gap: 7,
-                    boxShadow: '0 2px 10px rgba(212,80,10,0.08)',
-                }}
-            >
-                <span style={{
-                    fontSize: 15, fontWeight: 800, letterSpacing: '0.05em',
-                    fontFamily: 'Outfit, sans-serif',
-                    color: isWarn ? '#D97706' : '#D4500A',
-                }}>{subj.code}</span>
-                {isWarn && <FiAlertTriangle style={{ width: 11, height: 11, color: '#F59E0B' }} />}
-            </motion.div>
-        </motion.div>
-    );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-export default function OcrScanScreen({ imageUrl, currentFile, totalFiles, statusMsg }: OcrScanScreenProps) {
-    const [phases, setPhases] = useState<Phase[]>(() => DEMO.map(() => 'floating'));
-    const [gpa, setGpa] = useState('—');
-    const [snapCount, setSnapCount] = useState(0);
-    const [copyIdx, setCopyIdx] = useState(0);
-    const [copyText, setCopyText] = useState('');
-    const copyRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // Ref-based chain guard for strict mode safety
-    const chainTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
-    const chainStarted = useRef(false);
-
-    // Typewriter
-    useEffect(() => {
-        let ci = 0;
-        const t = COPY[copyIdx % COPY.length];
-        setCopyText('');
-        const iv = setInterval(() => {
-            ci++; setCopyText(t.slice(0, ci));
-            if (ci >= t.length) { clearInterval(iv); copyRef.current = setTimeout(() => setCopyIdx(p => p + 1), 2200); }
-        }, 28);
-        return () => { clearInterval(iv); if (copyRef.current) clearTimeout(copyRef.current); };
-    }, [copyIdx]);
-
-    // GPA recalc
-    useEffect(() => {
-        const snapped = DEMO.filter((_, i) => phases[i] === 'snapped');
-        if (!snapped.length) return;
-        const tw = snapped.reduce((a, s) => a + (GP[s.grade] || 0) * s.cr, 0);
-        const tc = snapped.reduce((a, s) => a + s.cr, 0);
-        if (tc > 0) setGpa((tw / tc).toFixed(2));
-    }, [snapCount, phases]);
-
-    // Pull chain — guarded against double mount
-    useEffect(() => {
-        if (chainStarted.current) return;
-        chainStarted.current = true;
-
-        const pullSubject = (idx: number) => {
-            if (idx >= DEMO.length) return;
-            // Start pulling
-            const t1 = setTimeout(() => {
-                setPhases(p => p.map((ph, i) => i === idx ? 'pulling' : ph));
-                // Snap after flight
-                const t2 = setTimeout(() => {
-                    setPhases(p => p.map((ph, i) => i === idx ? 'snapped' : ph));
-                    setSnapCount(c => c + 1);
-                    // Next subject
-                    const t3 = setTimeout(() => pullSubject(idx + 1), 700);
-                    chainTimers.current.push(t3);
-                }, 600);
-                chainTimers.current.push(t2);
-            }, idx === 0 ? 2000 : 0);
-            chainTimers.current.push(t1);
+    /* ── typewriter ── */
+    const typeWrite = (text: string) => {
+        typeTimers.current.forEach(clearTimeout);
+        typeTimers.current = [];
+        setTypeText('');
+        let i = 0;
+        const tick = () => {
+            i++;
+            setTypeText(text.slice(0, i));
+            if (i < text.length) {
+                const t = setTimeout(tick, 32);
+                typeTimers.current.push(t);
+            }
         };
+        tick();
+    };
 
-        pullSubject(0);
+    const addTimer = (fn: () => void, ms: number) => {
+        const t = setTimeout(fn, ms);
+        timers.current.push(t);
+    };
 
+    /* ── one draw-erase cycle ── */
+    const runCycle = () => {
+        const DRAW_MS  = 1100;
+        const ERASE_MS = 320;
+        const GAP_MS   = 100;
+
+        setErasing(false);
+
+        const start = performance.now();
+        const raf = (now: number) => {
+            const p = Math.min((now - start) / DRAW_MS, 1);
+            setDrawPct(p);
+            if (p < 1) {
+                rafRef.current = requestAnimationFrame(raf);
+            } else {
+                /* stroke done — erase then advance */
+                addTimer(() => {
+                    setErasing(true);
+                    addTimer(() => {
+                        const nextRow = rowRef.current + 1;
+                        rowRef.current = nextRow;
+                        setRowIndex(nextRow);
+                        setDrawPct(0);
+
+                        /* if ocrData has arrived and we've cycled through all rows → done */
+                        if (ocrReadyRef.current && nextRow >= totalRows && !doneRef.current) {
+                            doneRef.current = true;
+                            addTimer(() => { if (onComplete) onComplete(); }, 400);
+                            return;
+                        }
+                        /* otherwise keep looping */
+                        addTimer(() => runCycle(), GAP_MS);
+                    }, ERASE_MS);
+                }, 180);
+            }
+        };
+        rafRef.current = requestAnimationFrame(raf);
+    };
+
+    /* ── start loop immediately (no waiting for ocrData) ── */
+    useEffect(() => {
+        runCycle();
         return () => {
-            chainTimers.current.forEach(clearTimeout);
-            chainTimers.current = [];
+            timers.current.forEach(clearTimeout);
+            typeTimers.current.forEach(clearTimeout);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    /* ── mark ocrData ready when it arrives ── */
+    useEffect(() => {
+        if (ocrData) ocrReadyRef.current = true;
+    }, [ocrData]);
+
+    /* ── update typewriter whenever rowIndex changes ── */
+    useEffect(() => {
+        const idx   = rowIndex % totalRows;
+        const subj  = subjects[idx];
+        const code  = subj?.subject_code || subj?.code || '';
+        const label = code
+            ? `Reading row ${rowIndex + 1} — ${code}`
+            : `Scanning row ${rowIndex + 1}…`;
+        typeWrite(label);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rowIndex, totalRows]);
+
+    /* ── derived pencil position ── */
+    const pencilX = erasing ? 0  : drawPct * 100;
+    const pencilY = erasing ? 0  : Math.sin(drawPct * Math.PI * 12) * 10;
+    const fillPct = erasing ? 0  : drawPct * 100;
+
+    /* ══════════════════════════════════════════════ RENDER ═══════════════ */
     return (
         <div style={{
-            minHeight: '85vh', position: 'relative', maxWidth: 900,
-            margin: '0 auto', padding: '0 20px',
-            display: 'flex', flexDirection: 'column',
+            maxWidth: 720, margin: '0 auto', padding: '0 20px',
+            display: 'flex', flexDirection: 'column', gap: 20,
+            minHeight: '60vh', justifyContent: 'center',
         }}>
 
-            {/* ── Status strip ── */}
-            <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '10px 18px', marginBottom: 16,
-                background: '#FFF', border: '1.5px solid #FDE8D8',
-                borderRadius: 14, boxShadow: '0 2px 12px rgba(212,80,10,0.06)',
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: 'linear' }}
-                        style={{ display: 'flex', color: '#D4500A' }}><FiCpu size={18} /></motion.div>
-                    <span style={{ fontSize: 13, fontWeight: 700, fontFamily: 'Outfit, sans-serif', color: '#0F0A00' }}>
-                        {statusMsg || 'Saffron Engine — Magnetic Pull'}
-                    </span>
-                    <motion.span animate={{ opacity: [1, 0.3] }} transition={{ repeat: Infinity, duration: 0.8 }}
-                        style={{ width: 6, height: 6, borderRadius: '50%', background: '#D4500A' }} />
-                </div>
-                {totalFiles > 1 && (
+            {/* file counter badge — only shown when multi-file */}
+            {totalFiles > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <span style={{
                         fontSize: 11, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A',
-                        background: 'rgba(212,80,10,0.08)', borderRadius: 999, padding: '3px 12px'
+                        background: 'rgba(212,80,10,0.08)', border: '1px solid rgba(212,80,10,0.15)',
+                        borderRadius: 999, padding: '4px 14px',
                     }}>
-                        File {currentFile}/{totalFiles}
+                        File {currentFile} / {totalFiles}
                     </span>
-                )}
-            </div>
+                </div>
+            )}
 
-            {/* ══════════════════════════════════════════════════════════════════
-                 THE ARENA — one single container
-            ══════════════════════════════════════════════════════════════════ */}
+            {/* ══════════════════════════════════════════
+                  PENCIL CARD
+              ══════════════════════════════════════════ */}
             <div style={{
-                flex: 1, position: 'relative',
-                background: '#FFFAF5', border: '1.5px solid #FDE8D8',
-                borderRadius: 28, overflow: 'hidden',
-                boxShadow: '0 4px 30px rgba(212,80,10,0.06)',
-                minHeight: 540,
+                background: '#FFFAF5',
+                border: '1.5px solid #FDE8D8',
+                borderRadius: 28,
+                padding: '48px 44px 52px',
+                boxShadow: '0 4px 40px rgba(212,80,10,0.07)',
+                position: 'relative', overflow: 'hidden',
+                display: 'flex', flexDirection: 'column', gap: 36,
             }}>
-                {/* Dot grid */}
-                <div style={{
-                    position: 'absolute', inset: 0,
-                    backgroundImage: 'radial-gradient(rgba(212,80,10,0.04) 1px, transparent 1px)',
-                    backgroundSize: '28px 28px', zIndex: 0,
-                }} />
 
-                {/* ── Floating / Pulling / Ghost chips ── */}
-                {DEMO.map((subj, idx) => (
-                    <FloatingChip key={`chip-${idx}`} subj={subj} idx={idx} phase={phases[idx]} />
+                {/* faint ruled-paper lines */}
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} style={{
+                        position: 'absolute',
+                        left: 44, right: 44,
+                        top: `${80 + i * 52}px`,
+                        height: 1,
+                        background: 'rgba(212,80,10,0.045)',
+                    }} />
                 ))}
 
-                {/* Counter - top right */}
+                {/* dot grid */}
                 <div style={{
-                    position: 'absolute', top: 14, right: 14, zIndex: 30,
-                    background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
-                    borderRadius: 8, padding: '5px 12px',
-                    border: '1px solid #FDE8D8', display: 'flex', alignItems: 'center', gap: 8,
-                }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Outfit', color: '#78716C' }}>
-                        {DEMO.length - snapCount} floating
+                    position: 'absolute', inset: 0, pointerEvents: 'none',
+                    backgroundImage: 'radial-gradient(rgba(212,80,10,0.03) 1px, transparent 1px)',
+                    backgroundSize: '24px 24px',
+                }} />
+
+                {/* ── typewriter label ── */}
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <span style={{
+                        fontSize: 22, fontWeight: 800,
+                        fontFamily: 'Outfit, sans-serif',
+                        color: '#1A1A2E', letterSpacing: '-0.01em',
+                    }}>
+                        {typeText}
                     </span>
-                    <span style={{ width: 1, height: 14, background: '#FDE8D8' }} />
-                    <span style={{ fontSize: 11, fontWeight: 800, fontFamily: 'Outfit', color: '#059669' }}>
-                        {snapCount} snapped
-                    </span>
+                    {/* blinking cursor */}
+                    <span style={{
+                        display: 'inline-block', width: 2, height: '1em',
+                        background: '#D4500A', marginLeft: 3, verticalAlign: 'text-bottom',
+                        animation: 'blink-cursor 1s step-end infinite',
+                    }} />
                 </div>
 
-                {/* ── Table anchored at bottom of the arena ── */}
-                <div style={{
-                    position: 'absolute', left: '4%', right: '4%', bottom: 14, zIndex: 30,
-                    background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)',
-                    border: '1.5px solid #FDE8D8', borderRadius: 20,
-                    boxShadow: '0 -4px 30px rgba(212,80,10,0.06)',
-                    overflow: 'hidden',
-                }}>
-                    {/* Table header */}
+                {/* ── pencil stroke track ── */}
+                <div style={{ position: 'relative', height: 56, zIndex: 1 }}>
+
+                    {/* guide line */}
                     <div style={{
-                        padding: '10px 18px', borderBottom: '1px solid #FDE8D8',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        background: '#FFF8F2',
+                        position: 'absolute', left: 0, right: 0, top: '50%',
+                        transform: 'translateY(-50%)',
+                        height: 2, borderRadius: 99,
+                        background: 'rgba(212,80,10,0.08)',
+                    }} />
+
+                    {/* ink fill */}
+                    <div style={{
+                        position: 'absolute', left: 0, bottom: '50%', marginBottom: -1,
+                        height: 3, borderRadius: 99,
+                        background: 'linear-gradient(to right, #D4500A, #FB923C)',
+                        boxShadow: '0 0 7px 1px rgba(212,80,10,0.4)',
+                        width: `${fillPct}%`,
+                        transition: erasing
+                            ? 'width 0.3s cubic-bezier(0.4,0,1,1)'
+                            : 'none',
+                    }} />
+
+                    {/* pencil icon */}
+                    <div style={{
+                        position: 'absolute',
+                        left: `${pencilX}%`,
+                        top: `calc(50% + ${pencilY}px)`,
+                        transform: `translate(-50%, -50%) rotate(-40deg) scale(${erasing ? 0.65 : 1})`,
+                        color: '#D4500A',
+                        filter: 'drop-shadow(0 0 6px rgba(212,80,10,0.6))',
+                        display: 'flex',
+                        transition: erasing ? 'transform 0.2s ease, top 0.15s ease' : 'none',
                     }}>
-                        <span style={{
-                            fontSize: 9, fontWeight: 800, letterSpacing: '0.14em',
-                            textTransform: 'uppercase', color: '#D4500A', fontFamily: 'Outfit'
-                        }}>
-                            ● EXTRACTION TABLE
-                        </span>
-                        <span style={{ fontSize: 10, fontWeight: 700, fontFamily: 'Outfit', color: '#A8A29E' }}>
-                            {snapCount} / {DEMO.length}
-                        </span>
+                        <FiEdit3 size={22} />
                     </div>
 
-                    {/* Column labels */}
-                    <div style={{
-                        display: 'grid', gridTemplateColumns: '1.8rem 1fr auto auto auto',
-                        gap: '0 10px', padding: '7px 18px',
-                        borderBottom: '1px solid rgba(253,232,216,0.6)',
-                    }}>
-                        {['#', 'Subject', 'Grade', 'Cr', 'Pts'].map(h => (
-                            <span key={h} style={{
-                                fontSize: 9, fontWeight: 800, letterSpacing: '0.12em',
-                                textTransform: 'uppercase', color: '#C8C4C0', fontFamily: 'Outfit'
-                            }}>{h}</span>
-                        ))}
-                    </div>
-
-                    {/* Rows */}
-                    <div style={{ maxHeight: 260, overflowY: 'auto' }}>
-                        {DEMO.map((subj, idx) => {
-                            const isSnapped = phases[idx] === 'snapped';
-                            const w = (GP[subj.grade] || 0) * subj.cr;
-                            const isWarn = subj.conf !== 'high';
-                            return (
-                                <div key={`r-${subj.code}`}>
-                                    {isSnapped ? (
-                                        <motion.div
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{
-                                                height: 'auto', opacity: 1,
-                                                backgroundColor: ['rgba(212,80,10,0.12)', 'rgba(212,80,10,0.02)', 'transparent'],
-                                            }}
-                                            transition={{
-                                                height: { type: 'spring', stiffness: 700, damping: 28 },
-                                                opacity: { duration: 0.1 },
-                                                backgroundColor: { duration: 0.7, times: [0, 0.35, 1] },
-                                            }}
-                                            style={{
-                                                display: 'grid', gridTemplateColumns: '1.8rem 1fr auto auto auto',
-                                                gap: '0 10px', padding: '9px 18px',
-                                                borderBottom: '1px solid rgba(253,232,216,0.5)',
-                                                alignItems: 'center', transformOrigin: 'top',
-                                                borderLeft: isWarn ? `3px solid ${subj.conf === 'fail' ? '#EF444470' : '#F59E0B70'}` : '3px solid transparent',
-                                            }}>
-                                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                                style={{ fontSize: 11, fontWeight: 700, color: '#A8A29E', fontFamily: 'Outfit' }}>{idx + 1}</motion.span>
-                                            <motion.span initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }}
-                                                style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', fontFamily: 'Outfit', letterSpacing: '0.03em' }}>
-                                                {subj.code}
-                                                {isWarn && <FiAlertTriangle style={{
-                                                    marginLeft: 5, width: 11, height: 11,
-                                                    color: subj.conf === 'fail' ? '#EF4444' : '#F59E0B', verticalAlign: 'middle'
-                                                }} />}
-                                            </motion.span>
-                                            <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.08, type: 'spring', stiffness: 400, damping: 20 }}>
-                                                <Pill grade={subj.grade} />
-                                            </motion.div>
-                                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}
-                                                style={{ fontSize: 12, fontWeight: 700, color: '#78716C', fontFamily: 'Outfit', textAlign: 'right' }}>{subj.cr}</motion.span>
-                                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
-                                                style={{
-                                                    fontSize: 12, fontWeight: 700, fontFamily: 'Outfit', textAlign: 'right',
-                                                    color: w === 0 && subj.grade === '?' ? '#D1D5DB' : '#D4500A'
-                                                }}>
-                                                {w === 0 && subj.grade === '?' ? '—' : w}
-                                            </motion.span>
-                                        </motion.div>
-                                    ) : (
-                                        <div style={{
-                                            display: 'grid', gridTemplateColumns: '1.8rem 1fr auto auto auto',
-                                            gap: '0 10px', padding: '9px 18px',
-                                            borderBottom: '1px dashed rgba(253,232,216,0.4)',
-                                            alignItems: 'center', minHeight: 36,
-                                            borderLeft: '3px solid transparent',
-                                        }}>
-                                            <span style={{ fontSize: 11, fontWeight: 600, color: '#E7E5E4', fontFamily: 'Outfit' }}>{idx + 1}</span>
-                                            <span style={{ fontSize: 12, color: '#E7E5E4', letterSpacing: '0.15em' }}>· · · · · ·</span>
-                                            <span style={{ color: '#E7E5E4' }}>—</span>
-                                            <span style={{ color: '#E7E5E4' }}>—</span>
-                                            <span style={{ color: '#E7E5E4' }}>—</span>
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                    {/* graphite-dust sparkles at the tip */}
+                    {!erasing && drawPct > 0.04 && drawPct < 0.97 && [0, 1, 2].map(i => (
+                        <span
+                            key={i}
+                            style={{
+                                position: 'absolute',
+                                left: `${pencilX}%`,
+                                top: `calc(50% + ${pencilY}px)`,
+                                width: 3, height: 3,
+                                borderRadius: '50%',
+                                background: '#D4500A',
+                                animation: `dust-${i} 0.5s ease-out infinite`,
+                                animationDelay: `${i * 0.13}s`,
+                                pointerEvents: 'none',
+                            }}
+                        />
+                    ))}
                 </div>
+
+                {/* row progress dots */}
+                <div style={{
+                    display: 'flex', gap: 6, flexWrap: 'wrap',
+                    position: 'relative', zIndex: 1,
+                }}>
+                    {Array.from({ length: totalRows }).map((_, i) => {
+                        const done = i < (rowIndex % totalRows);
+                        const active = i === (rowIndex % totalRows);
+                        return (
+                            <div key={i} style={{
+                                width: active ? 24 : 8,
+                                height: 8, borderRadius: 99,
+                                background: done
+                                    ? '#D4500A'
+                                    : active
+                                        ? '#FB923C'
+                                        : 'rgba(212,80,10,0.15)',
+                                transition: 'width 0.3s ease, background 0.3s ease',
+                                boxShadow: active ? '0 0 8px rgba(212,80,10,0.5)' : 'none',
+                            }} />
+                        );
+                    })}
+                </div>
+
             </div>
 
-            {/* ── Bottom bar: GPA + micro-copy ── */}
-            <div style={{ display: 'flex', gap: 14, marginTop: 16 }}>
-                {/* GPA */}
-                <div style={{
-                    flex: '0 0 220px', background: '#FFF',
-                    border: '1.5px solid #FDE8D8', borderRadius: 16,
-                    padding: '12px 18px', display: 'flex', alignItems: 'center',
-                    justifyContent: 'space-between',
-                    boxShadow: '0 2px 12px rgba(212,80,10,0.05)',
-                }}>
-                    <div>
-                        <p style={{
-                            fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase',
-                            color: '#A8A29E', fontFamily: 'Outfit', margin: '0 0 2px'
-                        }}>GPA</p>
-                        <p style={{ fontSize: 10, fontWeight: 500, color: '#A8A29E', fontFamily: 'Outfit', margin: 0 }}>
-                            {snapCount} subj.
-                        </p>
-                    </div>
-                    <div style={{
-                        fontSize: 32, fontWeight: 900, fontFamily: 'Outfit',
-                        color: gpa !== '—' ? '#D4500A' : 'rgba(212,80,10,0.15)',
-                        lineHeight: 1, letterSpacing: '-0.03em',
-                    }}>
-                        {gpa.split('').map((c, i) => <Odo key={`${i}-${c}`} ch={c} />)}
-                    </div>
-                </div>
-
-                {/* Micro-copy */}
-                <div style={{
-                    flex: 1, background: 'rgba(212,80,10,0.03)',
-                    borderLeft: '3px solid rgba(212,80,10,0.2)',
-                    borderRadius: '0 14px 14px 0', padding: '12px 16px',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                }}>
-                    <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}
-                        style={{ width: 5, height: 5, borderRadius: '50%', background: '#D4500A', flexShrink: 0 }} />
-                    <span style={{ fontSize: 12, fontWeight: 600, fontFamily: 'Outfit', color: '#78716C', fontStyle: 'italic' }}>
-                        {copyText}
-                        <motion.span animate={{ opacity: [1, 1, 0, 0] }} transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-                            style={{ display: 'inline-block', width: 2, height: 13, background: '#D4500A', marginLeft: 2, verticalAlign: 'middle' }} />
-                    </span>
-                </div>
-            </div>
+            {/* keyframe styles — injected once */}
+            <style>{`
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to   { transform: rotate(360deg); }
+                }
+                @keyframes pulse-dot {
+                    from { opacity: 1; }
+                    to   { opacity: 0.2; }
+                }
+                @keyframes blink-cursor {
+                    0%, 100% { opacity: 1; }
+                    50%      { opacity: 0; }
+                }
+            `}</style>
         </div>
     );
 }
