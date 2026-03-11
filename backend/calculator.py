@@ -677,145 +677,119 @@ class AnnaUniversityCGPA:
         Backward compatible method for single-call CGPA calculation
         
         Supports enriched grades with is_arrear flag for accurate GPA/CGPA calculation.
-        
-        Args:
-            grades_data: List of grade dictionaries from OCR
-                [{'subject': 'CS3691', 'grade': 'B+', 'credits': 3, 'is_arrear': False}, ...]
-            semester: Current marksheet semester
-        
-        Returns:
-            Compatible result dictionary with separate GPA and CGPA
+        Handles arrears correctly by deduplicating subjects across attempts.
         """
         try:
             # Clear existing data
             self.semesters.clear()
             
-            # Separate current semester subjects from arrears
-            current_sem_subjects = []
-            arrear_subjects = []
+            # 1. Deduplicate subjects for CGPA
+            best_attempts = {}
+            scale = self._get_active_grade_scale()
+            ever_failed = False
             
-            for grade in grades_data:
+            for grade_info in grades_data:
+                code = grade_info.get('subject', '').upper()
+                if not code: continue
+                
+                grade = grade_info.get('grade', '').upper()
+                is_passing = grade in self.PASSING_GRADES
+                if not is_passing: ever_failed = True
+                
+                if code not in best_attempts:
+                    best_attempts[code] = grade_info
+                else:
+                    existing_grade = best_attempts[code].get('grade', '').upper()
+                    existing_passing = existing_grade in self.PASSING_GRADES
+                    
+                    if not existing_passing and is_passing:
+                        best_attempts[code] = grade_info
+                    elif existing_passing == is_passing:
+                        if best_attempts[code].get('is_arrear') and not grade_info.get('is_arrear'):
+                            best_attempts[code] = grade_info
+
+            # 2. Separate for GPA and Tracking
+            current_sem_subjects = []
+            arrear_subjects_list = []
+            
+            for code, info in best_attempts.items():
                 subject_data = {
-                    'code': grade.get('subject', ''),
-                    'credits': grade.get('credits', 3),
-                    'grade': grade.get('grade', ''),
-                    'marks': grade.get('marks'),
-                    'original_semester': grade.get('original_semester')
+                    'code': code,
+                    'credits': info.get('credits', 3),
+                    'grade': info.get('grade', '').upper(),
+                    'marks': info.get('marks'),
+                    'original_semester': info.get('original_semester')
                 }
-                
-                # Use is_arrear flag if provided (from enriched data)
-                is_arrear = grade.get('is_arrear', False)
-                
-                # Fallback: determine from original_semester if is_arrear not provided
-                if not is_arrear and 'is_arrear' not in grade:
-                    orig_sem = grade.get('original_semester')
+                is_arrear = info.get('is_arrear', False)
+                if not is_arrear and 'is_arrear' not in info:
+                    orig_sem = info.get('original_semester')
                     if orig_sem is not None and orig_sem != semester:
                         is_arrear = True
                 
                 if is_arrear:
-                    arrear_subjects.append(subject_data)
+                    arrear_subjects_list.append(subject_data)
                 else:
                     current_sem_subjects.append(subject_data)
+
+            self.add_semester(semester, current_sem_subjects + arrear_subjects_list)
             
-            # Add to semester tracking
-            self.add_semester(semester, current_sem_subjects + arrear_subjects)
-            
-            # Calculate Semester GPA (current semester subjects ONLY)
+            # 3. GPA Calculation
             sem_total_points = 0.0
             sem_total_credits = 0
-            sem_passed = 0
-            sem_failed = 0
-            
-            scale = self._get_active_grade_scale()
-            
             for subj_data in current_sem_subjects:
                 grade = subj_data['grade'].upper()
                 credits = float(subj_data['credits'])
-                
                 if grade in scale:
-                    grade_points = scale[grade]['points']
-                    weighted = grade_points * credits
-                    
-                    # Anna University rule: Include ALL credits in denominator, even failures
                     sem_total_credits += credits
-                    
                     if grade in self.PASSING_GRADES:
-                        sem_total_points += weighted
-                        sem_passed += 1
-                    else:
-                        # Failed subject: 0 points but credits still count
-                        sem_failed += 1
+                        sem_total_points += (scale[grade]['points'] * credits)
             
             sem_gpa = sem_total_points / sem_total_credits if sem_total_credits > 0 else 0.0
             
-            # Calculate CGPA (ALL subjects including arrears)
+            # 4. CGPA & Stats
             cgpa_total_points = 0.0
             cgpa_total_credits = 0
-            total_passed = sem_passed
-            total_failed = sem_failed
-            
-            # Add current semester to CGPA
-            cgpa_total_points += sem_total_points
-            cgpa_total_credits += sem_total_credits
-            
-            # Add arrear subjects to CGPA
-            for subj_data in arrear_subjects:
-                grade = subj_data['grade'].upper()
-                credits = float(subj_data['credits'])
-                
-                if grade in scale:
-                    grade_points = scale[grade]['points']
-                    weighted = grade_points * credits
-                    
-                    cgpa_total_credits += credits
-                    
-                    if grade in self.PASSING_GRADES:
-                        cgpa_total_points += weighted
-                        total_passed += 1
-                    else:
-                        total_failed += 1
-            
-            cgpa = cgpa_total_points / cgpa_total_credits if cgpa_total_credits > 0 else 0.0
-            
-            # Build subject details
-            all_grades = grades_data
+            total_passed = 0
+            total_failed = 0
             subjects_dict = {}
             
-            for grade_entry in all_grades:
-                code = grade_entry.get('subject', '')
-                grade = grade_entry.get('grade', '').upper()
-                credits = float(grade_entry.get('credits', 3))
-                is_arrear = grade_entry.get('is_arrear', False)
+            for code, info in best_attempts.items():
+                grade = info.get('grade', '').upper()
+                credits = float(info.get('credits', 3))
+                is_passing = grade in self.PASSING_GRADES
                 
                 grade_points = scale.get(grade, {}).get('points', 0)
                 weighted = grade_points * credits
-                status = 'PASS' if grade in self.PASSING_GRADES else 'FAIL'
+                
+                if is_passing:
+                    cgpa_total_points += weighted
+                    cgpa_total_credits += credits
+                    total_passed += 1
+                else:
+                    total_failed += 1
                 
                 subjects_dict[code] = {
                     'grade': grade,
                     'grade_points': grade_points,
                     'credits': credits,
                     'weighted': weighted,
-                    'status': status,
-                    'is_arrear': is_arrear,
-                    'original_semester': grade_entry.get('original_semester')
+                    'status': 'PASS' if is_passing else 'FAIL',
+                    'is_arrear': info.get('is_arrear', False),
+                    'original_semester': info.get('original_semester')
                 }
-                
-                if grade_entry.get('marks'):
-                    subjects_dict[code]['marks'] = grade_entry['marks']
+                if info.get('marks'): subjects_dict[code]['marks'] = info['marks']
             
-            # Determine class division
-            has_arrears = len(arrear_subjects) > 0 or total_failed > 0
-            class_division = self.get_class_division(cgpa, has_arrears)
+            cgpa = cgpa_total_points / cgpa_total_credits if cgpa_total_credits > 0 else 0.0
+            class_division = self.get_class_division(cgpa, ever_failed)
             
             return {
-                'gpa': round(sem_gpa, 2),  # Current semester only
-                'cgpa': round(cgpa, 2),     # All subjects including arrears
+                'gpa': round(sem_gpa, 2),
+                'cgpa': round(cgpa, 2),
                 'percentage': f"{round(cgpa * 10, 1)}%",
                 'class': class_division,
-                'total_subjects': len(all_grades),
+                'total_subjects': len(best_attempts),
                 'current_semester_subjects': len(current_sem_subjects),
-                'arrear_subjects': len(arrear_subjects),
+                'arrear_subjects': len(arrear_subjects_list),
                 'passed_subjects': total_passed,
                 'failed_subjects': total_failed,
                 'semester_credits': sem_total_credits,
