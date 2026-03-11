@@ -160,9 +160,13 @@ async def calculate_from_data(request: CalculateRequest):
             "cgpa": cgpa,
             "percentage": f"{percentage}%",
             "class": class_div,
-            "passed_subjects": sum(1 for s in details.values() if s['grade_points'] > 0),
             "total_subjects": len(details),
             "subjects": details,
+            "semester_credits": calc_result.get('semester_credits', 0),
+            "total_credits": calc_result.get('total_credits', 0),
+            "arrear_subjects": calc_result.get('arrear_subjects', 0),
+            "passed_subjects": calc_result.get('passed_subjects', 0),
+            "failed_subjects": calc_result.get('failed_subjects', 0),
             "status": "success",
             "semester_info": {
                 "semester": request.semester,
@@ -231,14 +235,21 @@ async def calculate_cgpa(file: UploadFile = File(...)):
             subject_semester = curriculum_service.get_semester(subject_code, 'CSE')
             
             # Determine if this is an arrear subject
-            # - If subject has fixed semester in curriculum, compare with current marksheet semester
-            # - If subject is an elective (semester=None), use OCR-detected original_semester
-            # - Otherwise, treat as current semester subject
+            # - A subject is an arrear only if its original semester is EXPLICITLY LESS than current marksheet semester
+            # - OR if the grade is explicitly a fail grade (RA, U, AB, F)
             is_arrear = False
-            if subject_semester is not None:
-                is_arrear = subject_semester != semester
-            elif grade.get('original_semester'):
-                is_arrear = grade['original_semester'] != semester
+            is_fail_grade = grade.get('grade', '').upper() in ['RA', 'U', 'AB', 'F', 'W', 'SA']
+            
+            # Use detected semester if valid (not just default 1 if detection failed)
+            current_sem = semester if semester_info.get('semester') else None
+            
+            if current_sem and subject_semester is not None:
+                is_arrear = subject_semester < current_sem or is_fail_grade
+            elif current_sem and grade.get('original_semester'):
+                is_arrear = grade['original_semester'] < current_sem or is_fail_grade
+            else:
+                # Fallback: only fail grades are arrears if semester context is missing
+                is_arrear = is_fail_grade
             
             enriched_grade = {
                 'subject': subject_code,
@@ -271,9 +282,13 @@ async def calculate_cgpa(file: UploadFile = File(...)):
             "cgpa": cgpa,
             "percentage": f"{percentage}%",
             "class": class_div,
-            "passed_subjects": sum(1 for s in details.values() if s['grade_points'] > 0),
             "total_subjects": len(details),
             "subjects": details,
+            "semester_credits": calc_result.get('semester_credits', 0),
+            "total_credits": calc_result.get('total_credits', 0),
+            "arrear_subjects": calc_result.get('arrear_subjects', 0),
+            "passed_subjects": calc_result.get('passed_subjects', 0),
+            "failed_subjects": calc_result.get('failed_subjects', 0),
             "status": "success",
             
             # v3 fields
