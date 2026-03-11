@@ -21,14 +21,16 @@ interface SubjectSim {
 interface WhatIfSimulatorProps {
     isOpen: boolean;
     initialSubjects: Record<string, SubjectSim>;
+    currentGpa: number;
+    isSingle: boolean;
     onClose: () => void;
 }
 
 const GRADE_POINTS: Record<string, number> = {
-    'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0
+    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0
 };
 
-export default function WhatIfSimulator({ isOpen, initialSubjects, onClose }: WhatIfSimulatorProps) {
+export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, isSingle, onClose }: WhatIfSimulatorProps) {
     const [simulatedGrades, setSimulatedGrades] = useState<Record<string, string>>(
         Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, det.grade]))
     );
@@ -38,17 +40,25 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, onClose }: Wh
         let totalCredits = 0;
         Object.entries(grades).forEach(([code, grade]) => {
             const credits = initialSubjects[code].credits;
-            totalWeighted += (GRADE_POINTS[grade] || 0) * credits;
-            totalCredits += credits;
+            const points = GRADE_POINTS[grade] || 0;
+            
+            totalWeighted += points * credits;
+            
+            if (isSingle) {
+                // GPA (Semester): Includes all registered credits in denominator
+                totalCredits += credits;
+            } else {
+                // CGPA (Cumulative): Includes only credits of passed subjects in denominator
+                if (points > 0) {
+                    totalCredits += credits;
+                }
+            }
         });
         return totalCredits > 0 ? totalWeighted / totalCredits : 0;
     };
 
-    const currentGpa = useMemo(() => calculateMetrics(
-        Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, det.grade]))
-    ), [initialSubjects]);
 
-    const simulatedGpa = useMemo(() => calculateMetrics(simulatedGrades), [simulatedGrades, initialSubjects]);
+    const simulatedGpa = useMemo(() => calculateMetrics(simulatedGrades), [simulatedGrades, initialSubjects, isSingle]);
     const diff = simulatedGpa - currentGpa;
 
     const handleGradeChange = (code: string, newGrade: string) => {
@@ -82,7 +92,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, onClose }: Wh
                                 </div>
                                 <h2 className="text-3xl font-black text-text-primary tracking-tighter">Grade <span className="text-primary">Simulator</span></h2>
                             </div>
-                            <p className="text-text-muted font-bold text-sm">Hypothetical analysis: Adjust your grades to see CGPA impact</p>
+                            <p className="text-text-muted font-bold text-sm">Hypothetical analysis: Adjust your grades to see {isSingle ? 'GPA' : 'CGPA'} impact</p>
                         </div>
                         <button
                             onClick={handleReset}
@@ -129,12 +139,12 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, onClose }: Wh
                                 <div className="text-6xl font-black text-text-primary tracking-tighter tabular-nums">
                                     {simulatedGpa.toFixed(2)}
                                 </div>
-                                <div className="text-sm font-bold text-text-muted">Simulated Semester GPA</div>
+                                <div className="text-sm font-bold text-text-muted">Simulated {isSingle ? 'Semester GPA' : 'Cumulative CGPA'}</div>
                             </div>
 
-                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-black text-xs uppercase tracking-widest border-2 ${diff >= 0 ? 'bg-success/10 border-success/20 text-success' : 'bg-accent-2/10 border-accent-2/20 text-accent-2'}`}>
-                                {diff >= 0 ? <FiTrendingUp /> : <FiAlertCircle />}
-                                {diff >= 0 ? '+' : ''}{diff.toFixed(3)} Net Change
+                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-black text-xs uppercase tracking-widest border-2 ${Math.abs(diff) < 0.001 ? 'bg-bg-card border-border text-text-muted' : diff > 0 ? 'bg-success/10 border-success/20 text-success' : 'bg-accent-2/10 border-accent-2/20 text-accent-2'}`}>
+                                {Math.abs(diff) < 0.001 ? <FiCheck /> : diff > 0 ? <FiTrendingUp /> : <FiAlertCircle />}
+                                {diff > 0.0005 ? '+' : ''}{diff.toFixed(3)} Net Change
                             </div>
                         </div>
 
@@ -142,18 +152,28 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, onClose }: Wh
                             <div className="p-6 rounded-3xl bg-bg-card border border-border space-y-4">
                                 <div className="flex justify-between items-center text-[10px] font-black text-text-muted uppercase tracking-widest">
                                     <span>Current</span>
-                                    <span>Target</span>
+                                    <span>Simulated</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="text-2xl font-black text-text-muted">{currentGpa.toFixed(2)}</div>
-                                    <FiChevronRight className="text-primary text-xl" />
+                                    <FiArrowRight className="text-primary text-xl" />
                                     <div className="text-2xl font-black text-primary">{simulatedGpa.toFixed(2)}</div>
                                 </div>
-                                <div className="h-2 w-full bg-bg-primary rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-bg-primary rounded-full relative overflow-hidden">
+                                     {/* Baseline ghost bar */}
+                                     <div 
+                                        className="absolute inset-y-0 left-0 bg-text-muted/10 transition-all duration-500" 
+                                        style={{ width: `${(currentGpa / 10) * 100}%` }}
+                                    />
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${(simulatedGpa / 10) * 100}%` }}
-                                        className="h-full bg-primary"
+                                        className={`h-full ${diff >= 0 ? 'bg-primary' : 'bg-accent-2'}`}
+                                    />
+                                    {/* Tick for exact current position */}
+                                    <div 
+                                        className="absolute inset-y-0 w-0.5 bg-text-muted/30 z-10"
+                                        style={{ left: `${(currentGpa / 10) * 100}%` }}
                                     />
                                 </div>
                             </div>
