@@ -1,34 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    FiEye,
-    FiCheckCircle,
-    FiAlertTriangle,
-    FiChevronLeft,
-    FiChevronRight,
-    FiEdit2,
-    FiCheck,
-    FiX,
-    FiInfo,
-    FiZap,
-    FiPlus,
-    FiTrash2
+    FiChevronLeft, FiChevronRight,
+    FiEdit2, FiCheck, FiX,
+    FiPlus, FiTrash2, FiAlertTriangle, FiSkipForward,
+    FiSearch,
 } from 'react-icons/fi';
 
-interface PreviewSubject {
+/* ─── Types ──────────────────────────────────────────────────────────────── */
+export interface PreviewSubject {
     subject_code: string;
     grade: string;
     marks?: number;
     credits?: number;
     is_revaluation?: boolean;
+    confidence?: string;
 }
 
 interface PreviewSectionProps {
     imageUrls: string[];
     ocrData: {
         subjects: PreviewSubject[];
+        subjects_per_file?: PreviewSubject[][];
         semester_info?: { semester?: number; regulation?: string };
         confidence?: { overall?: number };
     };
@@ -36,347 +31,680 @@ interface PreviewSectionProps {
     onBack: () => void;
 }
 
+/* ─── Constants ──────────────────────────────────────────────────────────── */
 const VALID_GRADES = ['O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', '-'];
 
-function getGradeClass(grade: string) {
-    if (grade === 'O') return 'bg-success/20 text-success border-success/30';
-    if (grade === 'A+' || grade === 'A') return 'bg-primary/20 text-primary border-primary/30';
-    if (grade === 'B+' || grade === 'B') return 'bg-accent-1/20 text-accent-1 border-accent-1/30';
-    if (grade === 'C') return 'bg-neutral/20 text-text-muted border-neutral/30';
-    if (grade === 'U' || grade === 'RA' || grade === 'SA') return 'bg-accent-2/20 text-accent-2 border-accent-2/30';
-    return 'bg-neutral/10 text-text-muted border-border';
+const GP: Record<string, number> = {
+    'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0,
+};
+
+const GRADE_COLOR: Record<string, string> = {
+    'O': '#059669', 'A+': '#7C3AED', 'A': '#D97706',
+    'B+': '#0EA5E9', 'B': '#14B8A6', 'C': '#6B7280',
+    'U': '#EF4444', 'RA': '#EF4444', 'SA': '#F59E0B', 'W': '#9CA3AF',
+};
+
+/* ─── Helpers ────────────────────────────────────────────────────────────── */
+function calcGPA(subjects: PreviewSubject[]) {
+    const passing = subjects.filter(s => !['U', 'RA', 'SA', 'W', '-'].includes(s.grade));
+    const tw = passing.reduce((a, s) => a + (GP[s.grade] ?? 0) * (s.credits ?? 0), 0);
+    const tc = passing.reduce((a, s) => a + (s.credits ?? 0), 0);
+    return tc > 0 ? (tw / tc).toFixed(2) : null;
 }
 
-export default function PreviewSection({
-    imageUrls,
-    ocrData,
-    onConfirm,
-    onBack,
-}: PreviewSectionProps) {
-    const [subjects, setSubjects] = useState<PreviewSubject[]>([]);
-    const [editing, setEditing] = useState<Record<number, { grade: string; marks: string; subject_code: string }>>({});
-    const [activeImageIdx, setActiveImageIdx] = useState(0);
-    const [mounted, setMounted] = useState(false);
+function hasIssues(subjects: PreviewSubject[]) {
+    return subjects.some(s =>
+        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code,
+    );
+}
 
-    useEffect(() => {
-        setSubjects(ocrData.subjects || []);
-        setMounted(true);
-    }, [ocrData]);
+function GradePill({ grade }: { grade: string }) {
+    const c = GRADE_COLOR[grade] || '#9CA3AF';
+    return (
+        <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            padding: '2px 10px', borderRadius: 6, minWidth: 38,
+            background: `${c}18`, border: `1px solid ${c}40`,
+            color: c, fontSize: 11, fontWeight: 800, fontFamily: 'Outfit, sans-serif',
+            letterSpacing: '0.04em',
+        }}>{grade || '—'}</span>
+    );
+}
 
-    const startEdit = (idx: number, subj: PreviewSubject) => {
-        setEditing((prev) => ({
-            ...prev,
-            [idx]: { grade: subj.grade, marks: String(subj.marks ?? ''), subject_code: subj.subject_code },
-        }));
+/* ─── Single Sem Slide ───────────────────────────────────────────────────── */
+function SemSlide({
+    imageUrl, subjects, semLabel, direction, onChange,
+}: {
+    imageUrl: string | null;
+    subjects: PreviewSubject[];
+    semLabel: string;
+    direction: number;
+    onChange: (updated: PreviewSubject[]) => void;
+}) {
+    const [editing, setEditing] = useState<Record<number, { grade: string; subject_code: string }>>({});
+    const [scale, setScale] = useState(1);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+    const hasDraggedRef = useRef(false);
+    const mouseDownPos = useRef({ x: 0, y: 0 });
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleWheel = (e: React.WheelEvent) => {
+        const delta = -e.deltaY * 0.001;
+        const newScale = Math.min(Math.max(scale + delta, 0.4), 4);
+        setScale(newScale);
     };
 
-    const cancelEdit = (idx: number) => {
-        setEditing((prev) => { const n = { ...prev }; delete n[idx]; return n; });
+    const handleMouseDown = (e: React.MouseEvent) => {
+        mouseDownPos.current = { x: e.clientX, y: e.clientY };
+        hasDraggedRef.current = false;
+        if (scale <= 1) return;
+        setIsDragging(true);
+        setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
     };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const dx = Math.abs(e.clientX - mouseDownPos.current.x);
+        const dy = Math.abs(e.clientY - mouseDownPos.current.y);
+        if (dx > 3 || dy > 3) hasDraggedRef.current = true;
+
+        if (!isDragging) return;
+        setPosition({
+            x: e.clientX - dragStart.x,
+            y: e.clientY - dragStart.y
+        });
+    };
+
+    const handleMouseUp = () => setIsDragging(false);
+
+    const resetZoom = () => {
+        setScale(1);
+        setPosition({ x: 0, y: 0 });
+    };
+
+    const toggleZoom = () => {
+        if (scale !== 1) resetZoom();
+        else setScale(2);
+    };
+
+    const startEdit = (idx: number, s: PreviewSubject) =>
+        setEditing(p => ({ ...p, [idx]: { grade: s.grade, subject_code: s.subject_code } }));
+
+    const cancelEdit = (idx: number) =>
+        setEditing(p => { const n = { ...p }; delete n[idx]; return n; });
 
     const saveEdit = (idx: number) => {
-        const edits = editing[idx];
-        if (!edits) return;
-        const updated = [...subjects];
-        updated[idx] = {
-            ...updated[idx],
-            grade: edits.grade.toUpperCase().trim(),
-            marks: edits.marks ? Number(edits.marks) : undefined,
-            subject_code: edits.subject_code.toUpperCase().trim() || updated[idx].subject_code,
-        };
-        setSubjects(updated);
+        const ed = editing[idx]; if (!ed) return;
+        const updated = subjects.map((s, i) => i === idx
+            ? { ...s, grade: ed.grade.toUpperCase().trim(), subject_code: ed.subject_code.toUpperCase().trim() || s.subject_code }
+            : s,
+        );
+        onChange(updated);
         cancelEdit(idx);
     };
 
-    const addSubject = () => {
-        const newSub: PreviewSubject = {
-            subject_code: 'NEW101',
-            grade: 'O',
-            credits: 3
-        };
-        const updated = [...subjects, newSub];
-        setSubjects(updated);
-        // Automatically start editing the new subject
-        startEdit(updated.length - 1, newSub);
+    const addRow = () => {
+        const newS: PreviewSubject = { subject_code: 'NEW101', grade: 'O', credits: 3 };
+        const updated = [...subjects, newS];
+        onChange(updated);
+        setTimeout(() => startEdit(updated.length - 1, newS), 50);
     };
 
-    const removeSubject = (idx: number) => {
-        const updated = subjects.filter((_, i) => i !== idx);
-        setSubjects(updated);
-        // Also clear any editing state for this index
+    const removeRow = (idx: number) => {
+        onChange(subjects.filter((_, i) => i !== idx));
         cancelEdit(idx);
     };
 
-    const handleConfirm = () => {
-        const finalSubjects = subjects.map((s, i) => {
-            if (editing[i]) {
-                const edits = editing[i];
-                return {
-                    ...s,
-                    grade: edits.grade.toUpperCase().trim(),
-                    marks: edits.marks ? Number(edits.marks) : s.marks,
-                    subject_code: edits.subject_code.toUpperCase().trim() || s.subject_code,
-                };
-            }
-            return s;
-        });
-        onConfirm(finalSubjects);
+    const slideVariants = {
+        enter: (d: number) => ({ x: d > 0 ? '60%' : '-60%', opacity: 0 }),
+        center: { x: 0, opacity: 1 },
+        exit: (d: number) => ({ x: d > 0 ? '-60%' : '60%', opacity: 0 }),
     };
-
-    const confidence = ocrData.confidence?.overall;
-    const semester = ocrData.semester_info?.semester;
-    const regulation = ocrData.semester_info?.regulation;
-
-    if (!mounted) return null;
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="w-full max-w-7xl mx-auto px-4 pb-20"
+            key={semLabel}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+            style={{
+                display: 'grid',
+                gridTemplateColumns: imageUrl ? '1fr 1.6fr' : '1fr',
+                gap: 0,
+                minHeight: 0,
+                flex: 1,
+                background: '#FFFDF9',
+                borderRadius: 0,
+                overflow: 'hidden',
+            }}
         >
-            {/* Header Section */}
-            <header className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
-                <div className="space-y-4">
-                    <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        className="flex items-center gap-3"
-                    >
-                        <div className="px-4 py-1.5 bg-accent-1/10 border border-accent-1/20 rounded-full flex items-center gap-2">
-                            <FiEye className="text-accent-1" />
-                            <span className="text-xs font-bold uppercase tracking-widest text-accent-1">OCR Analysis</span>
+            {/* ── Left: Marksheet image ── */}
+            {imageUrl && (
+                <div style={{
+                    borderRight: '1.5px solid #FDE8D8',
+                    display: 'flex', flexDirection: 'column',
+                    background: '#FFF8F4',
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}>
+                    {/* image toolbar */}
+                    <div style={{
+                        padding: '8px 14px', borderBottom: '1px solid #FDE8D8',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        background: '#FFF8F2', zIndex: 10,
+                    }}>
+                        <span style={{
+                            fontSize: 10, fontWeight: 800, fontFamily: 'Outfit', color: '#B2A49A',
+                            letterSpacing: '0.12em', textTransform: 'uppercase',
+                        }}>Document</span>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: '#D4500A', opacity: 0.6, fontFamily: 'Outfit' }}>
+                                Scroll to zoom • Drag to pan
+                            </span>
+                            {scale !== 1 && (
+                                <button
+                                    onClick={resetZoom}
+                                    style={{
+                                        padding: '4px 10px', borderRadius: 6, border: '1px solid #FDE8D8',
+                                        background: '#FFF', cursor: 'pointer',
+                                        fontSize: 10, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A',
+                                    }}
+                                >
+                                    Reset
+                                </button>
+                            )}
                         </div>
-                        {confidence !== undefined && (
-                            <div className={`px-4 py-1.5 rounded-full border flex items-center gap-2 ${confidence >= 0.8 ? 'bg-success/10 border-success/20 text-success' :
-                                confidence >= 0.6 ? 'bg-accent-1/10 border-accent-1/20 text-accent-1' :
-                                    'bg-accent-2/10 border-accent-2/20 text-accent-2'
-                                }`}>
-                                {confidence >= 0.8 ? <FiCheckCircle /> : <FiAlertTriangle />}
-                                <span className="text-xs font-bold uppercase tracking-widest">
-                                    {Math.round(confidence * 100)}% Confidence
-                                </span>
+                    </div>
+
+                    {/* scrollable image area */}
+                    <div
+                        ref={containerRef}
+                        onWheel={handleWheel}
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={() => { handleMouseUp(); setIsHovered(false); }}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onClick={(e) => {
+                            if (!hasDraggedRef.current) {
+                                toggleZoom();
+                            }
+                        }}
+                        style={{
+                            flex: 1,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <motion.img
+                            src={imageUrl}
+                            alt={semLabel}
+                            draggable={false}
+                            animate={{
+                                scale: scale,
+                                x: position.x,
+                                y: position.y
+                            }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200, mass: 0.5 }}
+                            style={{
+                                maxWidth: '90%',
+                                maxHeight: '90%',
+                                borderRadius: 10,
+                                border: '1px solid #FDE8D8',
+                                boxShadow: '0 4px 20px rgba(212,80,10,0.08)',
+                                objectFit: 'contain',
+                                userSelect: 'none',
+                                pointerEvents: 'none', // Allow events to pass to container
+                                cursor: scale === 1 ? 'zoom-in' : 'zoom-out',
+                            }}
+                        />
+
+                        {/* Hover Zoom Hint */}
+                        <AnimatePresence>
+                            {isHovered && scale === 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 5,
+                                        background: 'rgba(212,80,10,0.9)',
+                                        color: '#FFF',
+                                        padding: '8px 16px',
+                                        borderRadius: 99,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 8,
+                                        fontSize: 12,
+                                        fontWeight: 800,
+                                        fontFamily: 'Outfit',
+                                        boxShadow: '0 4px 12px rgba(212,80,10,0.3)',
+                                        pointerEvents: 'none',
+                                    }}
+                                >
+                                    <FiSearch size={14} />
+                                    Click to Zoom
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* zoom indicator overlay */}
+                        {scale !== 1 && (
+                            <div style={{
+                                position: 'absolute', bottom: 12, right: 12,
+                                background: 'rgba(255,255,255,0.9)',
+                                padding: '4px 10px', borderRadius: 8,
+                                border: '1px solid #FDE8D8',
+                                fontSize: 11, fontWeight: 800, color: '#D4500A',
+                                fontFamily: 'Outfit', pointerEvents: 'none',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                            }}>
+                                {Math.round(scale * 100)}%
                             </div>
                         )}
-                    </motion.div>
-
-                    <h2 className="text-4xl md:text-5xl font-black text-text-primary tracking-tighter">
-                        Review <span className="text-primary">Extracted</span> Data
-                    </h2>
-                    <p className="text-text-muted max-w-xl text-lg leading-relaxed">
-                        Verify the accuracy of your semester results. Ensure all subject codes and grades match your marksheets before we crunch the numbers.
-                    </p>
-                </div>
-
-                <div className="flex gap-4">
-                    {semester && (
-                        <div className="px-6 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20">
-                            Semester {semester}
-                        </div>
-                    )}
-                    {regulation && (
-                        <div className="px-6 py-3 bg-bg-card-alt border border-border text-primary rounded-2xl font-bold">
-                            R{regulation}
-                        </div>
-                    )}
-                </div>
-            </header>
-
-            {/* Main Interactive Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-
-                {/* ── Left Side: High-End Image Viewer (2/5 span) ── */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="relative group rounded-[32px] p-1 bg-gradient-to-br from-border to-border/30 overflow-hidden shadow-2xl shadow-primary/5">
-                        <div className="relative bg-bg-card rounded-[31px] overflow-hidden flex flex-col h-[500px]">
-                            {/* Viewer Toolbar */}
-                            <div className="px-6 py-4 flex items-center justify-between bg-bg-card-alt/50 backdrop-blur-md border-b border-border z-10">
-                                <span className="text-xs font-bold text-text-muted uppercase tracking-widest">
-                                    Document {activeImageIdx + 1} / {imageUrls.length}
-                                </span>
-
-                                {imageUrls.length > 1 && (
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => setActiveImageIdx(p => (p - 1 + imageUrls.length) % imageUrls.length)}
-                                            className="p-2 bg-white border border-border rounded-xl text-text-primary hover:text-primary hover:border-primary/30 transition-all shadow-sm"
-                                        >
-                                            <FiChevronLeft />
-                                        </button>
-                                        <button
-                                            onClick={() => setActiveImageIdx(p => (p + 1) % imageUrls.length)}
-                                            className="p-2 bg-white border border-border rounded-xl text-text-primary hover:text-primary hover:border-primary/30 transition-all shadow-sm"
-                                        >
-                                            <FiChevronRight />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Image Container */}
-                            <div className="flex-1 overflow-auto bg-neutral/5 p-8 flex items-center justify-center">
-                                <AnimatePresence mode="wait">
-                                    <motion.img
-                                        key={activeImageIdx}
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 1.05 }}
-                                        src={imageUrls[activeImageIdx]}
-                                        alt=""
-                                        className="max-w-full max-h-full rounded-lg shadow-lg border border-border h-auto object-contain cursor-zoom-in"
-                                    />
-                                </AnimatePresence>
-                            </div>
-                        </div>
                     </div>
                 </div>
+            )}
 
-                {/* ── Right Side: Dynamic Subject Management (3/5 span) ── */}
-                <div className="lg:col-span-3 space-y-6">
-                    <div className="relative rounded-[32px] p-1 bg-gradient-to-br from-primary/10 to-accent-1/10">
-                        <div className="bg-bg-card rounded-[31px] overflow-hidden border border-border shadow-xl">
-                            {/* Table Header */}
-                            <div className="px-8 py-6 border-b border-border bg-bg-card-alt/30 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                        <FiInfo />
+            {/* ── Right: Editable table ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                {/* table header */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1.8rem 1fr auto auto auto auto',
+                    gap: '0 10px', padding: '12px 20px',
+                    borderBottom: '1.5px solid #FDE8D8', background: '#FFF8F2',
+                    alignItems: 'center',
+                }}>
+                    {['#', 'Subject Code', 'Grade', 'Cr', 'Pts', ''].map(h => (
+                        <span key={h} style={{
+                            fontSize: 9, fontWeight: 800, letterSpacing: '0.14em',
+                            textTransform: 'uppercase', color: '#C8C4C0', fontFamily: 'Outfit',
+                        }}>{h}</span>
+                    ))}
+                </div>
+
+                {/* rows */}
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                    <AnimatePresence initial={false}>
+                        {subjects.map((subj, idx) => {
+                            const isEditing = !!editing[idx];
+                            const pts = (GP[subj.grade] ?? 0) * (subj.credits ?? 0);
+                            const isLow = subj.confidence === 'low';
+
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    layout
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.18 }}
+                                    className="group"
+                                    style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '1.8rem 1fr auto auto auto auto',
+                                        gap: '0 10px', padding: '10px 20px',
+                                        borderBottom: '1px solid rgba(253,232,216,0.55)',
+                                        borderLeft: isLow ? '3px solid #F59E0B' : '3px solid transparent',
+                                        alignItems: 'center',
+                                        background: isEditing ? 'rgba(212,80,10,0.03)' : 'transparent',
+                                        transition: 'background 0.15s',
+                                    }}
+                                >
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: '#C0BAB4', fontFamily: 'Outfit' }}>
+                                        {String(idx + 1).padStart(2, '0')}
+                                    </span>
+
+                                    {/* code */}
+                                    {isEditing ? (
+                                        <input
+                                            autoFocus
+                                            value={editing[idx].subject_code}
+                                            onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], subject_code: e.target.value.toUpperCase() } }))}
+                                            style={{
+                                                border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                padding: '3px 8px', fontSize: 13, fontWeight: 800,
+                                                fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                width: '100%', background: '#FFF',
+                                            }}
+                                        />
+                                    ) : (
+                                        <span style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', fontFamily: 'Outfit', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                            {subj.subject_code}
+                                            {isLow && <FiAlertTriangle size={11} color="#F59E0B" />}
+                                        </span>
+                                    )}
+
+                                    {/* grade */}
+                                    {isEditing ? (
+                                        <select
+                                            value={editing[idx].grade}
+                                            onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], grade: e.target.value } }))}
+                                            style={{
+                                                border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                padding: '3px 6px', fontSize: 12, fontWeight: 800,
+                                                fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                background: '#FFF',
+                                            }}
+                                        >
+                                            {VALID_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                                        </select>
+                                    ) : (
+                                        <GradePill grade={subj.grade} />
+                                    )}
+
+                                    <span style={{ fontSize: 12, fontWeight: 700, color: '#78716C', fontFamily: 'Outfit', textAlign: 'right' }}>
+                                        {subj.credits ?? '—'}
+                                    </span>
+                                    <span style={{ fontSize: 12, fontWeight: 700, fontFamily: 'Outfit', textAlign: 'right', color: pts ? '#D4500A' : '#D1D5DB' }}>
+                                        {pts || '—'}
+                                    </span>
+
+                                    {/* action buttons */}
+                                    <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                                        {isEditing ? (
+                                            <>
+                                                <button onClick={() => saveEdit(idx)} style={iconBtn('#059669')}><FiCheck size={13} /></button>
+                                                <button onClick={() => cancelEdit(idx)} style={iconBtn('#9CA3AF')}><FiX size={13} /></button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button onClick={() => startEdit(idx, subj)} style={{ ...iconBtn('#D4500A'), opacity: 0 }} className="group-hover:opacity-100" title="Edit"><FiEdit2 size={13} /></button>
+                                                <button onClick={() => removeRow(idx)} style={{ ...iconBtn('#EF4444'), opacity: 0 }} className="group-hover:opacity-100" title="Remove"><FiTrash2 size={13} /></button>
+                                            </>
+                                        )}
                                     </div>
-                                    <h3 className="font-bold text-lg text-text-primary">Extracted Results</h3>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <button
-                                        onClick={addSubject}
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all"
-                                    >
-                                        <FiPlus />
-                                        Add Subject
-                                    </button>
-                                    <div className="text-xs text-text-muted font-bold tracking-widest uppercase">
-                                        {subjects.length} Subjects Detected
-                                    </div>
-                                </div>
-                            </div>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
 
-                            {/* Subjects List */}
-                            <div className="max-h-[500px] overflow-y-auto px-4 py-4 custom-scrollbar">
-                                <div className="space-y-3">
-                                    {subjects.map((subj, idx) => {
-                                        const isEditing = editing[idx] !== undefined;
-                                        return (
-                                            <motion.div
-                                                key={idx}
-                                                layout
-                                                initial={{ x: 20, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                transition={{ delay: idx * 0.05 }}
-                                                className={`group relative p-4 rounded-2xl border transition-all duration-300 ${isEditing
-                                                    ? 'bg-primary/5 border-primary/20 shadow-inner'
-                                                    : 'bg-bg-card border-border hover:border-primary/30 hover:shadow-md'
-                                                    }`}
-                                            >
-                                                <div className="flex items-center justify-between gap-4">
-                                                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 items-center gap-4">
-                                                        <div className="flex items-center gap-4">
-                                                            <span className="text-[10px] font-bold text-text-muted font-mono w-6">
-                                                                {String(idx + 1).padStart(2, '0')}
-                                                            </span>
-                                                            {isEditing ? (
-                                                                <input
-                                                                    type="text"
-                                                                    autoFocus
-                                                                    className="bg-bg-card border border-border px-3 py-2 rounded-xl text-sm font-bold text-primary focus:ring-2 focus:ring-primary/20 outline-none w-full"
-                                                                    value={editing[idx].subject_code}
-                                                                    onChange={(e) => setEditing(prev => ({ ...prev, [idx]: { ...prev[idx], subject_code: e.target.value.toUpperCase() } }))}
-                                                                />
-                                                            ) : (
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="font-black text-text-primary tracking-tight">{subj.subject_code}</span>
-                                                                    {subj.is_revaluation && (
-                                                                        <span className="px-2 py-0.5 bg-accent-1/10 text-accent-1 text-[8px] font-black uppercase rounded-sm border border-accent-1/20">REVAL</span>
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                        </div>
+                {/* add subject footer */}
+                <div style={{
+                    padding: '8px 20px', borderTop: '1px solid #FDE8D8',
+                    background: '#FAFAFA', display: 'flex', alignItems: 'center', gap: 8,
+                }}>
+                    <button
+                        onClick={addRow}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            padding: '5px 12px', borderRadius: 8,
+                            border: '1.5px dashed rgba(212,80,10,0.3)',
+                            background: 'transparent', cursor: 'pointer',
+                            fontSize: 11, fontWeight: 700, color: '#D4500A',
+                            fontFamily: 'Outfit',
+                        }}
+                    >
+                        <FiPlus size={13} /> Add subject
+                    </button>
+                    <span style={{ fontSize: 10, color: '#C8C4C0', fontFamily: 'Outfit' }}>
+                        {subjects.length} subjects detected
+                    </span>
+                </div>
+            </div>
+        </motion.div>
+    );
+}
 
-                                                        <div className="flex justify-center">
-                                                            {isEditing ? (
-                                                                <select
-                                                                    className="bg-bg-card border border-border px-3 py-2 rounded-xl text-sm font-bold text-primary outline-none"
-                                                                    value={editing[idx].grade}
-                                                                    onChange={(e) => setEditing(prev => ({ ...prev, [idx]: { ...prev[idx], grade: e.target.value } }))}
-                                                                >
-                                                                    {VALID_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
-                                                                </select>
-                                                            ) : (
-                                                                <div className={`px-4 py-1.5 rounded-xl border text-sm font-black transition-colors ${getGradeClass(subj.grade)}`}>
-                                                                    {subj.grade || '—'}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
+/* tiny icon button style */
+function iconBtn(color: string) {
+    return {
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: 26, height: 26, borderRadius: 6,
+        border: `1px solid ${color}30`, background: `${color}10`,
+        color, cursor: 'pointer', transition: 'all 0.15s',
+    } as React.CSSProperties;
+}
 
-                                                    <div className="flex items-center gap-2">
-                                                        {isEditing ? (
-                                                            <>
-                                                                <button onClick={() => saveEdit(idx)} className="p-2 bg-success text-white rounded-xl shadow-lg shadow-success/20 hover:scale-110 active:scale-95 transition-transform"><FiCheck /></button>
-                                                                <button onClick={() => cancelEdit(idx)} className="p-2 bg-bg-card-alt text-text-muted rounded-xl hover:text-accent-2 transition-colors"><FiX /></button>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <button onClick={() => startEdit(idx, subj)} className="p-2 opacity-0 group-hover:opacity-100 bg-bg-card-alt text-text-muted rounded-xl hover:text-primary hover:bg-primary/5 transition-all outline-none" title="Edit"><FiEdit2 /></button>
-                                                                <button onClick={() => removeSubject(idx)} className="p-2 opacity-0 group-hover:opacity-100 bg-bg-card-alt text-text-muted rounded-xl hover:text-accent-2 hover:bg-accent-2/5 transition-all outline-none" title="Remove"><FiTrash2 /></button>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+/* ─── Main Component ─────────────────────────────────────────────────────── */
+export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }: PreviewSectionProps) {
+    /*
+      A single ocrData object covers all subjects for potentially multiple sems.
+      We treat each marksheet image as one "slide" — if only one image, one slide.
+      The subjects are all combined; per-slide GPA is computed from the full set
+      (since we don't have per-image subject splits from the back end today).
+      The user confirms the whole set on the final slide.
+    */
+    const totalSlides = Math.max(imageUrls.length, 1);
 
-                            {/* Subjects Footer/Notice */}
-                            <div className="px-8 py-4 bg-bg-card-alt/50 border-t border-border flex items-center gap-3">
-                                <FiAlertTriangle className="text-accent-1 w-4 h-4 flex-shrink-0" />
-                                <span className="text-[10px] text-text-muted font-medium">Verify all codes and grades manually. Accuracy depends on document clarity.</span>
-                            </div>
-                        </div>
-                    </div>
+    // Per-slide subject arrays — prioritising exact mapping from OCR
+    const [slideSubjects, setSlideSubjects] = useState<PreviewSubject[][]>(() => {
+        // Use exact per-file results if available (strongest source)
+        if (ocrData.subjects_per_file && Array.isArray(ocrData.subjects_per_file)) {
+            return ocrData.subjects_per_file;
+        }
+
+        const all = ocrData.subjects || [];
+        if (imageUrls.length <= 1) return [all];
+        // Fallback: Distribute subjects roughly evenly across slides
+        const perSlide = Math.ceil(all.length / imageUrls.length);
+        return imageUrls.map((_, i) => all.slice(i * perSlide, (i + 1) * perSlide));
+    });
+
+    const [currentIdx, setCurrentIdx] = useState(0);
+    const [direction, setDirection]   = useState(1);
+    const [skipped, setSkipped]       = useState<Set<number>>(new Set());
+
+    const semLabel = `Sem ${currentIdx + 1} of ${totalSlides}`;
+    const curSubjects = slideSubjects[currentIdx] || [];
+    const gpa = calcGPA(curSubjects);
+    const issues = hasIssues(curSubjects);
+
+    const go = (delta: number) => {
+        const next = currentIdx + delta;
+        if (next < 0 || next >= totalSlides) return;
+        setDirection(delta);
+        setCurrentIdx(next);
+    };
+
+    const handleSkip = () => {
+        setSkipped(p => new Set([...p, currentIdx]));
+        if (currentIdx < totalSlides - 1) go(1);
+        else confirmAll();
+    };
+
+    const handleNext = () => {
+        if (currentIdx < totalSlides - 1) go(1);
+        else confirmAll();
+    };
+
+    const confirmAll = () => {
+        const all = slideSubjects.flat();
+        onConfirm(all);
+    };
+
+    const isLast = currentIdx === totalSlides - 1;
+
+    /* swipe gesture */
+    const dragStart = useRef(0);
+    const onDragStart = (e: React.TouchEvent) => { dragStart.current = e.touches[0].clientX; };
+    const onDragEnd = (e: React.TouchEvent) => {
+        const delta = dragStart.current - e.changedTouches[0].clientX;
+        if (Math.abs(delta) > 50) go(delta > 0 ? 1 : -1);
+    };
+
+    /* ─── render ─────────────────────────────────────────────────────────── */
+    return (
+        <div
+            onTouchStart={onDragStart}
+            onTouchEnd={onDragEnd}
+            style={{
+                display: 'flex', flexDirection: 'column',
+                minHeight: '85vh', maxWidth: 1100, margin: '0 auto',
+                background: '#FFFDF9', borderRadius: 28, overflow: 'hidden',
+                border: '1.5px solid #FDE8D8',
+                boxShadow: '0 8px 48px rgba(212,80,10,0.08)',
+            }}
+        >
+            {/* ══ TOP BAR ══ */}
+            <div style={{
+                padding: '16px 28px',
+                borderBottom: '1.5px solid #FDE8D8',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                background: '#FFFAF6', flexShrink: 0,
+            }}>
+                {/* back */}
+                <button
+                    onClick={onBack}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        fontSize: 13, fontWeight: 700, color: '#B2A49A',
+                        fontFamily: 'Outfit', padding: 0,
+                    }}
+                >
+                    <FiChevronLeft size={16} /> Back
+                </button>
+
+                {/* progress dots */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {Array.from({ length: totalSlides }).map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => { setDirection(i > currentIdx ? 1 : -1); setCurrentIdx(i); }}
+                            style={{
+                                width: i === currentIdx ? 28 : 8,
+                                height: 8, borderRadius: 99,
+                                background: i === currentIdx
+                                    ? '#D4500A'
+                                    : skipped.has(i)
+                                        ? '#D1D5DB'
+                                        : i < currentIdx
+                                            ? '#059669'
+                                            : 'rgba(212,80,10,0.2)',
+                                border: 'none', cursor: 'pointer', padding: 0,
+                                transition: 'all 0.25s ease',
+                                boxShadow: i === currentIdx ? '0 0 8px rgba(212,80,10,0.45)' : 'none',
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* sem label + warning */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {issues && (
+                        <span style={{
+                            display: 'flex', alignItems: 'center', gap: 5,
+                            fontSize: 11, fontWeight: 700, fontFamily: 'Outfit',
+                            color: '#F59E0B', padding: '3px 10px',
+                            background: '#FEF3C7', borderRadius: 999,
+                            border: '1px solid #FDE68A',
+                        }}>
+                            <FiAlertTriangle size={11} /> Needs review
+                        </span>
+                    )}
+                    <span style={{
+                        fontSize: 12, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A',
+                        background: 'rgba(212,80,10,0.08)', borderRadius: 999, padding: '4px 14px',
+                        border: '1px solid rgba(212,80,10,0.15)',
+                    }}>
+                        {semLabel}
+                    </span>
                 </div>
             </div>
 
-            {/* Bottom Controls */}
-            <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="mt-12 flex flex-col md:flex-row items-center justify-between p-8 rounded-[32px] bg-bg-card-alt/50 border border-border backdrop-blur-xl gap-6"
-            >
-                <button onClick={onBack} className="flex items-center gap-3 font-bold text-text-muted hover:text-primary transition-colors group">
-                    <FiChevronLeft className="group-hover:-x-1 transition-transform" />
-                    Upload Different Image
-                </button>
+            {/* ══ SLIDE CONTENT ══ */}
+            <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                <AnimatePresence custom={direction} mode="wait">
+                    <SemSlide
+                        key={currentIdx}
+                        imageUrl={imageUrls[currentIdx] ?? null}
+                        subjects={curSubjects}
+                        semLabel={semLabel}
+                        direction={direction}
+                        onChange={updated => setSlideSubjects(prev => prev.map((s, i) => i === currentIdx ? updated : s))}
+                    />
+                </AnimatePresence>
+            </div>
 
-                <div className="flex flex-col md:flex-row items-center gap-8">
-                    <div className="text-center md:text-right">
-                        <div className="text-2xl font-black text-text-primary tracking-tight">
-                            {subjects.length} <span className="text-text-muted text-sm font-bold uppercase tracking-widest pl-1">Subjects</span>
-                        </div>
-                        <div className="text-xs text-text-muted font-medium">
-                            {subjects.filter(s => !['U', 'RA', 'SA', 'W', '-'].includes(s.grade)).length} Passing Result(s)
-                        </div>
-                    </div>
+            {/* ══ BOTTOM BAR ══ */}
+            <div style={{
+                padding: '16px 28px', borderTop: '1.5px solid #FDE8D8',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                background: '#FFFAF6', flexShrink: 0,
+            }}>
+                {/* GPA this sem */}
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#B2A49A', fontFamily: 'Outfit' }}>
+                        GPA this sem
+                    </span>
+                    <span style={{ fontSize: 26, fontWeight: 900, fontFamily: 'Outfit', color: '#D4500A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                        {gpa ?? '—'}
+                    </span>
+                    <span style={{ fontSize: 11, color: '#B2A49A', fontFamily: 'Outfit' }}>/ 10</span>
+                </div>
 
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleConfirm}
-                        className="px-12 py-4 bg-primary text-white rounded-2xl font-black text-lg shadow-[0_15px_40px_rgba(212,80,10,0.25)] flex items-center gap-3 group"
+                {/* actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    {/* prev */}
+                    {currentIdx > 0 && (
+                        <button
+                            onClick={() => go(-1)}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                                border: '1.5px solid #FDE8D8', borderRadius: 12, background: '#FFF',
+                                cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#78716C', fontFamily: 'Outfit',
+                            }}
+                        >
+                            <FiChevronLeft size={16} /> Prev
+                        </button>
+                    )}
+
+                    {/* skip */}
+                    <button
+                        onClick={handleSkip}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                            border: '1.5px solid #E7E5E4', borderRadius: 12, background: '#FFF',
+                            cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#9CA3AF', fontFamily: 'Outfit',
+                        }}
                     >
-                        <FiZap className="group-hover:animate-pulse" />
-                        Generate report
+                        <FiSkipForward size={14} /> {isLast ? 'Skip & Finish' : 'Skip'}
+                    </button>
+
+                    {/* next / confirm */}
+                    <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={handleNext}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px',
+                            background: 'linear-gradient(135deg, #D4500A, #F28C1A)',
+                            border: 'none', borderRadius: 12, cursor: 'pointer',
+                            fontSize: 13, fontWeight: 800, color: '#FFF', fontFamily: 'Outfit',
+                            boxShadow: '0 4px 16px rgba(212,80,10,0.25)',
+                        }}
+                    >
+                        {isLast ? (
+                            <><FiCheck size={15} /> Confirm & Calculate</>
+                        ) : (
+                            <>Next <FiChevronRight size={15} /></>
+                        )}
                     </motion.button>
                 </div>
-            </motion.div>
-        </motion.div>
+            </div>
+
+            {/* CSS for group-hover reveal on edit/delete buttons */}
+            <style>{`
+                .group:hover button[title="Edit"],
+                .group:hover button[title="Remove"] {
+                    opacity: 1 !important;
+                }
+            `}</style>
+        </div>
     );
 }
