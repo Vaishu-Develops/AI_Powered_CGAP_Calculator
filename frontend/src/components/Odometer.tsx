@@ -43,7 +43,7 @@ export default function Odometer({ value, delay = 0.9 }: OdometerProps) {
     const [whole, decimal] = formattedValue.split('.');
 
     return (
-        <div className="flex items-baseline font-black tracking-tighter overflow-hidden h-[1.2em]">
+        <div className="flex items-baseline font-black tracking-normal overflow-hidden h-[1.2em] pr-2">
             <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -55,7 +55,6 @@ export default function Odometer({ value, delay = 0.9 }: OdometerProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: delay + 0.2 }}
-                className="text-primary"
             >
                 .
             </motion.span>
