@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import UploadSection from '@/components/UploadSection';
-import ProgressBar from '@/components/ProgressBar';
+
 import ResultsSection from '@/components/ResultsSection';
 import PreviewSection from '@/components/PreviewSection';
 import { useCalcFlow } from '@/context/CalcFlowContext';
@@ -55,7 +55,8 @@ export default function InputPage() {
     setStage('ocr');
 
     try {
-      let combinedSubjects: any[] = [];
+      const FAILING = ['U', 'RA', 'SA', 'W', 'AB', '-'];
+      let bestAttempts: Record<string, { slideIdx: number; sub: any }> = {};
       let overallConfidence = 0;
       let highestSem = 0;
       let regulationStr = '';
@@ -93,14 +94,20 @@ export default function InputPage() {
 
         const newSubjects = data.subjects || [];
         newSubjects.forEach((newSub: any) => {
-          const existingIdx = combinedSubjects.findIndex(s => s.subject_code === newSub.subject_code);
-          if (existingIdx > -1) {
-            const FAILING = ['U', 'RA', 'SA', 'W', 'AB', '-'];
-            const isExistingPassing = !FAILING.includes(combinedSubjects[existingIdx].grade);
-            const isNewPassing = !FAILING.includes(newSub.grade);
-            if (isNewPassing && !isExistingPassing) combinedSubjects[existingIdx] = newSub;
+          const code = (newSub.subject_code || '').toUpperCase();
+          const isPassing = !FAILING.includes(newSub.grade);
+          
+          if (!bestAttempts[code]) {
+            bestAttempts[code] = { slideIdx: i, sub: newSub };
           } else {
-            combinedSubjects.push(newSub);
+            const existingSub = bestAttempts[code].sub;
+            const existingPassing = !FAILING.includes(existingSub.grade);
+            
+            // If current is better (Fail -> Pass)
+            if (!existingPassing && isPassing) {
+              // Update the grade/data, but keep it on the original slide tab as per user request
+              bestAttempts[code].sub = newSub;
+            }
           }
         });
 
@@ -111,9 +118,19 @@ export default function InputPage() {
         }
       }
 
+      // Reconstruct per-file structure from fused attempts
+      const subjectsPerFile: any[][] = files.map(() => []);
+      Object.values(bestAttempts).forEach(entry => {
+        if (subjectsPerFile[entry.slideIdx]) {
+           subjectsPerFile[entry.slideIdx].push(entry.sub);
+        }
+      });
+
+      const combinedSubjects = Object.values(bestAttempts).map(e => e.sub);
       const avgConfidence = files.length > 0 ? overallConfidence / files.length : 0;
       const mergedData = {
         subjects: combinedSubjects,
+        subjects_per_file: subjectsPerFile,
         semester_info: { semester: highestSem > 0 ? highestSem : undefined, regulation: regulationStr || undefined },
         confidence: { overall: avgConfidence },
         status: 'preview_ready'
@@ -127,8 +144,8 @@ export default function InputPage() {
         setStatusMsg('');
       } else {
         setOcrData(mergedData);
-        setStage('preview');
-        setStatusMsg(`Review ${combinedSubjects.length} extracted subjects`);
+        // Do NOT setStage('preview') here. Let the OCR animation finish first.
+        setStatusMsg(`Animating ${combinedSubjects.length} extracted subjects...`);
       }
     } catch (e: any) {
       setError(e.message || 'Failed to scan marksheets. Is the backend running?');
@@ -143,8 +160,8 @@ export default function InputPage() {
     if (remaining.length === 0 && pendingOcrData) {
       setOcrData(pendingOcrData);
       setPendingOcrData(null);
-      setStage('preview');
-      setStatusMsg(`Review ${pendingOcrData.subjects.length} extracted subjects`);
+      setStage('ocr');
+      setStatusMsg(`Animating ${pendingOcrData.subjects.length} extracted subjects...`);
     }
   };
 
@@ -157,9 +174,14 @@ export default function InputPage() {
     if (remaining.length === 0 && pendingOcrData) {
       setOcrData(pendingOcrData);
       setPendingOcrData(null);
-      setStage('preview');
-      setStatusMsg(`Review ${pendingOcrData.subjects.length} extracted subjects`);
+      setStage('ocr');
+      setStatusMsg(`Animating ${pendingOcrData.subjects.length} extracted subjects...`);
     }
+  };
+
+  const handleScanAnimationComplete = () => {
+    setStage('preview');
+    setStatusMsg(`Review extracted subjects`);
   };
 
   // ── Manual Calculation Flow ──
@@ -293,7 +315,7 @@ export default function InputPage() {
           </p>
         </header>
 
-        {stage !== 'idle' && stage !== 'done' && <ProgressBar stage={stage} />}
+
 
         {/* Status Message */}
         {statusMsg && stage !== 'idle' && stage !== 'preview' && stage !== 'done' && (
@@ -366,6 +388,8 @@ export default function InputPage() {
               currentFile={filesRef.current ? Array.from(filesRef.current).findIndex((_, i) => i === 0) + 1 : 1}
               totalFiles={filesRef.current?.length ?? 1}
               statusMsg={statusMsg}
+              ocrData={ocrData}
+              onComplete={handleScanAnimationComplete}
             />
           </div>
         )}
@@ -384,7 +408,7 @@ export default function InputPage() {
         )}
 
         {stage === 'done' && results && (
-          <ResultsSection data={results} onReset={handleReset} />
+          <ResultsSection data={results} onReset={handleReset} mode={(state.mode as 'single_sem' | 'multi_sem') || 'single_sem'} context={state} />
         )}
       </div>
     </main>
