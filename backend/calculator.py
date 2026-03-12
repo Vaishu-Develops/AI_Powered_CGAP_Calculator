@@ -32,6 +32,7 @@ class Subject:
     status: str = "PENDING"  # PASS, FAIL, PENDING
     attempt: int = 1  # Track revaluation attempts
     original_semester: Optional[int] = None  # For arrear detection
+    is_arrear: bool = False  # Explicit arrear flag
     
     def to_dict(self) -> Dict:
         return asdict(self)
@@ -251,7 +252,8 @@ class AnnaUniversityCGPA:
                     credits=credits,
                     grade=subj_data.get('grade', '').upper(),
                     marks=subj_data.get('marks'),
-                    original_semester=subj_data.get('original_semester')
+                    original_semester=subj_data.get('original_semester'),
+                    is_arrear=subj_data.get('is_arrear', False)
                 )
                 
                 # Calculate grade points and status
@@ -283,7 +285,8 @@ class AnnaUniversityCGPA:
                 credits=credits,
                 grade=subject_data.get('grade', '').upper(),
                 marks=subject_data.get('marks'),
-                original_semester=subject_data.get('original_semester')
+                original_semester=subject_data.get('original_semester'),
+                is_arrear=subject_data.get('is_arrear', False)
             )
             
             self._calculate_subject_metrics(subject)
@@ -357,13 +360,24 @@ class AnnaUniversityCGPA:
         
         # Separate current semester subjects from arrear subjects
         for subject in subjects:
-            # Use OCR-detected original_semester if available, otherwise fallback to code pattern
-            if subject.original_semester is not None:
-                subject_sem = subject.original_semester
-            else:
-                subject_sem = self._determine_subject_semester(subject.code, semester)
+            is_arrear_subject = False
             
-            if subject_sem == semester:
+            # Check if explicitly marked as arrear
+            if hasattr(subject, 'is_arrear') and subject.is_arrear:
+                is_arrear_subject = True
+            else:
+                # Conservative arrear detection based on semester mismatch
+                if subject.original_semester is not None:
+                    subject_sem = subject.original_semester
+                else:
+                    subject_sem = self._determine_subject_semester(subject.code, semester)
+                
+                # Only treat as arrear if there's a significant mismatch (>1 semester difference)
+                # This prevents 1st semester subjects from being incorrectly marked as arrears
+                if abs(subject_sem - semester) > 1:
+                    is_arrear_subject = True
+            
+            if not is_arrear_subject:
                 # This is a current semester subject
                 current_semester_subjects.append(subject)
                 credits_attempted += subject.credits
@@ -721,9 +735,13 @@ class AnnaUniversityCGPA:
                     'original_semester': info.get('original_semester')
                 }
                 is_arrear = info.get('is_arrear', False)
-                if not is_arrear and 'is_arrear' not in info:
+                # Only mark as arrear if explicitly flagged OR if original_semester is clearly different
+                if not is_arrear:
                     orig_sem = info.get('original_semester')
-                    if orig_sem is not None and orig_sem != semester:
+                    # Only consider it an arrear if:
+                    # 1. original_semester is explicitly set AND different from current semester
+                    # 2. AND it's not just a missing semester info (None)
+                    if orig_sem is not None and orig_sem != semester and orig_sem > 0:
                         is_arrear = True
                 
                 if is_arrear:
@@ -761,9 +779,12 @@ class AnnaUniversityCGPA:
                 grade_points = scale.get(grade, {}).get('points', 0)
                 weighted = grade_points * credits
                 
+                # Anna University Formula: CGPA = Σ(Ci × GPi) / ΣCi
+                # ALL subjects contribute to both numerator and denominator (including failed with 0 points)
+                cgpa_total_points += weighted
+                cgpa_total_credits += credits
+                
                 if is_passing:
-                    cgpa_total_points += weighted
-                    cgpa_total_credits += credits
                     total_passed += 1
                 else:
                     total_failed += 1
