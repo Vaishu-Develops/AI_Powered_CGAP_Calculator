@@ -27,7 +27,7 @@ interface WhatIfSimulatorProps {
 }
 
 const GRADE_POINTS: Record<string, number> = {
-    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0
+    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'P': 5, 'D': 4, 'E': 3, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0, 'F': 0, 'FE': 0, 'NC': 0
 };
 
 export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, isSingle, onClose }: WhatIfSimulatorProps) {
@@ -39,25 +39,19 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
         let totalWeighted = 0;
         let totalCredits = 0;
         Object.entries(grades).forEach(([code, grade]) => {
-            const credits = initialSubjects[code].credits;
+            const credits = initialSubjects[code]?.credits || 0;
             const points = GRADE_POINTS[grade] || 0;
             
+            // Anna University Formula: CGPA = Σ(Ci × GPi) / ΣCi
+            // ALL subjects contribute to denominator (including failed with 0 points)
             totalWeighted += points * credits;
-            
-            if (isSingle) {
-                // GPA (Semester): Includes all registered credits in denominator
-                totalCredits += credits;
-            } else {
-                // CGPA (Cumulative): Includes only credits of passed subjects in denominator
-                if (points > 0) {
-                    totalCredits += credits;
-                }
-            }
+            totalCredits += credits;
         });
         return totalCredits > 0 ? totalWeighted / totalCredits : 0;
     };
 
-
+    // Use backend-calculated GPA as the "Current" value for consistency
+    // Only use frontend calculation for the "Simulated" value
     const simulatedGpa = useMemo(() => calculateMetrics(simulatedGrades), [simulatedGrades, initialSubjects, isSingle]);
     const diff = simulatedGpa - currentGpa;
 
@@ -137,7 +131,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
 
                             <div className="space-y-2">
                                 <div className="text-6xl font-black text-text-primary tracking-tighter tabular-nums">
-                                    {simulatedGpa.toFixed(2)}
+                                    {Math.abs(diff) < 0.01 ? simulatedGpa.toFixed(3) : simulatedGpa.toFixed(2)}
                                 </div>
                                 <div className="text-sm font-bold text-text-muted">Simulated {isSingle ? 'Semester GPA' : 'Cumulative CGPA'}</div>
                             </div>
@@ -154,10 +148,23 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                     <span>Current</span>
                                     <span>Simulated</span>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-2xl font-black text-text-muted">{currentGpa.toFixed(2)}</div>
+                                <div className="flex items-center gap-4 text-center">
+                                    <div className="text-2xl font-black text-text-muted">
+                                        {Math.abs(diff) < 0.01 ? currentGpa.toFixed(3) : currentGpa.toFixed(2)}
+                                    </div>
                                     <FiArrowRight className="text-primary text-xl" />
-                                    <div className="text-2xl font-black text-primary">{simulatedGpa.toFixed(2)}</div>
+                                    <div className="text-2xl font-black text-primary">
+                                        {Math.abs(diff) < 0.01 ? simulatedGpa.toFixed(3) : simulatedGpa.toFixed(2)}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4 text-center text-xs font-bold opacity-60">
+                                    <div className="text-text-muted">
+                                        {(Math.abs(diff) < 0.01 ? currentGpa.toFixed(3) : currentGpa.toFixed(2)) && `${(currentGpa * 10).toFixed(1)}%`}
+                                    </div>
+                                    <div className="w-4"></div>
+                                    <div className="text-primary">
+                                        {(Math.abs(diff) < 0.01 ? simulatedGpa.toFixed(3) : simulatedGpa.toFixed(2)) && `${(simulatedGpa * 10).toFixed(1)}%`}
+                                    </div>
                                 </div>
                                 <div className="h-2 w-full bg-bg-primary rounded-full relative overflow-hidden">
                                      {/* Baseline ghost bar */}
