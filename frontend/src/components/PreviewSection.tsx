@@ -53,9 +53,22 @@ function calcGPA(subjects: PreviewSubject[]) {
 }
 
 function hasIssues(subjects: PreviewSubject[]) {
-    return subjects.some(s =>
-        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code,
+    const issues = subjects.some(s =>
+        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3,
     );
+    // Debug: Log subjects with potential issues
+    const problemSubjects = subjects.filter(s => 
+        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3
+    );
+    if (problemSubjects.length > 0) {
+        console.log('Preview subjects with issues:', problemSubjects.map(s => ({
+            code: s.subject_code,
+            grade: s.grade,
+            confidence: s.confidence,
+            codeLength: s.subject_code?.trim().length
+        })));
+    }
+    return issues;
 }
 
 function GradePill({ grade }: { grade: string }) {
