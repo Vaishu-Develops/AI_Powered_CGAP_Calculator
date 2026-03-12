@@ -237,6 +237,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                         <div className="text-[#1E293B] font-black text-xs md:text-sm uppercase tracking-[0.4em] mt-10 opacity-80">
                             Semester {data.semester_info?.semester || '?'} Performance
                         </div>
+                        <div className="text-[#D4500A]/80 font-bold text-sm mt-2">{data.percentage}</div>
                     </motion.div>
                 ) : (
                     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: 'spring' }} className="w-full max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-16 md:gap-28 relative z-20 px-8">
@@ -246,6 +247,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             </div>
                             <div className="mt-6">
                                 <span className="text-[#D4500A]/60 font-black text-[10px] uppercase tracking-[0.3em]">Cumulative GPA</span>
+                                <div className="text-[#D4500A]/80 font-bold text-xs mt-1">{data.percentage}</div>
                             </div>
                         </div>
 
@@ -403,7 +405,31 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             <>
                                 <StatTile label="Sem Credits" value={semesterGpas.find(s=>s.sem===selectedSem)?.credits?.toString() || '-'} sub={`Semester ${selectedSem}`} />
                                 <StatTile label="Sem Subjects" value={subjectEntries.length.toString()} sub="Attempted" />
-                                <StatTile label="Sem Arrears" value={subjectEntries.filter(s=>['U','RA','AB'].includes(s[1].grade)).length.toString()} sub="Uncleared" highlight={subjectEntries.filter(s=>['U','RA','AB'].includes(s[1].grade)).length === 0 ? 'success' : 'danger'} />
+                                <StatTile label="Sem Arrears" value={subjectEntries.filter(s=>{
+                                    // Only count as arrear if still failing AND no later passing grade exists
+                                    if (!['U','RA','AB'].includes(s[1].grade)) return false;
+                                    
+                                    // Check if this subject was cleared in consolidated data
+                                    const subjectCode = s[0];
+                                    const allSubjects = Object.entries(data.subjects || {});
+                                    const sameSubject = allSubjects.find(([code]) => code === subjectCode);
+                                    
+                                    // If we found the subject in consolidated data and it's passing, don't count as arrear
+                                    if (sameSubject && !['U','RA','AB'].includes(sameSubject[1].grade)) {
+                                        return false;
+                                    }
+                                    
+                                    return true;
+                                }).length.toString()} sub="Uncleared" highlight={subjectEntries.filter(s=>{
+                                    if (!['U','RA','AB'].includes(s[1].grade)) return false;
+                                    const subjectCode = s[0];
+                                    const allSubjects = Object.entries(data.subjects || {});
+                                    const sameSubject = allSubjects.find(([code]) => code === subjectCode);
+                                    if (sameSubject && !['U','RA','AB'].includes(sameSubject[1].grade)) {
+                                        return false;
+                                    }
+                                    return true;
+                                }).length === 0 ? 'success' : 'danger'} />
                                 <StatTile label="Sem GPA" value={semesterGpas.find(s=>s.sem===selectedSem)?.gpa.toFixed(2) || '0.00'} sub="Achieved" highlight="primary" />
                             </>
                         ) : (
@@ -462,7 +488,12 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                                         <td className="py-6 px-8 text-sm font-bold text-[#89858E]">{String(i + 1).padStart(2, '0')}</td>
                                         <td className="py-6 px-8">
                                             <div className="font-black text-[#38352F] text-lg group-hover:text-[#D25419] transition-colors">{code}</div>
-                                            {subj.is_arrear ? (
+                                            {/* Check if this failing subject was actually cleared in consolidated data */}
+                                            {['U', 'RA', 'AB'].includes(subj.grade) && data.subjects && data.subjects[code] && !['U', 'RA', 'AB'].includes(data.subjects[code].grade) ? (
+                                                <div className="text-[10px] font-black text-green-600/70 tracking-[0.15em] uppercase mt-1">
+                                                    Cleared ({data.subjects[code].grade})
+                                                </div>
+                                            ) : subj.is_arrear ? (
                                                 <div className="text-[10px] font-black text-[#D4500A]/70 tracking-[0.15em] uppercase mt-1">
                                                     Arrear History
                                                 </div>
