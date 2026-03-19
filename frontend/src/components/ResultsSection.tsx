@@ -50,6 +50,7 @@ interface ResultsSectionProps {
         arrear_subjects?: number;
         semester_credits?: number;
         total_credits?: number;
+        semester_gpas?: Array<{ semester: number; gpa: number; credits: number }>;
         subjects: Record<string, SubjectDetail>;
         semester_info?: { semester?: number; regulation?: string };
     };
@@ -80,6 +81,20 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
 
     const semesterGpas = useMemo(() => {
         if (isSingle) return [];
+
+        // Preferred source: backend-computed semester GPAs.
+        if (Array.isArray(data.semester_gpas) && data.semester_gpas.length > 0) {
+            return [...data.semester_gpas]
+                .map((s) => ({
+                    sem: Number(s.semester),
+                    gpa: Number(s.gpa) || 0,
+                    credits: Number(s.credits) || 0,
+                }))
+                .filter((s) => s.sem > 0)
+                .sort((a, b) => a.sem - b.sem);
+        }
+
+        // Fallback: derive from subject-level data.
         const semData: Record<number, { weighted: number; credits: number }> = {};
         Object.entries(data.subjects).forEach(([code, subj]) => {
             const sem = subj.original_semester || data.semester_info?.semester || 1;
@@ -100,7 +115,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
             });
         });
         return gpas;
-    }, [data.subjects, isSingle, data.semester_info]);
+    }, [data.subjects, data.semester_gpas, isSingle, data.semester_info]);
 
     useEffect(() => {
         setMounted(true);
@@ -162,6 +177,11 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
         });
         return `${topGrade} × ${count}`;
     }, [data.subjects, selectedSem, data.semester_info]);
+
+    const currentArrearsCount = useMemo(() => {
+        const failSet = new Set(['U', 'RA', 'AB', 'W', 'SA', 'F']);
+        return Object.values(data.subjects || {}).filter((s) => failSet.has(String(s.grade || '').toUpperCase())).length;
+    }, [data.subjects]);
 
     const primaryValue = isSingle ? data.gpa : data.cgpa;
 
@@ -396,7 +416,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                     <>
                         <StatTile label="Credits Earned" value={data.semester_credits?.toString() || '-'} sub="This Semester" />
                         <StatTile label="Subjects" value={data.current_semester_subjects?.toString() || data.total_subjects.toString()} sub="Total Attempted" />
-                        <StatTile label="Arrears" value={data.arrear_subjects?.toString() || '0'} sub={data.arrear_subjects ? 'Needs Attention' : 'Clean!'} highlight={data.arrear_subjects === 0 ? 'success' : 'danger'} />
+                        <StatTile label="Arrears" value={currentArrearsCount.toString()} sub={currentArrearsCount ? 'Needs Attention' : 'Clean!'} highlight={currentArrearsCount === 0 ? 'success' : 'danger'} />
                         <StatTile label="Highest" value={highestGrade} sub="Grade Achieved" highlight="primary" />
                     </>
                 ) : (
@@ -436,8 +456,8 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             <>
                                 <StatTile label="Total Credits" value={data.total_credits?.toString() || '-'} sub="Earned so far" />
                                 <StatTile label="Total Subjects" value={data.total_subjects.toString()} sub="Analyzed" />
-                                <StatTile label="Total Arrears" value={data.failed_subjects?.toString() || '0'} sub={data.failed_subjects ? 'Uncleared' : 'All Cleared!'} highlight={data.failed_subjects === 0 ? 'success' : 'danger'} />
-                                <StatTile label="Pass Rate" value={`${Math.round((data.passed_subjects / (data.total_subjects || 1)) * 100)}%`} sub="Overall Clearance" highlight="primary" />
+                                <StatTile label="Total Arrears" value={currentArrearsCount.toString()} sub={currentArrearsCount ? 'Uncleared' : 'All Cleared!'} highlight={currentArrearsCount === 0 ? 'success' : 'danger'} />
+                                <StatTile label="Percentage" value={data.percentage} sub="Overall Score" highlight="primary" />
                             </>
                         )}
                     </>
