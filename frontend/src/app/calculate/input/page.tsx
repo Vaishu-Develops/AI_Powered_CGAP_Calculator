@@ -18,6 +18,115 @@ const ParticleBackground = dynamic(() => import('@/components/ParticleBackground
 
 type Stage = 'idle' | 'uploading' | 'ocr' | 'preview' | 'calculating' | 'done';
 
+const FAILING_GRADES = new Set(['U', 'RA', 'SA', 'W', 'AB', '-']);
+
+function isPassingGrade(grade?: string) {
+  return !!grade && !FAILING_GRADES.has(String(grade).toUpperCase());
+}
+
+function normalizeSubjectsByHome(rawSubjectsPerFile: any[][], fileSems: number[]) {
+  const normalizedPerFile: any[][] = rawSubjectsPerFile.map(() => []);
+  const semToFirstSlide = new Map<number, number>();
+  fileSems.forEach((sem, idx) => {
+    if (!semToFirstSlide.has(sem)) semToFirstSlide.set(sem, idx);
+  });
+
+  type HomeRef = { homeSem: number; slideIdx: number; rowIdx: number };
+  const homeMap: Record<string, HomeRef> = {};
+
+  const order = rawSubjectsPerFile
+    .map((_, idx) => ({ idx, sem: fileSems[idx] || 99 }))
+    .sort((a, b) => (a.sem - b.sem) || (a.idx - b.idx));
+
+  for (const { idx: slideIdx } of order) {
+    const subjects = rawSubjectsPerFile[slideIdx] || [];
+
+    for (const raw of subjects) {
+      const code = String(raw.subject_code || '').toUpperCase().trim();
+      if (!code) continue;
+
+      const credits = typeof raw.credits === 'number' ? raw.credits : null;
+      const semFromRow = Number(raw.original_semester || raw.semester || fileSems[slideIdx] || 0) || fileSems[slideIdx] || 0;
+      // Key by code only; we resolve credits compatibility below to handle OCR misses
+      const key = code;
+
+      if (!homeMap[key]) {
+        const targetSlide = semToFirstSlide.get(semFromRow) ?? slideIdx;
+        const base = { ...raw, subject_code: code, home_semester: semFromRow };
+        normalizedPerFile[targetSlide].push(base);
+        homeMap[key] = {
+          homeSem: semFromRow,
+          slideIdx: targetSlide,
+          rowIdx: normalizedPerFile[targetSlide].length - 1,
+        };
+        continue;
+      }
+
+      const home = homeMap[key];
+      // If both entries have explicit credits and they differ, treat as a different subject
+      // (same code, different credit weight = curriculum change or different course)
+      if (home.slideIdx !== undefined) {
+        const existingEntry = normalizedPerFile[home.slideIdx][home.rowIdx];
+        const existingCredits = existingEntry && typeof existingEntry.credits === 'number' ? existingEntry.credits : null;
+        if (existingCredits !== null && credits !== null && existingCredits !== credits) {
+          // Different subject with same code — add as new entry
+          const targetSlide = semToFirstSlide.get(semFromRow) ?? slideIdx;
+          const base = { ...raw, subject_code: code, home_semester: semFromRow };
+          normalizedPerFile[targetSlide].push(base);
+          homeMap[`${code}::${credits}`] = {
+            homeSem: semFromRow,
+            slideIdx: targetSlide,
+            rowIdx: normalizedPerFile[targetSlide].length - 1,
+          };
+          continue;
+        }
+      }
+      const existing = normalizedPerFile[home.slideIdx][home.rowIdx];
+      if (!existing) continue;
+
+      const currentPassing = isPassingGrade(raw.grade);
+      const existingPassing = isPassingGrade(existing.grade);
+      const sameHomeSem = semFromRow === home.homeSem;
+
+      // Same-sem duplicate: prefer revaluation override, then better confidence.
+      if (sameHomeSem) {
+        if (raw.overridden_by_revaluation && !existing.overridden_by_revaluation) {
+          normalizedPerFile[home.slideIdx][home.rowIdx] = { ...existing, ...raw, subject_code: code };
+        } else if ((Number(raw.confidence) || 0) > (Number(existing.confidence) || 0)) {
+          normalizedPerFile[home.slideIdx][home.rowIdx] = { ...existing, ...raw, subject_code: code };
+        }
+        continue;
+      }
+
+      // Later-sem arrear appearance: DO NOT keep in later table.
+      // Update only the home-sem record with latest passing grade when available.
+      if (currentPassing) {
+        normalizedPerFile[home.slideIdx][home.rowIdx] = {
+          ...existing,
+          grade: String(raw.grade || existing.grade).toUpperCase(),
+          confidence: Math.max(Number(existing.confidence) || 0, Number(raw.confidence) || 0),
+          cleared_in_semester: semFromRow,
+          cleared_badge: `cleared Sem ${semFromRow}`,
+          cleared_source_grade: raw.grade,
+          is_cleared_arrear: true,
+        };
+      } else if (!existingPassing) {
+        // Still uncleared arrear; keep on home sem only, retain lowest-state grade.
+        normalizedPerFile[home.slideIdx][home.rowIdx] = {
+          ...existing,
+          grade: String(existing.grade || raw.grade || 'U').toUpperCase(),
+          confidence: Math.max(Number(existing.confidence) || 0, Number(raw.confidence) || 0),
+        };
+      }
+    }
+  }
+
+  return {
+    subjectsPerFile: normalizedPerFile,
+    combinedSubjects: normalizedPerFile.flat(),
+  };
+}
+
 export default function InputPage() {
   const router = useRouter();
   const { state } = useCalcFlow();
@@ -55,8 +164,8 @@ export default function InputPage() {
     setStage('ocr');
 
     try {
-      const FAILING = ['U', 'RA', 'SA', 'W', 'AB', '-'];
-      let bestAttempts: Record<string, { slideIdx: number; sub: any }> = {};
+      const rawSubjectsPerFile: any[][] = files.map(() => []);
+      const fileSems: number[] = files.map((_, idx) => (slotMap && slotMap[idx]) ? slotMap[idx] : 0);
       let overallConfidence = 0;
       let highestSem = 0;
       let regulationStr = '';
@@ -78,6 +187,7 @@ export default function InputPage() {
 
         const data = await res.json();
         const detectedSem: number = data.semester_info?.semester || 0;
+        if (!fileSems[i]) fileSems[i] = detectedSem || (i + 1);
 
         // ── Layer 2: Slot mismatch detection ──
         if (slotMap && slotMap[i] && detectedSem > 0 && detectedSem !== slotMap[i]) {
@@ -93,23 +203,8 @@ export default function InputPage() {
         }
 
         const newSubjects = data.subjects || [];
-        newSubjects.forEach((newSub: any) => {
-          const code = (newSub.subject_code || '').toUpperCase();
-          const isPassing = !FAILING.includes(newSub.grade);
-          
-          if (!bestAttempts[code]) {
-            bestAttempts[code] = { slideIdx: i, sub: newSub };
-          } else {
-            const existingSub = bestAttempts[code].sub;
-            const existingPassing = !FAILING.includes(existingSub.grade);
-            
-            // If current is better (Fail -> Pass)
-            if (!existingPassing && isPassing) {
-              // Update the grade/data, but keep it on the original slide tab as per user request
-              bestAttempts[code].sub = newSub;
-            }
-          }
-        });
+        // Keep per-file raw extraction; we will run a home-subject normalization pass after all files are scanned.
+        rawSubjectsPerFile[i] = Array.isArray(newSubjects) ? [...newSubjects] : [];
 
         overallConfidence += data.confidence?.overall || 0;
         if (detectedSem > highestSem) {
@@ -118,15 +213,7 @@ export default function InputPage() {
         }
       }
 
-      // Reconstruct per-file structure from fused attempts
-      const subjectsPerFile: any[][] = files.map(() => []);
-      Object.values(bestAttempts).forEach(entry => {
-        if (subjectsPerFile[entry.slideIdx]) {
-           subjectsPerFile[entry.slideIdx].push(entry.sub);
-        }
-      });
-
-      const combinedSubjects = Object.values(bestAttempts).map(e => e.sub);
+      const { subjectsPerFile, combinedSubjects } = normalizeSubjectsByHome(rawSubjectsPerFile, fileSems);
       const avgConfidence = files.length > 0 ? overallConfidence / files.length : 0;
       const mergedData = {
         subjects: combinedSubjects,
@@ -328,6 +415,19 @@ export default function InputPage() {
 
         {stage === 'idle' && (
           <div className="animate-fade-up">
+            {state.inputMethod === 'ocr' && (
+              <div className="max-w-4xl mx-auto mb-8 rounded-[24px] border border-[#FADFD0] bg-[#FFF7F2] p-5 md:p-6">
+                <div className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-[#D25419] mb-2">Before Upload</div>
+                <p className="text-[#38352F] font-semibold text-sm md:text-base leading-relaxed">
+                  Upload clear, original images only. WhatsApp-compressed images, blurry photos, low-quality screenshots,
+                  messy fonts, and partially cropped marksheets are often unreadable by AI and can produce wrong grades.
+                </p>
+                <p className="text-[#7C7670] text-xs md:text-sm mt-2 font-medium">
+                  Best results: straight image, good lighting, full table visible, and readable subject code and grade columns.
+                </p>
+              </div>
+            )}
+
             {state.inputMethod === 'ocr' ? (
               <>
                 {state.mode === 'multi_sem' ? (
