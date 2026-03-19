@@ -16,7 +16,15 @@ export interface PreviewSubject {
     marks?: number;
     credits?: number;
     is_revaluation?: boolean;
-    confidence?: string;
+    confidence?: string | number;
+    original_semester?: number;
+    overridden_by_revaluation?: boolean;
+    main_grade?: string;
+    revaluation_grade?: string;
+    review_required?: boolean;
+    cleared_in_semester?: number;
+    cleared_badge?: string;
+    is_cleared_arrear?: boolean;
 }
 
 interface PreviewSectionProps {
@@ -54,11 +62,17 @@ function calcGPA(subjects: PreviewSubject[]) {
 
 function hasIssues(subjects: PreviewSubject[]) {
     const issues = subjects.some(s =>
-        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3,
+        s.review_required ||
+        (typeof s.confidence === 'string' && s.confidence === 'low') ||
+        (typeof s.confidence === 'number' && s.confidence < 0.7) ||
+        !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3,
     );
     // Debug: Log subjects with potential issues
     const problemSubjects = subjects.filter(s => 
-        s.confidence === 'low' || !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3
+        s.review_required ||
+        (typeof s.confidence === 'string' && s.confidence === 'low') ||
+        (typeof s.confidence === 'number' && s.confidence < 0.7) ||
+        !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3
     );
     if (problemSubjects.length > 0) {
         console.log('Preview subjects with issues:', problemSubjects.map(s => ({
@@ -94,7 +108,7 @@ function SemSlide({
     direction: number;
     onChange: (updated: PreviewSubject[]) => void;
 }) {
-    const [editing, setEditing] = useState<Record<number, { grade: string; subject_code: string }>>({});
+    const [editing, setEditing] = useState<Record<number, { grade: string; subject_code: string; credits: string; points: string }>>({});
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
@@ -144,15 +158,44 @@ function SemSlide({
     };
 
     const startEdit = (idx: number, s: PreviewSubject) =>
-        setEditing(p => ({ ...p, [idx]: { grade: s.grade, subject_code: s.subject_code } }));
+        setEditing(p => ({
+            ...p,
+            [idx]: {
+                grade: s.grade,
+                subject_code: s.subject_code,
+                credits: String(s.credits ?? ''),
+                points: String((GP[s.grade] ?? 0) * (s.credits ?? 0)),
+            }
+        }));
 
     const cancelEdit = (idx: number) =>
         setEditing(p => { const n = { ...p }; delete n[idx]; return n; });
 
     const saveEdit = (idx: number) => {
         const ed = editing[idx]; if (!ed) return;
+        const grade = ed.grade.toUpperCase().trim();
+        const gradePoints = GP[grade] ?? 0;
+
+        const enteredCredits = Number(ed.credits);
+        const safeCredits = Number.isFinite(enteredCredits) && enteredCredits >= 0 ? enteredCredits : 0;
+
+        const enteredPoints = Number(ed.points);
+        const safePoints = Number.isFinite(enteredPoints) && enteredPoints >= 0 ? enteredPoints : 0;
+
+        // If points and credits disagree, treat points as the source of truth.
+        // Convert points back to credits so backend calculations remain consistent.
+        const derivedPointsFromCredits = safeCredits * gradePoints;
+        const credits = gradePoints > 0 && Math.abs(safePoints - derivedPointsFromCredits) > 0.01
+            ? Number((safePoints / gradePoints).toFixed(2))
+            : safeCredits;
+
         const updated = subjects.map((s, i) => i === idx
-            ? { ...s, grade: ed.grade.toUpperCase().trim(), subject_code: ed.subject_code.toUpperCase().trim() || s.subject_code }
+            ? {
+                ...s,
+                grade,
+                subject_code: ed.subject_code.toUpperCase().trim() || s.subject_code,
+                credits,
+            }
             : s,
         );
         onChange(updated);
@@ -336,7 +379,7 @@ function SemSlide({
                 {/* table header */}
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: '1.8rem 1fr auto auto auto auto',
+                    gridTemplateColumns: '1.8rem 1fr 5.5rem 2.8rem 3.2rem 4.5rem',
                     gap: '0 10px', padding: '12px 20px',
                     borderBottom: '1.5px solid #FDE8D8', background: '#FFF8F2',
                     alignItems: 'center',
@@ -355,7 +398,12 @@ function SemSlide({
                         {subjects.map((subj, idx) => {
                             const isEditing = !!editing[idx];
                             const pts = (GP[subj.grade] ?? 0) * (subj.credits ?? 0);
-                            const isLow = subj.confidence === 'low';
+                            const confNum = typeof subj.confidence === 'number'
+                                ? subj.confidence
+                                : (subj.confidence === 'low' ? 0.6 : subj.confidence === 'medium' ? 0.8 : 0.95);
+                            const isLow = confNum < 0.7;
+                            const isMedium = confNum >= 0.7 && confNum < 0.9;
+                            const needsReview = !!subj.review_required || isLow;
 
                             return (
                                 <motion.div
@@ -368,17 +416,26 @@ function SemSlide({
                                     className="group"
                                     style={{
                                         display: 'grid',
-                                        gridTemplateColumns: '1.8rem 1fr auto auto auto auto',
+                                        gridTemplateColumns: '1.8rem 1fr 5.5rem 2.8rem 3.2rem 4.5rem',
                                         gap: '0 10px', padding: '10px 20px',
                                         borderBottom: '1px solid rgba(253,232,216,0.55)',
-                                        borderLeft: isLow ? '3px solid #F59E0B' : '3px solid transparent',
+                                        borderLeft: needsReview ? '3px solid #EF4444' : (isMedium ? '3px solid #F59E0B' : '3px solid transparent'),
                                         alignItems: 'center',
-                                        background: isEditing ? 'rgba(212,80,10,0.03)' : 'transparent',
+                                        background: isEditing ? 'rgba(212,80,10,0.03)' : (needsReview ? 'rgba(239,68,68,0.04)' : 'transparent'),
                                         transition: 'background 0.15s',
                                     }}
                                 >
                                     <span style={{ fontSize: 11, fontWeight: 700, color: '#C0BAB4', fontFamily: 'Outfit' }}>
-                                        {String(idx + 1).padStart(2, '0')}
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                                            <span style={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: 999,
+                                                display: 'inline-block',
+                                                background: isLow ? '#EF4444' : (isMedium ? '#F59E0B' : '#10B981')
+                                            }} />
+                                            {String(idx + 1).padStart(2, '0')}
+                                        </span>
                                     </span>
 
                                     {/* code */}
@@ -397,7 +454,46 @@ function SemSlide({
                                     ) : (
                                         <span style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', fontFamily: 'Outfit', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 5 }}>
                                             {subj.subject_code}
-                                            {isLow && <FiAlertTriangle size={11} color="#F59E0B" />}
+                                            {subj.original_semester ? (
+                                                <span style={{
+                                                    fontSize: 9,
+                                                    fontWeight: 800,
+                                                    padding: '1px 6px',
+                                                    borderRadius: 999,
+                                                    color: '#1E293B',
+                                                    background: 'rgba(30,41,59,0.08)',
+                                                    border: '1px solid rgba(30,41,59,0.15)'
+                                                }}>
+                                                    S{subj.original_semester}
+                                                </span>
+                                            ) : null}
+                                            {subj.overridden_by_revaluation ? (
+                                                <span style={{
+                                                    fontSize: 9,
+                                                    fontWeight: 900,
+                                                    padding: '1px 6px',
+                                                    borderRadius: 999,
+                                                    color: '#7C3AED',
+                                                    background: 'rgba(124,58,237,0.12)',
+                                                    border: '1px solid rgba(124,58,237,0.25)'
+                                                }}>
+                                                    REV
+                                                </span>
+                                            ) : null}
+                                            {subj.cleared_in_semester ? (
+                                                <span style={{
+                                                    fontSize: 9,
+                                                    fontWeight: 900,
+                                                    padding: '1px 6px',
+                                                    borderRadius: 999,
+                                                    color: '#065F46',
+                                                    background: 'rgba(16,185,129,0.14)',
+                                                    border: '1px solid rgba(16,185,129,0.3)'
+                                                }}>
+                                                    ✓ cleared Sem {subj.cleared_in_semester}
+                                                </span>
+                                            ) : null}
+                                            {needsReview && <FiAlertTriangle size={11} color="#EF4444" />}
                                         </span>
                                     )}
 
@@ -416,15 +512,51 @@ function SemSlide({
                                             {VALID_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
                                         </select>
                                     ) : (
-                                        <GradePill grade={subj.grade} />
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                                            <GradePill grade={subj.grade} />
+                                            {subj.overridden_by_revaluation && subj.main_grade && subj.main_grade !== subj.grade ? (
+                                                <span style={{ fontSize: 10, fontWeight: 700, color: '#7C3AED', fontFamily: 'Outfit' }}>
+                                                    {subj.main_grade} → {subj.grade}
+                                                </span>
+                                            ) : null}
+                                        </div>
                                     )}
 
-                                    <span style={{ fontSize: 12, fontWeight: 700, color: '#78716C', fontFamily: 'Outfit', textAlign: 'right' }}>
-                                        {subj.credits ?? '—'}
-                                    </span>
-                                    <span style={{ fontSize: 12, fontWeight: 700, fontFamily: 'Outfit', textAlign: 'right', color: pts ? '#D4500A' : '#D1D5DB' }}>
-                                        {pts || '—'}
-                                    </span>
+                                    {isEditing ? (
+                                        <input
+                                            value={editing[idx].credits}
+                                            onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], credits: e.target.value } }))}
+                                            inputMode="decimal"
+                                            style={{
+                                                border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                padding: '3px 6px', fontSize: 12, fontWeight: 800,
+                                                fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                background: '#FFF', textAlign: 'right', width: '100%'
+                                            }}
+                                        />
+                                    ) : (
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#78716C', fontFamily: 'Outfit', textAlign: 'right' }}>
+                                            {subj.credits ?? '—'}
+                                        </span>
+                                    )}
+
+                                    {isEditing ? (
+                                        <input
+                                            value={editing[idx].points}
+                                            onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], points: e.target.value } }))}
+                                            inputMode="decimal"
+                                            style={{
+                                                border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                padding: '3px 6px', fontSize: 12, fontWeight: 800,
+                                                fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                background: '#FFF', textAlign: 'right', width: '100%'
+                                            }}
+                                        />
+                                    ) : (
+                                        <span style={{ fontSize: 12, fontWeight: 700, fontFamily: 'Outfit', textAlign: 'right', color: pts ? '#D4500A' : '#D1D5DB' }}>
+                                            {pts || '—'}
+                                        </span>
+                                    )}
 
                                     {/* action buttons */}
                                     <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
@@ -445,6 +577,20 @@ function SemSlide({
                         })}
                     </AnimatePresence>
                 </div>
+
+                {subjects.some(s => s.review_required) && (
+                    <div style={{
+                        padding: '8px 20px',
+                        borderTop: '1px solid #FDE8D8',
+                        background: 'rgba(239,68,68,0.06)',
+                        color: '#991B1B',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        fontFamily: 'Outfit'
+                    }}>
+                        Review required: one or more rows were auto-overridden using revaluation results. Please verify highlighted rows.
+                    </div>
+                )}
 
                 {/* add subject footer */}
                 <div style={{
