@@ -112,6 +112,8 @@ class AnnaUniversityCGPA:
     
     # R2017/R2021/R2025 Grading Scale (official Anna University)
     GRADE_SCALE = {
+        # 'S' is accepted as a compatibility alias of 'O' (some mark statements use S).
+        'S':  {'points': 10, 'marks_range': '91-100', 'description': 'Superior (compat alias of O)'},
         'O':  {'points': 10, 'marks_range': '91-100', 'description': 'Outstanding'},
         'A+': {'points': 9,  'marks_range': '81-90',  'description': 'Excellent'},
         'A':  {'points': 8,  'marks_range': '71-80',  'description': 'Very Good'},
@@ -802,6 +804,37 @@ class AnnaUniversityCGPA:
             
             cgpa = cgpa_total_points / cgpa_total_credits if cgpa_total_credits > 0 else 0.0
             class_division = self.get_class_division(cgpa, ever_failed)
+
+            # Build semester journey metrics from real subject data (not UI-derived mocks).
+            # Group by original semester and compute GPA as Σ(Ci×GPi)/ΣCi for that semester.
+            sem_buckets: Dict[int, Dict[str, float]] = {}
+            for info in best_attempts.values():
+                orig_sem = info.get('original_semester')
+                try:
+                    sem = int(orig_sem) if orig_sem is not None else int(semester)
+                except (TypeError, ValueError):
+                    sem = int(semester)
+
+                if sem not in sem_buckets:
+                    sem_buckets[sem] = {'weighted': 0.0, 'credits': 0.0}
+
+                grade = str(info.get('grade', '')).upper()
+                credits = float(info.get('credits', 3))
+                grade_points = float(scale.get(grade, {}).get('points', 0))
+
+                sem_buckets[sem]['weighted'] += grade_points * credits
+                sem_buckets[sem]['credits'] += credits
+
+            semester_gpas = []
+            for sem in sorted(sem_buckets.keys()):
+                vals = sem_buckets[sem]
+                sem_credits = vals['credits']
+                sem_gpa = (vals['weighted'] / sem_credits) if sem_credits > 0 else 0.0
+                semester_gpas.append({
+                    'semester': sem,
+                    'gpa': round(sem_gpa, 2),
+                    'credits': round(sem_credits, 1)
+                })
             
             return {
                 'gpa': round(sem_gpa, 2),
@@ -815,6 +848,7 @@ class AnnaUniversityCGPA:
                 'failed_subjects': total_failed,
                 'semester_credits': sem_total_credits,
                 'total_credits': cgpa_total_credits,
+                'semester_gpas': semester_gpas,
                 'subjects': subjects_dict
             }
             
