@@ -60,6 +60,7 @@ interface ResultsSectionProps {
 }
 
 const GRADE_THEMES: Record<string, { color: string, bg: string, border: string }> = {
+    'S': { color: '#51A880', bg: 'bg-[#51A880]/10', border: 'border-[#51A880]/20' },
     'O': { color: '#51A880', bg: 'bg-[#51A880]/10', border: 'border-[#51A880]/20' },
     'A+': { color: '#51A880', bg: 'bg-[#51A880]/10', border: 'border-[#51A880]/20' },
     'A': { color: '#4FA37D', bg: 'bg-[#4FA37D]/10', border: 'border-[#4FA37D]/20' },
@@ -513,7 +514,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                                                 <div className="text-[10px] font-black text-green-600/70 tracking-[0.15em] uppercase mt-1">
                                                     Cleared ({data.subjects[code].grade})
                                                 </div>
-                                            ) : subj.is_arrear ? (
+                                            ) : (subj.is_arrear && subj.status === 'PASS') ? (
                                                 <div className="text-[10px] font-black text-[#D4500A]/70 tracking-[0.15em] uppercase mt-1">
                                                     Arrear History
                                                 </div>
