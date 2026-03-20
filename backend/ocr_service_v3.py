@@ -74,6 +74,11 @@ class SubjectData:
     row_index: int = 0
     fragments_merged: bool = False
     is_revaluation: bool = False
+    overridden_by_revaluation: bool = False
+    main_grade: str = ""
+    revaluation_grade: str = ""
+    original_semester: Optional[int] = None
+    review_required: bool = False
     # Production validation fields
     validation_status: str = ""  # "verified" | "corrected" | "unverified"
     original_code: str = ""      # Original OCR code before auto-correction
@@ -91,8 +96,17 @@ class SubjectData:
             'credits': self.credits,
             'confidence': self.confidence,
             'is_revaluation': self.is_revaluation,
+            'overridden_by_revaluation': self.overridden_by_revaluation,
             'validation_status': self.validation_status,
         }
+        if self.main_grade:
+            d['main_grade'] = self.main_grade
+        if self.revaluation_grade:
+            d['revaluation_grade'] = self.revaluation_grade
+        if self.original_semester is not None:
+            d['original_semester'] = self.original_semester
+        if self.review_required:
+            d['review_required'] = True
         if self.original_code:
             d['original_code'] = self.original_code
         if self.original_grade:
@@ -364,11 +378,11 @@ class SevenLayerOCRService:
             a_ids = {id(a) for a in anchors}
             for i, a in enumerate(anchors): rows[i].append(a)
             
-            # FIX 3a: Increased radius from 12 → 20px for first-pass assignment
+            # FIX 3a: More generous radius for first-pass assignment (25px instead of 20px)
             unclaimed = []
             for t in tokens:
                 if id(t) in a_ids: continue
-                best, b_dist = None, 20
+                best, b_dist = None, 25  # Increased from 20 to 25
                 for i, ay in enumerate(a_ys):
                     d = abs(t.center_y - ay)
                     if d < b_dist: b_dist, best = d, i
@@ -377,15 +391,37 @@ class SevenLayerOCRService:
                 else:
                     unclaimed.append(t)
             
-            # FIX 3b: Second-pass sweep — assign orphaned tokens at up to 30px
+            # FIX 3b: More aggressive second-pass sweep — assign orphaned tokens at up to 40px
             for t in unclaimed:
-                best, b_dist = None, 30
+                best, b_dist = None, 40  # Increased from 30 to 40
                 for i, ay in enumerate(a_ys):
                     d = abs(t.center_y - ay)
                     if d < b_dist: b_dist, best = d, i
                 if best is not None:
                     rows[best].append(t)
                     logger.debug(f"Second-pass claimed orphan token '{t.text}' → row {best} (dist={b_dist}px)")
+            
+            # FIX 3c: Third-pass for heavily fragmented subjects - look for any remaining subject-like tokens
+            remaining_unclaimed = []
+            for t in tokens:
+                if any(id(t) in [id(rt) for rt in r] for r in rows):
+                    continue  # Already assigned
+                # Check if this looks like a important token (subject code fragment or grade)
+                txt = t.text.upper().replace(' ', '')
+                if (re.search(r'[A-Z]{2,3}\d{2,4}', txt) or  # Subject code pattern
+                    txt in self.VALID_GRADES or  # Valid grade
+                    len(txt) >= 3):  # Significant text
+                    remaining_unclaimed.append(t)
+            
+            # Assign remaining tokens to nearest row (up to 50px away)
+            for t in remaining_unclaimed:
+                best, b_dist = None, 50
+                for i, ay in enumerate(a_ys):
+                    d = abs(t.center_y - ay)
+                    if d < b_dist: b_dist, best = d, i
+                if best is not None:
+                    rows[best].append(t)
+                    logger.debug(f"Third-pass claimed important token '{t.text}' → row {best} (dist={b_dist}px)")
             
             # Filter out headers from subject rows
             header_terms = {'SEMESTER', 'SUBJECT', 'CODE', 'GRADE', 'RESULT', 'BRANCH'}
@@ -517,23 +553,56 @@ class SevenLayerOCRService:
                 
                 # Detect special section headers that flag subsequent rows
                 # e.g. "Revaluation / Photocopy Result"
-                if not re.search(self.SUBJECT_PATTERN, txt):
+                
+                # First try exact pattern match
+                m = re.search(self.SUBJECT_PATTERN, txt)
+                
+                # If no exact match, try more lenient patterns for missing subjects
+                code_raw = None
+                if m:
+                    code_raw = m.group(1).replace(' ', '')
+                else:
+                    # Fallback: look for any letter+digit combinations that could be subjects
+                    # This catches subjects that might be split or have OCR errors
+                    fallback_patterns = [
+                        r'([A-Z]{2,3}\s*\d{3,4}[A-Z]?)',  # Standard pattern with optional spaces
+                        r'([A-Z]{2}\s*\d{4})',  # 4-digit codes like GE3251 
+                        r'([A-Z]{3}\s*\d{3})',  # 3-letter + 3-digit codes
+                        r'([A-Z]{2}\s*\d{3}[A-Z]?)',  # 2-letter + 3-digit + optional suffix
+                    ]
+                    
+                    for pattern in fallback_patterns:
+                        m_fallback = re.search(pattern, txt)
+                        if m_fallback:
+                            code_raw = m_fallback.group(1).replace(' ', '')
+                            logger.debug(f"Fallback pattern matched: '{code_raw}' in '{txt}'")
+                            break
+                
+                # Skip if no subject pattern found at all
+                if not code_raw:
                     if any(kw in txt for kw in ['REVALUAT', 'PHOTOCOPY', 'REVAL']):
                         in_reval_section = True
                         logger.debug(f"  [Layer 5] Entered revaluation section at row {r.row_index}")
                     continue
                 
-                m = re.search(self.SUBJECT_PATTERN, txt)
-                if not m: continue
-                code_raw = m.group(1).replace(' ', '')
                 code = self._clean_subject_code(code_raw)
                 
-                # Anna University codes are always at least 6 chars (e.g. CS3551, IT3501, MX3084)
-                # Skip fragments shorter than 6 chars - they are OCR artifacts
-                if len(code) < 6: continue
+                # More lenient validation for subject codes
+                # Anna University codes are usually at least 5-6 chars, but be more forgiving
+                if len(code) < 5: 
+                    logger.debug(f"  Skipping short code: '{code}' (length {len(code)})")
+                    continue
                 
                 # Must contain at least one letter (AU codes always have a prefix)
-                if not any(c.isalpha() for c in code): continue
+                if not any(c.isalpha() for c in code): 
+                    logger.debug(f"  Skipping non-alphabetic code: '{code}'")
+                    continue
+                
+                # Additional validation: check if it looks like a reasonable Anna University code
+                # Most AU codes follow: 2-3 letters + 3-4 digits + optional suffix
+                if not re.match(r'^[A-Z]{2,3}\d{3,4}[A-Z]?$', code):
+                    logger.debug(f"  Code format validation failed: '{code}'")
+                    continue
                 
                 # FIX 3c: Fault-tolerant subject code token boundary detection
                 # Primary: exact match of code_raw in a single token
@@ -614,12 +683,22 @@ class SevenLayerOCRService:
                             grade = 'U'  # UA means absent = U grade
                             break
 
+                # Extract row semester from the row text (e.g. leading 06/05/04 column)
+                row_semester = None
+                sem_candidates = re.findall(r'\b(0?[1-8])\b', txt)
+                if sem_candidates:
+                    try:
+                        row_semester = int(sem_candidates[0])
+                    except Exception:
+                        row_semester = None
+
                 subjects.append(SubjectData(
                     subject_code=code, grade=grade, 
                     marks=self._extract_marks([t for t in r.tokens if t.center_x > code_right_x]),
                     credits=3.0, confidence=0.0, row_index=r.row_index, 
                     fragments_merged=merged, 
                     is_revaluation=is_reval,
+                    original_semester=row_semester,
                     code_raw=code_raw, grade_col_x=grade_col_x, row_ref=r
                 ))
             
@@ -792,38 +871,49 @@ class SevenLayerOCRService:
             v_clean = trans.get(t.text.strip(), v)
             texts.append(v_clean)
         
-        # PASS 1 (FIRST): Compound fragment merge (A+, B+, RA, AB, SA, UA)
-        # Must run BEFORE single-char match so A+'+' -> 'A+', not just 'A'
-        # Extended to handle ROI common misreads
+        # PASS 1: Compound grades FIRST (A+, B+, RA, AB, SA) - these take priority
+        # Must run BEFORE single-char match so 'B+' stays 'B+', not just 'B'
         found_grades = []
-        for i in range(len(texts) - 1):
-            combined = texts[i] + texts[i+1]
-            if combined in self.VALID_GRADES:
-                found_grades.append((combined, True))
-            elif combined in ('8+', 'B+', '8T', '8t', '8-'):
-                found_grades.append(('B+', True))
-            # Explicit compound grade patterns
-            elif texts[i] in ('A', 'B', '8') and texts[i+1] == '+':
-                found_grades.append(((texts[i] if texts[i] != '8' else 'B') + '+', True))
-            elif texts[i] in ('R', 'P') and texts[i+1] == 'A':
-                found_grades.append(('RA', True))
-            elif texts[i] == 'A' and texts[i+1] == 'B':
-                found_grades.append(('AB', True))
-            elif texts[i] == 'S' and texts[i+1] == 'A':
-                found_grades.append(('SA', True))
-            elif texts[i] == 'U' and texts[i+1] == 'A':
-                found_grades.append(('U', True))  # UA = absent = U grade
         
-        # Check single-token compounds (e.g. "B+", "8T")
-        if not found_grades:
-            for v in texts:
-                if v in ('8+', '8T', '8t', '8-', 'B+ '):
-                    found_grades.append(('B+', True))
-                elif v in ('RA', 'PA', 'R A', 'P A'):
-                    found_grades.append(('RA', True))
+        # Check single-token compounds first (e.g. "B+", "A+", "8T")
+        for i, v in enumerate(texts):
+            if v in ('A+', 'B+', 'A +', 'B +'):
+                found_grades.append((v.replace(' ', ''), True))
+            elif v in ('8+', '8T', '8t', '8-', 'B+ '):
+                found_grades.append(('B+', True))
+            elif v in ('RA', 'PA', 'R A', 'P A'):
+                found_grades.append(('RA', True))
+            elif v in ('SA', 'S A'):
+                found_grades.append(('SA', True))
                 
+        # Check two-token compounds (A + +, R + A, etc.)
         if not found_grades:
-            # PASS 2: Exact single-char grade match
+            for i in range(len(texts) - 1):
+                combined = texts[i] + texts[i+1]
+                if combined in self.VALID_GRADES:
+                    found_grades.append((combined, True))
+                elif combined in ('8+', 'B+', '8T', '8t', '8-'):
+                    found_grades.append(('B+', True))
+                # Explicit compound grade patterns
+                elif texts[i] in ('A', 'B', '8') and texts[i+1] == '+':
+                    found_grades.append(((texts[i] if texts[i] != '8' else 'B') + '+', True))
+                elif texts[i] in ('R', 'P') and texts[i+1] == 'A':
+                    found_grades.append(('RA', True))
+                elif texts[i] == 'S' and texts[i+1] == 'A':
+                    found_grades.append(('SA', True))
+                elif texts[i] == 'U' and texts[i+1] == 'A':
+                    found_grades.append(('U', True))  # UA = absent = U grade
+                # AB grade detection - VERY restrictive
+                elif texts[i] == 'A' and texts[i+1] == 'B':
+                    if (len(clean_tokens) == 2 and len(texts) == 2 and
+                        abs(clean_tokens[0].center_x - clean_tokens[1].center_x) < 25):
+                        found_grades.append(('AB', True))
+                        logger.debug(f"  Accepted AB grade under strict conditions")
+                    else:
+                        # Don't auto-default to B, let it fall through to single grade detection
+                        pass
+        
+        # PASS 2: Single character valid grades ONLY if no compounds found
             for t in clean_tokens:
                 v = t.text.upper().strip()
                 if v in self.VALID_GRADES:
@@ -1126,40 +1216,74 @@ class SevenLayerOCRService:
             for s in subjects:
                 try:
                     cr = self.curriculum_service.get_credits(s.subject_code, branch=b, regulation=r)
-                    if cr.credits > 0:
-                        s.credits = cr.credits
-                        meta.credits_filled_from_curriculum += 1
-                except:
+                    # Include both credit and zero-credit subjects (like mandatory MX codes)
+                    s.credits = cr.credits
+                    meta.credits_filled_from_curriculum += 1
+                    if cr.credits == 0:
+                        logger.debug(f"Zero-credit subject found: {s.subject_code} (type: {getattr(cr, 'category', 'unknown')})")
+                except Exception as e:
+                    logger.debug(f"Credit lookup failed for {s.subject_code}: {e}")
                     pass
 
         if not subjects:
             return [], meta
 
-        # ── Step 5: Final De-resolve (Logical Deduplication) ──
-        seen = {}
+        # ── Step 5: Main/Revaluation Aware Merge ──
+        # Goal:
+        # 1) Keep all main-table subjects as base list
+        # 2) If same subject appears in revaluation table, override grade on top of main
+        # 3) Preserve metadata for frontend badges/review
+        main_map: Dict[str, SubjectData] = {}
+        reval_map: Dict[str, SubjectData] = {}
+
         for s in subjects:
-            # Key subject by code AND row context to avoid collapsing different rows with same code
-            # unless they are logically duplicates (e.g. re-read of same physical line)
             key = s.subject_code
-            if key not in seen:
-                seen[key] = s
+            if s.is_revaluation:
+                if key not in reval_map or s.confidence >= reval_map[key].confidence:
+                    reval_map[key] = s
             else:
-                ex = seen[key]
-                # PRIORITY: Revaluation > Higher Confidence
-                if s.is_revaluation and not ex.is_revaluation:
-                    seen[key] = s
-                elif ex.is_revaluation and not s.is_revaluation:
-                    # Keep existing reval
-                    continue
-                elif s.confidence > ex.confidence:
-                    # Same reval status, keep higher confidence
-                    seen[key] = s
-                    meta.duplicates_removed += 1
-                elif abs(s.row_index - ex.row_index) > 5:
-                    # Log unusual duplicate far apart (could be different semesters)
-                    logger.warning(f"Suspected legitimate duplicate or far-OCR copy: {key} at rows {ex.row_index} and {s.row_index}")
-        
-        res = sorted(list(seen.values()), key=lambda x: x.subject_code)
+                if key not in main_map or s.confidence >= main_map[key].confidence:
+                    main_map[key] = s
+
+        merged: List[SubjectData] = []
+
+        # Base: main table subjects
+        for code, m in main_map.items():
+            if code in reval_map:
+                r = reval_map[code]
+                # Revaluation overrides main grade for final output
+                m.main_grade = m.grade
+                m.revaluation_grade = r.grade
+                m.grade = r.grade
+                m.overridden_by_revaluation = True
+                m.review_required = (m.main_grade != m.revaluation_grade)
+                # Keep higher confidence of the two sources
+                m.confidence = max(m.confidence, r.confidence)
+            merged.append(m)
+
+        # Revaluation-only subjects (rare) should still be included
+        for code, r in reval_map.items():
+            if code not in main_map:
+                r.overridden_by_revaluation = True
+                r.revaluation_grade = r.grade
+                r.review_required = True
+                merged.append(r)
+
+        # Sort by semester then subject code to support multi-semester-in-one-document preview
+        res = sorted(
+            merged,
+            key=lambda x: ((x.original_semester if x.original_semester is not None else 99), x.subject_code)
+        )
+
+        # Confidence tagging based on numeric thresholds (for frontend row indicators)
+        for s in res:
+            if s.confidence >= 0.9:
+                s.validation_status = s.validation_status or "high"
+            elif s.confidence >= 0.7:
+                s.validation_status = s.validation_status or "medium"
+            else:
+                s.validation_status = s.validation_status or "low"
+
         meta.fragments_merged = sum(1 for s in res if s.fragments_merged)
 
         # ── Step 6: Confidence Rating ──
