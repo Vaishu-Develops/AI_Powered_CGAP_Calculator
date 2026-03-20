@@ -85,14 +85,26 @@ async def preview_ocr(file: UploadFile = File(...)):
 
         # Build subject list in the format the frontend expects
         raw_subjects = result.get('subjects', [])
+        semester_info = result.get('semester_info', {})
+        regulation = str(semester_info.get('regulation') or '2021')
         subjects_out = []
         for s in raw_subjects:
+            subject_code = s.get('subject_code', '')
+            credit_res = curriculum_service.get_credits(subject_code, 'CSE', regulation)
             subjects_out.append({
-                "subject_code": s.get('subject_code', ''),
+                "subject_code": subject_code,
                 "grade": s.get('grade', ''),
                 "marks": s.get('marks'),
+                # Always prefer curriculum credits to avoid OCR/default drift in preview.
+                "credits": credit_res.credits,
                 "confidence": s.get('confidence', 1.0),
-                "semester": result.get('semester_info', {}).get('semester'),
+                "semester": semester_info.get('semester'),
+                "original_semester": s.get('original_semester'),
+                "is_revaluation": s.get('is_revaluation', False),
+                "overridden_by_revaluation": s.get('overridden_by_revaluation', False),
+                "main_grade": s.get('main_grade'),
+                "revaluation_grade": s.get('revaluation_grade'),
+                "review_required": s.get('review_required', False),
             })
 
         return {
@@ -118,6 +130,14 @@ async def calculate_from_data(request: CalculateRequest):
     """
     try:
         print(f"Manual calculation requested for branch: {request.branch}, sem: {request.semester}, reg: {request.regulation}")
+
+        # Multi-sem payloads (OCR flow) can contain subjects from multiple semesters.
+        # In that case, do not classify every earlier-sem subject as arrear by default.
+        subject_sem_values = {
+            int(s.semester) for s in request.subjects
+            if getattr(s, 'semester', None) is not None and int(s.semester) > 0
+        }
+        is_multi_sem_payload = len(subject_sem_values) > 1
         
         # 1. Enrich subjects with credits from curriculum service using the provided branch
         enriched_grades = []
@@ -130,11 +150,19 @@ async def calculate_from_data(request: CalculateRequest):
             credits = credit_res.credits
             subject_semester = credit_res.semester
             
-            # For manual entry, we trust the semester passed by the user or the curriculum
-            # If curriculum says 3, but user is in sem 5, it's an arrear.
             is_arrear = False
-            if subject_semester is not None:
-                is_arrear = subject_semester != request.semester
+            row_semester = s.semester if s.semester and s.semester > 0 else None
+
+            if is_multi_sem_payload:
+                # For cumulative multi-sem calculations, treat rows as normal semester records
+                # unless there is an explicit semester mismatch for that subject.
+                if subject_semester is not None and row_semester is not None and subject_semester != row_semester:
+                    is_arrear = True
+            else:
+                # For single-sem/manual mode, preserve conservative arrear detection.
+                if subject_semester is not None and subject_semester > 0:
+                    if subject_semester < request.semester - 1:
+                        is_arrear = True
                 
             enriched_grade = {
                 'subject': s.subject_code,
@@ -162,6 +190,7 @@ async def calculate_from_data(request: CalculateRequest):
             "class": class_div,
             "total_subjects": len(details),
             "subjects": details,
+            "semester_gpas": calc_result.get('semester_gpas', []),
             "semester_credits": calc_result.get('semester_credits', 0),
             "total_credits": calc_result.get('total_credits', 0),
             "arrear_subjects": calc_result.get('arrear_subjects', 0),
@@ -235,8 +264,9 @@ async def calculate_cgpa(file: UploadFile = File(...)):
             subject_semester = curriculum_service.get_semester(subject_code, 'CSE')
             
             # Determine if this is an arrear subject
-            # - A subject is an arrear only if its original semester is EXPLICITLY LESS than current marksheet semester
+            # - A subject is an arrear only if its original semester is SIGNIFICANTLY LESS than current marksheet semester
             # - OR if the grade is explicitly a fail grade (RA, U, AB, F)
+            # - Use a conservative approach to avoid marking normal subjects as arrears
             is_arrear = False
             is_fail_grade = grade.get('grade', '').upper() in ['RA', 'U', 'AB', 'F', 'W', 'SA']
             
@@ -244,9 +274,12 @@ async def calculate_cgpa(file: UploadFile = File(...)):
             current_sem = semester if semester_info.get('semester') else None
             
             if current_sem and subject_semester is not None:
-                is_arrear = subject_semester < current_sem or is_fail_grade
+                # Only mark as arrear if it's from a significantly lower semester (2+ difference) OR is a fail grade
+                is_arrear = (subject_semester < current_sem - 1) or is_fail_grade
             elif current_sem and grade.get('original_semester'):
-                is_arrear = grade['original_semester'] < current_sem or is_fail_grade
+                # Same logic for OCR-detected original semester
+                orig_sem = grade['original_semester']
+                is_arrear = (orig_sem < current_sem - 1) or is_fail_grade
             else:
                 # Fallback: only fail grades are arrears if semester context is missing
                 is_arrear = is_fail_grade
@@ -284,6 +317,7 @@ async def calculate_cgpa(file: UploadFile = File(...)):
             "class": class_div,
             "total_subjects": len(details),
             "subjects": details,
+            "semester_gpas": calc_result.get('semester_gpas', []),
             "semester_credits": calc_result.get('semester_credits', 0),
             "total_credits": calc_result.get('total_credits', 0),
             "arrear_subjects": calc_result.get('arrear_subjects', 0),
