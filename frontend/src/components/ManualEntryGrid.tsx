@@ -46,7 +46,7 @@ const BRANCHES = [
 
 const REGULATIONS = ['2017', '2019', '2021', '2025'];
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
-const GRADES = ['O', 'A+', 'A', 'B+', 'B', 'B-', 'C', 'U', 'AB'];
+const GRADES = ['S', 'O', 'A+', 'A', 'B+', 'B', 'B-', 'C', 'U', 'AB'];
 
 export default function ManualEntryGrid({
     onCalculate
