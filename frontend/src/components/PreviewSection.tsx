@@ -40,13 +40,14 @@ interface PreviewSectionProps {
 }
 
 /* ─── Constants ──────────────────────────────────────────────────────────── */
-const VALID_GRADES = ['O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', '-'];
+const VALID_GRADES = ['S', 'O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', '-'];
 
 const GP: Record<string, number> = {
-    'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0,
+    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0,
 };
 
 const GRADE_COLOR: Record<string, string> = {
+    'S': '#059669',
     'O': '#059669', 'A+': '#7C3AED', 'A': '#D97706',
     'B+': '#0EA5E9', 'B': '#14B8A6', 'C': '#6B7280',
     'U': '#EF4444', 'RA': '#EF4444', 'SA': '#F59E0B', 'W': '#9CA3AF',
@@ -174,20 +175,12 @@ function SemSlide({
     const saveEdit = (idx: number) => {
         const ed = editing[idx]; if (!ed) return;
         const grade = ed.grade.toUpperCase().trim();
-        const gradePoints = GP[grade] ?? 0;
 
         const enteredCredits = Number(ed.credits);
         const safeCredits = Number.isFinite(enteredCredits) && enteredCredits >= 0 ? enteredCredits : 0;
-
-        const enteredPoints = Number(ed.points);
-        const safePoints = Number.isFinite(enteredPoints) && enteredPoints >= 0 ? enteredPoints : 0;
-
-        // If points and credits disagree, treat points as the source of truth.
-        // Convert points back to credits so backend calculations remain consistent.
-        const derivedPointsFromCredits = safeCredits * gradePoints;
-        const credits = gradePoints > 0 && Math.abs(safePoints - derivedPointsFromCredits) > 0.01
-            ? Number((safePoints / gradePoints).toFixed(2))
-            : safeCredits;
+        // Credits must remain authoritative. Points is always derived from Grade x Credits.
+        // This prevents impossible credit values such as 3.75 for fixed-credit subjects.
+        const credits = safeCredits;
 
         const updated = subjects.map((s, i) => i === idx
             ? {
