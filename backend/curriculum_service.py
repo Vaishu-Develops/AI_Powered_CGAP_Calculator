@@ -753,6 +753,22 @@ class CurriculumService:
                     'semester': None
                 }
         
+        # Extract Open Electives (OE_I, OE_II, etc.)
+        open_electives = data.get('open_electives', {})
+        if isinstance(open_electives, dict):
+            for oe_group, oe_info in open_electives.items():
+                # Format: {"OE_I": {"subjects": {"CODE": {...}}}}
+                oe_subjects = oe_info.get('subjects', {})
+                if isinstance(oe_subjects, dict):
+                    for code, info in oe_subjects.items():
+                        subjects[code.upper()] = {
+                            'name': info.get('name', ''),
+                            'credits': info.get('credits', 3),
+                            'category': 'OEC',
+                            'type': 'elective',
+                            'semester': None
+                        }
+
         # Also check elective_groups for management electives
         elective_groups = data.get('elective_groups', {})
         mgmt_group = elective_groups.get('management_electives', {})
