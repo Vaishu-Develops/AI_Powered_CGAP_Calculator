@@ -149,6 +149,7 @@ export default function InputPage() {
   ]);
   const [mismatches, setMismatches] = useState<SlotMismatch[]>([]);
   const [pendingOcrData, setPendingOcrData] = useState<any>(null);
+  const [fileSemestersState, setFileSemestersState] = useState<number[]>([]); // New state for PreviewSection
   const filesRef = useRef<File[]>([]);
 
   // ── Step 1: Files Selected → Upload to /preview-ocr/ sequentially ──
@@ -222,6 +223,8 @@ export default function InputPage() {
         confidence: { overall: avgConfidence },
         status: 'preview_ready'
       };
+
+      setFileSemestersState(fileSems); // Store semester mapping for PreviewSection
 
       if (foundMismatches.length > 0) {
         // Pause — show mismatch modal before proceeding to preview
@@ -333,6 +336,71 @@ export default function InputPage() {
       }
 
       const data = await res.json();
+
+      // ── Compute semester_gpas on frontend using the SAME formula as Preview table ──
+      // This ensures the Semester Journey chart always matches what the user saw in Preview.
+      const GP_MAP: Record<string, number> = {
+        'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5,
+        'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0, 'F': 0, '-': 0,
+      };
+      const FAIL_GRADES = new Set(['U', 'RA', 'SA', 'W', 'AB', 'F', '-']);
+
+      // Merge edited subjects into the backend result to ensure the Subject Analysis table shows all edits
+      const mergedSubjects: Record<string, any> = { ...(data.subjects || {}) };
+      for (const subj of editedSubjects) {
+        const code = (subj.subject_code || subj.code || '').trim().toUpperCase();
+        if (!code) continue;
+
+        const grade = String(subj.grade || '').toUpperCase();
+        const credits = Number(subj.credits || 0);
+        const gradePoints = Number(subj.grade_points ?? GP_MAP[grade] ?? 0);
+        const weighted = gradePoints * credits;
+        const semesterTag = Number(subj.semester || subj.home_semester || subj.original_semester || 1);
+        const status = !FAIL_GRADES.has(grade) && gradePoints > 0 ? 'PASS' : 'FAIL';
+
+        mergedSubjects[code] = {
+          grade,
+          grade_points: gradePoints,
+          credits,
+          weighted,
+          status,
+          is_arrear: subj.is_arrear ?? false,
+          original_semester: semesterTag,
+          marks: subj.marks ?? mergedSubjects[code]?.marks,
+        };
+      }
+      data.subjects = mergedSubjects;
+
+      const semBuckets: Record<number, { weighted: number; credits: number }> = {};
+      for (const subj of Object.values(mergedSubjects)) {
+        const sem = Number((subj as any).original_semester || 1);
+        const grade = String((subj as any).grade || '').toUpperCase();
+        const credits = Number((subj as any).credits || 0);
+        const gp = Number((subj as any).grade_points ?? GP_MAP[grade] ?? 0);
+
+        if (!semBuckets[sem]) semBuckets[sem] = { weighted: 0, credits: 0 };
+
+        // Pass-only formula — identical to Preview table's calcGPA
+        if (!FAIL_GRADES.has(grade) && credits > 0) {
+          semBuckets[sem].weighted += gp * credits;
+          semBuckets[sem].credits += credits;
+        }
+      }
+
+      const frontendSemGpas = Object.keys(semBuckets)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(sem => ({
+          semester: sem,
+          gpa: semBuckets[sem].credits > 0
+            ? Math.round((semBuckets[sem].weighted / semBuckets[sem].credits) * 100) / 100
+            : 0,
+          credits: semBuckets[sem].credits,
+        }));
+
+      // Override backend's semester_gpas with our frontend-computed values
+      data.semester_gpas = frontendSemGpas;
+
       setResults(data);
       setStage('done');
       setStatusMsg('Done!');
@@ -469,7 +537,10 @@ export default function InputPage() {
                 )}
               </>
             ) : (
-              <ManualEntryGrid onCalculate={handleManualCalculate} />
+              <ManualEntryGrid
+                isMultiSem={state.mode !== 'single_sem'}
+                onCalculate={handleManualCalculate}
+              />
             )}
 
             {error && (
@@ -495,13 +566,65 @@ export default function InputPage() {
         )}
 
         {stage === 'calculating' && (
-          <div className="text-center py-20 text-2xl font-bold animate-pulse text-data">Calculating Results...</div>
+          <div className="flex flex-col items-center justify-center py-24 animate-fade-up">
+            {/* Spinning saffron ring */}
+            <div className="relative w-20 h-20 mb-8">
+              <div
+                className="absolute inset-0 rounded-full border-[3px] border-border/20"
+              />
+              <div
+                className="absolute inset-0 rounded-full border-[3px] border-transparent"
+                style={{
+                  borderTopColor: '#D4500A',
+                  borderRightColor: '#E8863A',
+                  animation: 'spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite',
+                }}
+              />
+              <div
+                className="absolute inset-2 rounded-full border-[2px] border-transparent"
+                style={{
+                  borderBottomColor: '#F5A623',
+                  borderLeftColor: '#D4500A80',
+                  animation: 'spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse',
+                }}
+              />
+              {/* Center dot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="w-2.5 h-2.5 rounded-full bg-primary"
+                  style={{ animation: 'pulse 1.5s ease-in-out infinite' }}
+                />
+              </div>
+            </div>
+
+            {/* Animated text with bouncing dots */}
+            <h3 className="text-2xl font-black tracking-tight text-text-primary mb-3">
+              Crunching Numbers
+              <span className="inline-flex ml-1">
+                {[0, 1, 2].map(i => (
+                  <span
+                    key={i}
+                    className="text-primary"
+                    style={{
+                      animation: 'bounce 1.2s ease-in-out infinite',
+                      animationDelay: `${i * 0.15}s`,
+                      display: 'inline-block',
+                    }}
+                  >.</span>
+                ))}
+              </span>
+            </h3>
+            <p className="text-sm text-text-muted font-medium">
+              Your GPA is being computed with precision
+            </p>
+          </div>
         )}
 
         {stage === 'preview' && ocrData && imageUrls.length > 0 && (
           <PreviewSection
             imageUrls={imageUrls}
             ocrData={ocrData}
+            fileSemesters={fileSemestersState}
             onConfirm={handleConfirm}
             onBack={() => setStage('idle')}
           />
