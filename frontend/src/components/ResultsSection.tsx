@@ -72,6 +72,11 @@ const GRADE_THEMES: Record<string, { color: string, bg: string, border: string }
     'AB': { color: '#6b7280', bg: 'bg-gray-50', border: 'border-gray-100' },
 };
 
+// GPA points map (aligned with Preview table and pass-only logic)
+const GP_MAP: Record<string, number> = {
+    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0, 'F': 0,
+};
+
 export default function ResultsSection({ data, onReset, mode = 'single_sem', context }: ResultsSectionProps) {
     const [mounted, setMounted] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof SubjectDetail | 'code', direction: 'asc' | 'desc' } | null>(null);
@@ -83,65 +88,73 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
     const semesterGpas = useMemo(() => {
         if (isSingle) return [];
 
-        // Preferred source: backend-computed semester GPAs.
+        // Trust the pre-computed semester_gpas from the frontend (computed using Preview table's exact formula).
         if (Array.isArray(data.semester_gpas) && data.semester_gpas.length > 0) {
-            return [...data.semester_gpas]
-                .map((s) => ({
-                    sem: Number(s.semester),
-                    gpa: Number(s.gpa) || 0,
-                    credits: Number(s.credits) || 0,
-                }))
-                .filter((s) => s.sem > 0)
+            return data.semester_gpas
+                .filter((s) => typeof s.semester === 'number' && typeof s.gpa === 'number')
+                .map((s) => ({ sem: Number(s.semester), gpa: Number(s.gpa), credits: Number(s.credits ?? 0) }))
                 .sort((a, b) => a.sem - b.sem);
         }
 
-        // Fallback: derive from subject-level data.
+        // Fallback for manual mode or when semester_gpas is not provided:
+        // Group subjects by original_semester and compute pass-only GPA.
         const semData: Record<number, { weighted: number; credits: number }> = {};
         Object.entries(data.subjects).forEach(([code, subj]) => {
             const sem = subj.original_semester || data.semester_info?.semester || 1;
             if (!semData[sem]) semData[sem] = { weighted: 0, credits: 0 };
-            // use base grade_points * credits
-            semData[sem].weighted += (subj.grade_points * subj.credits);
-            semData[sem].credits += subj.credits;
+
+            const gradeUpper = String(subj.grade || '').toUpperCase();
+            const gp = Number(subj.grade_points ?? GP_MAP[gradeUpper] ?? 0);
+            const cr = Number(subj.credits) || 0;
+            const isPassing = gp > 0 && !['U', 'RA', 'SA', 'W', 'AB', 'F'].includes(gradeUpper);
+            if (!isPassing) return;
+
+            semData[sem].weighted += (gp * cr);
+            semData[sem].credits += cr;
         });
-        
-        const gpas: { sem: number; gpa: number; credits: number }[] = [];
-        Object.keys(semData).sort((a,b)=>Number(a)-Number(b)).forEach(k => {
-            const sem = Number(k);
-            const vals = semData[sem];
-            gpas.push({
+
+        return Object.keys(semData)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .map(sem => ({
                 sem,
-                gpa: vals.credits > 0 ? vals.weighted / vals.credits : 0,
-                credits: vals.credits
-            });
-        });
-        return gpas;
-    }, [data.subjects, data.semester_gpas, isSingle, data.semester_info]);
+                gpa: semData[sem].credits > 0 ? semData[sem].weighted / semData[sem].credits : 0,
+                credits: semData[sem].credits,
+            }));
+    }, [data.subjects, isSingle, data.semester_info, data.semester_gpas]);
 
     useEffect(() => {
         setMounted(true);
+        if (process.env.NODE_ENV !== 'production') return;
+
         if (data.cgpa >= 7.5 || data.class.toLowerCase().includes('distinction')) {
-            setTimeout(() => {
+            const kickoff = setTimeout(() => {
                 const duration = 3 * 1000;
                 const animationEnd = Date.now() + duration;
-                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+                const defaults = { startVelocity: 24, spread: 300, ticks: 50, zIndex: 0 };
 
                 const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
                 const interval: any = setInterval(function () {
                     const timeLeft = animationEnd - Date.now();
                     if (timeLeft <= 0) return clearInterval(interval);
-                    const particleCount = 50 * (timeLeft / duration);
+                    const particleCount = 24 * (timeLeft / duration);
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-                }, 250);
+                }, 320);
+
+                // Ensure interval is always cleaned up when effect reruns/unmounts.
+                const cleanup = () => clearInterval(interval);
+                window.addEventListener('beforeunload', cleanup, { once: true });
             }, 1000); // Trigger shortly after render
+
+            return () => clearTimeout(kickoff);
         }
     }, [data.cgpa, data.class]);
 
     const subjectEntries = useMemo(() => {
         let entries = Object.entries(data.subjects);
-        
+
         if (selectedSem !== null) {
             entries = entries.filter(([_, subj]) => (subj.original_semester || data.semester_info?.semester || 1) === selectedSem);
         }
@@ -165,7 +178,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
         let maxGradePoints = -1;
         let count = 0;
         let topGrade = 'C';
-        
+
         Object.values(data.subjects).forEach((d) => {
             if (selectedSem !== null && (d.original_semester || data.semester_info?.semester || 1) !== selectedSem) return;
             if (d.grade_points > maxGradePoints) {
@@ -218,27 +231,27 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#D4500A 0.5px, transparent 0.5px)`, backgroundSize: '24px 24px' }} />
 
                 {/* Glass Blobs */}
-                <motion.div 
-                    animate={{ 
+                <motion.div
+                    animate={{
                         scale: [1, 1.3, 1],
                         opacity: [0.3, 0.6, 0.3],
                         x: [0, 40, 0],
                         y: [0, -30, 0]
                     }}
                     transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-[#D4500A]/5 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" 
+                    className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-[#D4500A]/5 rounded-full blur-[120px] pointer-events-none mix-blend-multiply"
                 />
-                <motion.div 
-                    animate={{ 
+                <motion.div
+                    animate={{
                         scale: [1.3, 1, 1.3],
                         opacity: [0.2, 0.5, 0.2],
                         x: [0, -50, 0],
                         y: [0, 40, 0]
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#fadfd0]/30 rounded-full blur-[150px] pointer-events-none mix-blend-multiply" 
+                    className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#fadfd0]/30 rounded-full blur-[150px] pointer-events-none mix-blend-multiply"
                 />
-                
+
                 {data.class && (
                     <motion.div
                         initial={{ y: -20, opacity: 0 }}
@@ -313,12 +326,12 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             </div>
                         </motion.div>
                     </div>
-                    
-                     {/* Milestone Labels (High Contrast) */}
-                     <div className="relative w-full mt-6 h-10 text-[9px] font-black uppercase tracking-[0.25em]">
+
+                    {/* Milestone Labels (High Contrast) */}
+                    <div className="relative w-full mt-6 h-10 text-[9px] font-black uppercase tracking-[0.25em]">
                         {/* Dynamic Highlighting with Monochrome Saffron Scale */}
                         <div className={`absolute left-0 transition-opacity duration-300 ${primaryValue < 5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Fail</div>
-                        
+
                         <div className={`absolute left-[50%] -translate-x-1/2 transition-opacity duration-300 ${primaryValue >= 5 && primaryValue < 7 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>
                             Pass
                         </div>
@@ -353,7 +366,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             <p className="text-sm font-medium text-[#89858E] ml-13">Visualizing your performance across terms.</p>
                         </div>
                         {selectedSem && (
-                            <button 
+                            <button
                                 onClick={() => setSelectedSem(null)}
                                 className="text-[10px] font-black uppercase tracking-widest text-[#D25419] hover:bg-[#FADFD0]/40 transition-colors flex items-center gap-2 bg-[#FADFD0]/20 px-4 py-2 rounded-full border border-[#FADFD0]/50"
                             >
@@ -366,7 +379,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                         {semesterGpas.map((item, i) => {
                             const isSelected = selectedSem === item.sem;
                             const heightPct = Math.max((item.gpa / 10) * 100, 10);
-                            
+
                             let barStyle = "";
                             if (isSelected) {
                                 barStyle = "bg-gradient-to-t from-[#D25419] to-[#FAD6A5] shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)]";
@@ -379,7 +392,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                             }
 
                             return (
-                                <motion.div 
+                                <motion.div
                                     key={item.sem}
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: '100%', opacity: 1 }}
@@ -387,11 +400,11 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                                     className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
                                     onClick={() => setSelectedSem(isSelected ? null : item.sem)}
                                 >
-                                    <div className={`absolute -top-10 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 font-black text-xs px-2 py-1 bg-[#38352F] text-white rounded-md z-10 whitespace-nowrap`}>
+                                    <div className={`absolute -top-10 ${isSelected ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} transition-all font-black text-xs px-2 py-1 bg-[#38352F] text-white rounded-md z-10 whitespace-nowrap pointer-events-none`}>
                                         {item.gpa.toFixed(2)}
                                     </div>
-                                    <div 
-                                        className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${barStyle}`} 
+                                    <div
+                                        className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${barStyle}`}
                                         style={{ height: `${heightPct}%` }}
                                     >
                                         <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
@@ -424,34 +437,34 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                     <>
                         {selectedSem ? (
                             <>
-                                <StatTile label="Sem Credits" value={semesterGpas.find(s=>s.sem===selectedSem)?.credits?.toString() || '-'} sub={`Semester ${selectedSem}`} />
+                                <StatTile label="Sem Credits" value={semesterGpas.find(s => s.sem === selectedSem)?.credits?.toString() || '-'} sub={`Semester ${selectedSem}`} />
                                 <StatTile label="Sem Subjects" value={subjectEntries.length.toString()} sub="Attempted" />
-                                <StatTile label="Sem Arrears" value={subjectEntries.filter(s=>{
+                                <StatTile label="Sem Arrears" value={subjectEntries.filter(s => {
                                     // Only count as arrear if still failing AND no later passing grade exists
-                                    if (!['U','RA','AB'].includes(s[1].grade)) return false;
-                                    
+                                    if (!['U', 'RA', 'AB'].includes(s[1].grade)) return false;
+
                                     // Check if this subject was cleared in consolidated data
                                     const subjectCode = s[0];
                                     const allSubjects = Object.entries(data.subjects || {});
                                     const sameSubject = allSubjects.find(([code]) => code === subjectCode);
-                                    
+
                                     // If we found the subject in consolidated data and it's passing, don't count as arrear
-                                    if (sameSubject && !['U','RA','AB'].includes(sameSubject[1].grade)) {
+                                    if (sameSubject && !['U', 'RA', 'AB'].includes(sameSubject[1].grade)) {
                                         return false;
                                     }
-                                    
+
                                     return true;
-                                }).length.toString()} sub="Uncleared" highlight={subjectEntries.filter(s=>{
-                                    if (!['U','RA','AB'].includes(s[1].grade)) return false;
+                                }).length.toString()} sub="Uncleared" highlight={subjectEntries.filter(s => {
+                                    if (!['U', 'RA', 'AB'].includes(s[1].grade)) return false;
                                     const subjectCode = s[0];
                                     const allSubjects = Object.entries(data.subjects || {});
                                     const sameSubject = allSubjects.find(([code]) => code === subjectCode);
-                                    if (sameSubject && !['U','RA','AB'].includes(sameSubject[1].grade)) {
+                                    if (sameSubject && !['U', 'RA', 'AB'].includes(sameSubject[1].grade)) {
                                         return false;
                                     }
                                     return true;
                                 }).length === 0 ? 'success' : 'danger'} />
-                                <StatTile label="Sem GPA" value={semesterGpas.find(s=>s.sem===selectedSem)?.gpa.toFixed(2) || '0.00'} sub="Achieved" highlight="primary" />
+                                <StatTile label="Sem GPA" value={semesterGpas.find(s => s.sem === selectedSem)?.gpa.toFixed(2) || '0.00'} sub="Achieved" highlight="primary" />
                             </>
                         ) : (
                             <>
@@ -481,13 +494,13 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                         <p className="text-[#89858E] text-sm font-medium">Detailed breakdown of your academic results.</p>
                     </div>
                 </div>
-                
+
                 <div className="overflow-x-auto w-full custom-scrollbar">
                     <table className="w-full text-left min-w-[800px] border-collapse">
                         <thead>
                             <tr className="bg-[#F3F1EF]/30 border-b border-[#FADFD0]/40">
                                 <th className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E]">No.</th>
-                                <th 
+                                <th
                                     className="py-5 px-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#89858E] cursor-pointer hover:text-[#D25419] transition-colors"
                                     onClick={() => setSortConfig({ key: 'code', direction: sortConfig?.key === 'code' && sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
                                 >
@@ -513,10 +526,6 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                                             {['U', 'RA', 'AB'].includes(subj.grade) && data.subjects && data.subjects[code] && !['U', 'RA', 'AB'].includes(data.subjects[code].grade) ? (
                                                 <div className="text-[10px] font-black text-green-600/70 tracking-[0.15em] uppercase mt-1">
                                                     Cleared ({data.subjects[code].grade})
-                                                </div>
-                                            ) : (subj.is_arrear && subj.status === 'PASS') ? (
-                                                <div className="text-[10px] font-black text-[#D4500A]/70 tracking-[0.15em] uppercase mt-1">
-                                                    Arrear History
                                                 </div>
                                             ) : (!isSingle && subj.original_semester) ? (
                                                 <div className="text-[10px] font-black text-[#1E293B]/50 tracking-[0.15em] uppercase mt-1">
@@ -555,7 +564,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                     </div>
                     <p className="text-text-muted text-sm font-medium">Test hypothetical grades to see how your {isSingle ? 'GPA' : 'Overall CGPA'} would change.</p>
                 </div>
-                <button 
+                <button
                     onClick={() => setIsSimOpen(true)}
                     className="px-6 py-3 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 shrink-0 relative z-10"
                 >
@@ -565,12 +574,12 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
 
             <AnimatePresence>
                 {isSimOpen && (
-                    <WhatIfSimulator 
-                        isOpen={isSimOpen} 
-                        initialSubjects={data.subjects} 
+                    <WhatIfSimulator
+                        isOpen={isSimOpen}
+                        initialSubjects={data.subjects}
                         currentGpa={isSingle ? data.gpa : data.cgpa}
                         isSingle={isSingle}
-                        onClose={() => setIsSimOpen(false)} 
+                        onClose={() => setIsSimOpen(false)}
                     />
                 )}
             </AnimatePresence>
@@ -583,7 +592,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                 className="bg-bg-card-alt border border-border rounded-[32px] p-8 md:p-12 text-center"
             >
                 <h3 className="text-xl font-black text-text-primary tracking-tight mb-2">What would you like to do next?</h3>
-                
+
                 {isSingle ? (
                     <p className="text-text-muted font-medium mb-8">Want to see your full CGPA? Add your other semesters to see the complete picture.</p>
                 ) : (
@@ -592,21 +601,21 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                     {isSingle && (context?.files?.length === 1 || Object.keys(context?.gradesData || {}).length === 1) && (
-                         <button onClick={onReset} className="px-8 py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        <button onClick={onReset} className="px-8 py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
                             <FiPlusSquare className="text-lg" /> Add Another Semester
                         </button>
                     )}
-                    
+
                     <button className="px-8 py-4 bg-bg-card border border-border text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
                         <FiDownload className="text-lg" /> Export PDF
                     </button>
-                    
+
                     <button onClick={onReset} className="px-8 py-4 bg-bg-card border border-border text-text-muted hover:text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
                         <FiHome className="text-lg" /> Go Home
                     </button>
                 </div>
             </motion.div>
-            
+
         </motion.div>
     );
 }
@@ -635,14 +644,14 @@ function StatTile({ label, value, sub, highlight }: { label: string, value: stri
     return (
         <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
             <div className={`absolute top-0 right-0 w-24 h-24 ${highlight === 'primary' ? 'bg-[#D25419]/5' : 'bg-[#89858E]/5'} rounded-full -mr-12 -mt-12 transition-transform duration-700 group-hover:scale-150`} />
-            
+
             <div className="flex items-center gap-2 mb-3">
                 <div className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
                 <div className="text-[10px] font-black text-[#89858E] uppercase tracking-[0.2em]">{label}</div>
             </div>
-            
+
             <div className={`text-4xl md:text-5xl font-black tracking-tight mb-2 ${textClass} relative z-10`}>{value}</div>
-            
+
             <div className="text-[10px] font-bold text-[#89858E]/60 uppercase tracking-[0.1em]">{sub}</div>
         </div>
     );
