@@ -77,6 +77,7 @@ export default function AuthPage() {
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                autoComplete="name"
                                 placeholder="Student Name"
                                 className="w-full bg-bg-card-alt border border-border/50 text-text-primary px-5 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                             />
@@ -90,6 +91,7 @@ export default function AuthPage() {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            autoComplete="email"
                             placeholder="you@university.edu"
                             className="w-full bg-bg-card-alt border border-border/50 text-text-primary px-5 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                         />
@@ -100,6 +102,7 @@ export default function AuthPage() {
                         <input
                             type="password"
                             required
+                            autoComplete={isLogin ? 'current-password' : 'new-password'}
                             placeholder="••••••••"
                             className="w-full bg-bg-card-alt border border-border/50 text-text-primary px-5 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                         />
