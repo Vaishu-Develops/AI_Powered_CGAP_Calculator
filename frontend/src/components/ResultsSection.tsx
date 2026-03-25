@@ -438,7 +438,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                         {selectedSem ? (
                             <>
                                 <StatTile label="Sem Credits" value={semesterGpas.find(s => s.sem === selectedSem)?.credits?.toString() || '-'} sub={`Semester ${selectedSem}`} />
-                                <StatTile label="Sem Subjects" value={subjectEntries.length.toString()} sub="Attempted" />
+                                <StatTile label="Total Subjects" value={data.total_subjects.toString()} sub="All Semesters" />
                                 <StatTile label="Sem Arrears" value={subjectEntries.filter(s => {
                                     // Only count as arrear if still failing AND no later passing grade exists
                                     if (!['U', 'RA', 'AB'].includes(s[1].grade)) return false;
