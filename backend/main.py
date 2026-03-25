@@ -53,6 +53,7 @@ class ManualSubject(BaseModel):
     subject_code: str
     grade: str
     semester: Optional[int] = 1
+    credits: Optional[float] = None
 
 class CalculateRequest(BaseModel):
     subjects: List[ManualSubject]
@@ -123,7 +124,6 @@ async def preview_ocr(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/calculate-from-data/")
-
 async def calculate_from_data(request: CalculateRequest):
     """
     Direct Calculation from provided JSON data (used for Manual Entry)
@@ -147,7 +147,7 @@ async def calculate_from_data(request: CalculateRequest):
             
             # get_credits returns a CreditResult object
             credit_res = curriculum_service.get_credits(s.subject_code, branch_key, request.regulation)
-            credits = credit_res.credits
+            credits = s.credits if s.credits is not None else credit_res.credits
             subject_semester = credit_res.semester
             
             is_arrear = False
