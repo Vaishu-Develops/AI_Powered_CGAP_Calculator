@@ -55,9 +55,13 @@ export default function OcrScanScreen({
     const doneRef      = useRef(false);       // have we fired onComplete?
     const ocrReadyRef  = useRef(false);       // ocrData has arrived
     const typeTimers   = useRef<ReturnType<typeof setTimeout>[]>([]);
+    const lastRafCommitRef = useRef(0);
+    const lastTypeLabelRef = useRef('');
 
     /* ── typewriter ── */
     const typeWrite = (text: string) => {
+        if (lastTypeLabelRef.current === text) return;
+        lastTypeLabelRef.current = text;
         typeTimers.current.forEach(clearTimeout);
         typeTimers.current = [];
         setTypeText('');
@@ -66,7 +70,8 @@ export default function OcrScanScreen({
             i++;
             setTypeText(text.slice(0, i));
             if (i < text.length) {
-                const t = setTimeout(tick, 32);
+                // Slightly slower cadence reduces re-render pressure during dev hot reload.
+                const t = setTimeout(tick, 55);
                 typeTimers.current.push(t);
             }
         };
@@ -88,6 +93,13 @@ export default function OcrScanScreen({
 
         const start = performance.now();
         const raf = (now: number) => {
+            // Throttle commits to ~30fps to avoid excessive state updates.
+            if (now - lastRafCommitRef.current < 33) {
+                rafRef.current = requestAnimationFrame(raf);
+                return;
+            }
+            lastRafCommitRef.current = now;
+
             const p = Math.min((now - start) / DRAW_MS, 1);
             setDrawPct(p);
             if (p < 1) {
