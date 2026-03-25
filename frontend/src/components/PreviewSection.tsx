@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     FiChevronLeft, FiChevronRight,
     FiEdit2, FiCheck, FiX,
     FiPlus, FiTrash2, FiAlertTriangle, FiSkipForward,
-    FiSearch,
+    FiSearch, FiFileText,
 } from 'react-icons/fi';
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -35,6 +35,7 @@ interface PreviewSectionProps {
         semester_info?: { semester?: number; regulation?: string };
         confidence?: { overall?: number };
     };
+    fileSemesters?: number[]; // Added to map slides to semesters
     onConfirm: (editedSubjects: PreviewSubject[]) => void;
     onBack: () => void;
 }
@@ -69,7 +70,7 @@ function hasIssues(subjects: PreviewSubject[]) {
         !s.grade || s.grade === '?' || !s.subject_code || s.subject_code.trim().length < 3,
     );
     // Debug: Log subjects with potential issues
-    const problemSubjects = subjects.filter(s => 
+    const problemSubjects = subjects.filter(s =>
         s.review_required ||
         (typeof s.confidence === 'string' && s.confidence === 'low') ||
         (typeof s.confidence === 'number' && s.confidence < 0.7) ||
@@ -86,117 +87,159 @@ function hasIssues(subjects: PreviewSubject[]) {
     return issues;
 }
 
-function GradePill({ grade }: { grade: string }) {
-    const c = GRADE_COLOR[grade] || '#9CA3AF';
+const GradePill = ({ grade }: { grade: string }) => {
+    const isPassing = !['U', 'RA', 'SA', 'W', '-'].includes(grade);
+    const color = GRADE_COLOR[grade] || '#6B7280';
     return (
         <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            padding: '2px 10px', borderRadius: 6, minWidth: 38,
-            background: `${c}18`, border: `1px solid ${c}40`,
-            color: c, fontSize: 11, fontWeight: 800, fontFamily: 'Outfit, sans-serif',
-            letterSpacing: '0.04em',
-        }}>{grade || '—'}</span>
+            padding: '1px 8px', borderRadius: 999,
+            fontSize: 11, fontWeight: 800, fontFamily: 'Outfit',
+            color: isPassing ? color : '#EF4444',
+            background: isPassing ? `${color}15` : '#EF444415',
+            border: `1px solid ${isPassing ? `${color}40` : '#EF444440'}`,
+            minWidth: 24, textAlign: 'center', display: 'inline-block'
+        }}>
+            {grade}
+        </span>
     );
-}
+};
 
 /* ─── Single Sem Slide ───────────────────────────────────────────────────── */
 function SemSlide({
-    imageUrl, subjects, semLabel, direction, onChange,
+    imageUrl, subjects, semLabel, direction, semNum, onChange,
 }: {
     imageUrl: string | null;
     subjects: PreviewSubject[];
     semLabel: string;
     direction: number;
+    semNum?: number;
     onChange: (updated: PreviewSubject[]) => void;
 }) {
-    const [editing, setEditing] = useState<Record<number, { grade: string; subject_code: string; credits: string; points: string }>>({});
+    // Mobile detection
+    const [isMobile, setIsMobile] = useState(false);
+    const [docExpanded, setDocExpanded] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 768px)');
+        setIsMobile(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
+
+    // State: Image Viewer
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
-    const hasDraggedRef = useRef(false);
-    const mouseDownPos = useRef({ x: 0, y: 0 });
-
     const containerRef = useRef<HTMLDivElement>(null);
+    const hasDraggedRef = useRef(false);
+    const dragStartRef = useRef({ x: 0, y: 0 });
+    const scaleRef = useRef(1);
+    useEffect(() => { scaleRef.current = scale; }, [scale]);
 
-    const handleWheel = (e: React.WheelEvent) => {
-        const delta = -e.deltaY * 0.001;
-        const newScale = Math.min(Math.max(scale + delta, 0.4), 4);
-        setScale(newScale);
-    };
+    // State: Row Editing
+    const [editing, setEditing] = useState<Record<number, PreviewSubject>>({});
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        mouseDownPos.current = { x: e.clientX, y: e.clientY };
-        hasDraggedRef.current = false;
-        if (scale <= 1) return;
-        setIsDragging(true);
-        setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const dx = Math.abs(e.clientX - mouseDownPos.current.x);
-        const dy = Math.abs(e.clientY - mouseDownPos.current.y);
-        if (dx > 3 || dy > 3) hasDraggedRef.current = true;
-
-        if (!isDragging) return;
-        setPosition({
-            x: e.clientX - dragStart.x,
-            y: e.clientY - dragStart.y
-        });
-    };
-
-    const handleMouseUp = () => setIsDragging(false);
-
+    // Handlers: Image Zoom
     const resetZoom = () => {
         setScale(1);
         setPosition({ x: 0, y: 0 });
     };
 
     const toggleZoom = () => {
-        if (scale !== 1) resetZoom();
+        if (scale > 1) resetZoom();
         else setScale(2);
     };
 
-    const startEdit = (idx: number, s: PreviewSubject) =>
-        setEditing(p => ({
-            ...p,
-            [idx]: {
-                grade: s.grade,
-                subject_code: s.subject_code,
-                credits: String(s.credits ?? ''),
-                points: String((GP[s.grade] ?? 0) * (s.credits ?? 0)),
-            }
-        }));
+    // Wheel interaction with passive:false listener for UX-friendly zoom/pan
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
 
-    const cancelEdit = (idx: number) =>
-        setEditing(p => { const n = { ...p }; delete n[idx]; return n; });
+        const onWheel = (e: WheelEvent) => {
+            // Always keep wheel interaction inside the preview area
+            e.preventDefault();
+
+            // Shift + wheel can pan when zoomed in
+            if (e.shiftKey && scaleRef.current > 1) {
+                setPosition(prev => ({
+                    x: prev.x - e.deltaY,
+                    y: prev.y,
+                }));
+                return;
+            }
+
+            // Natural wheel zoom without requiring Ctrl key
+            const delta = -e.deltaY * 0.0035;
+            setScale(prev => Math.min(Math.max(1, prev + delta), 4));
+        };
+
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (scale > 1) {
+            setIsDragging(true);
+            hasDraggedRef.current = false;
+            dragStartRef.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+            e.stopPropagation();
+        }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (isDragging && scale > 1) {
+            hasDraggedRef.current = true;
+            setPosition({
+                x: e.clientX - dragStartRef.current.x,
+                y: e.clientY - dragStartRef.current.y
+            });
+        }
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        // Keep click suppressed right after a drag, then allow future click-to-zoom.
+        setTimeout(() => {
+            hasDraggedRef.current = false;
+        }, 0);
+    };
+
+    // Handlers: Row Editing
+    const startEdit = (idx: number, subject: PreviewSubject) => {
+        setEditing(prev => ({ ...prev, [idx]: { ...subject } }));
+    };
+
+    const cancelEdit = (idx: number) => {
+        setEditing(prev => {
+            const next = { ...prev };
+            delete next[idx];
+            return next;
+        });
+    };
 
     const saveEdit = (idx: number) => {
-        const ed = editing[idx]; if (!ed) return;
-        const grade = ed.grade.toUpperCase().trim();
+        const edited = editing[idx];
+        if (!edited) return;
 
-        const enteredCredits = Number(ed.credits);
-        const safeCredits = Number.isFinite(enteredCredits) && enteredCredits >= 0 ? enteredCredits : 0;
-        // Credits must remain authoritative. Points is always derived from Grade x Credits.
-        // This prevents impossible credit values such as 3.75 for fixed-credit subjects.
-        const credits = safeCredits;
+        const newSubjects = [...subjects];
+        // Ensure credits is number
+        if (typeof edited.credits === 'string') {
+            edited.credits = Number(edited.credits) || 0;
+        }
+        newSubjects[idx] = edited;
+        onChange(newSubjects);
 
-        const updated = subjects.map((s, i) => i === idx
-            ? {
-                ...s,
-                grade,
-                subject_code: ed.subject_code.toUpperCase().trim() || s.subject_code,
-                credits,
-            }
-            : s,
-        );
-        onChange(updated);
         cancelEdit(idx);
     };
 
     const addRow = () => {
-        const newS: PreviewSubject = { subject_code: 'NEW101', grade: 'O', credits: 3 };
+        const newS: PreviewSubject = {
+            subject_code: 'NEW101',
+            grade: 'O',
+            credits: 3,
+            original_semester: semNum || undefined
+        };
         const updated = [...subjects, newS];
         onChange(updated);
         setTimeout(() => startEdit(updated.length - 1, newS), 50);
@@ -207,12 +250,178 @@ function SemSlide({
         cancelEdit(idx);
     };
 
+    const iconBtn = (color: string) => ({
+        padding: '4px',
+        borderRadius: 4,
+        border: 'none',
+        background: 'transparent',
+        color,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'background 0.2s',
+    });
+
     const slideVariants = {
         enter: (d: number) => ({ x: d > 0 ? '60%' : '-60%', opacity: 0 }),
         center: { x: 0, opacity: 1 },
         exit: (d: number) => ({ x: d > 0 ? '-60%' : '60%', opacity: 0 }),
     };
 
+    if (isMobile) {
+        return (
+            <motion.div
+                key={semLabel}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter" animate="center" exit="exit"
+                transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+                style={{ display: 'flex', flexDirection: 'column', flex: 1, background: '#FFFDF9', overflow: 'hidden' }}
+            >
+                {/* ── Mobile: Collapsible Document Strip ── */}
+                {imageUrl && (
+                    <div style={{ margin: '8px 12px', borderRadius: 12, border: '1px solid #F7C59F', background: '#FFF8F0', overflow: 'hidden' }}>
+                        <button
+                            onClick={() => setDocExpanded(!docExpanded)}
+                            style={{
+                                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer',
+                                fontFamily: 'Outfit', fontSize: 13, fontWeight: 700, color: '#1A1A2E',
+                            }}
+                        >
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <FiFileText size={15} style={{ color: '#D4500A' }} /> {semLabel}
+                            </span>
+                            <span style={{ fontSize: 16, color: '#B2A49A', transition: 'transform 0.2s', transform: docExpanded ? 'rotate(180deg)' : 'rotate(0)' }}>▾</span>
+                        </button>
+                        <AnimatePresence>
+                            {docExpanded && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.25 }}
+                                    style={{ overflow: 'hidden', padding: '0 12px 12px' }}
+                                >
+                                    <img
+                                        src={imageUrl} alt={semLabel} draggable={false}
+                                        style={{ width: '100%', maxHeight: 240, objectFit: 'contain', borderRadius: 8, border: '1px solid #FDE8D8' }}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                )}
+
+                {/* ── Mobile: Subject Count ── */}
+                <div style={{ padding: '8px 16px 4px', fontSize: 12, fontWeight: 700, color: '#B2A49A', fontFamily: 'Outfit' }}>
+                    {subjects.length} subjects detected
+                </div>
+
+                {/* ── Mobile: Full-Width Subject Rows ── */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '0 4px' }}>
+                    <AnimatePresence initial={false}>
+                        {subjects.map((subj, idx) => {
+                            const isEditingRow = !!editing[idx];
+                            const confNum = typeof subj.confidence === 'number' ? subj.confidence : (subj.confidence === 'low' ? 0.6 : 0.95);
+                            const isLow = confNum < 0.7;
+                            const needsReview = !!subj.review_required || isLow;
+
+                            return (
+                                <motion.div
+                                    key={idx} layout
+                                    initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.18 }}
+                                    style={{
+                                        padding: '14px 16px', minHeight: 56,
+                                        borderBottom: '1px solid #F5EFE8',
+                                        borderLeft: needsReview ? '3px solid #EF4444' : '3px solid transparent',
+                                        background: isEditingRow ? 'rgba(212,80,10,0.03)' : 'transparent',
+                                    }}
+                                >
+                                    {isEditingRow ? (
+                                        /* ── Mobile Edit Mode ── */
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                            <div style={{ display: 'flex', gap: 8 }}>
+                                                <input autoFocus value={editing[idx].subject_code}
+                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], subject_code: e.target.value.toUpperCase() } }))}
+                                                    style={{ flex: 2, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px 12px', fontSize: 14, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF' }}
+                                                />
+                                                <select value={editing[idx].grade}
+                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], grade: e.target.value } }))}
+                                                    style={{ flex: 1, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px', fontSize: 13, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF' }}
+                                                >
+                                                    {VALID_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                                                </select>
+                                                <input value={editing[idx].credits} inputMode="decimal"
+                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], credits: e.target.value } }))}
+                                                    style={{ width: 48, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px', fontSize: 13, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF', textAlign: 'center' }}
+                                                />
+                                            </div>
+                                            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                                                <button onClick={() => saveEdit(idx)} style={{ ...iconBtn('#059669'), padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700 }}><FiCheck size={14} /> Save</button>
+                                                <button onClick={() => cancelEdit(idx)} style={{ ...iconBtn('#9CA3AF'), padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700 }}><FiX size={14} /></button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        /* ── Mobile Display Mode ── */
+                                        <div onClick={() => startEdit(idx, subj)} style={{ cursor: 'pointer' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                    <span style={{ fontSize: 12, fontWeight: 700, color: '#A8A29E', fontFamily: 'Outfit', width: 24 }}>
+                                                        {String(idx + 1).padStart(2, '0')}
+                                                    </span>
+                                                    <span style={{ fontSize: 16, fontWeight: 600, color: '#0F0A00', fontFamily: 'Outfit', letterSpacing: '0.02em' }}>
+                                                        {subj.subject_code}
+                                                    </span>
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    <GradePill grade={subj.grade} />
+                                                    <span style={{ fontSize: 14, fontWeight: 600, color: '#78716C', fontFamily: 'Outfit', marginLeft: 4 }}>
+                                                        {subj.credits ?? '—'}
+                                                    </span>
+                                                    <button onClick={(e) => { e.stopPropagation(); removeRow(idx); }}
+                                                        style={{ background: 'none', border: 'none', color: '#D1D5DB', padding: 4, cursor: 'pointer', display: 'flex' }}>
+                                                        <FiTrash2 size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {/* Inline cleared badge */}
+                                            {(subj.cleared_in_semester || subj.overridden_by_revaluation) && (
+                                                <div style={{ marginTop: 2, marginLeft: 34, fontSize: 12, color: '#059669', fontWeight: 600, fontFamily: 'Outfit', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                    {subj.cleared_in_semester && <span>✓ arrear · cleared Sem {subj.cleared_in_semester}</span>}
+                                                    {subj.overridden_by_revaluation && <span style={{ color: '#7C3AED' }}>REV {subj.main_grade} → {subj.grade}</span>}
+                                                </div>
+                                            )}
+                                            {needsReview && (
+                                                <div style={{ marginTop: 2, marginLeft: 34, fontSize: 11, color: '#EF4444', fontWeight: 700, fontFamily: 'Outfit', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                    <FiAlertTriangle size={11} /> Needs review
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
+
+                {/* ── Mobile: Add Subject ── */}
+                <div style={{ padding: '8px 16px', borderTop: '1px solid #F5EFE8' }}>
+                    <button onClick={addRow} style={{
+                        display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 12,
+                        border: '1.5px dashed rgba(212,80,10,0.3)', background: 'transparent', cursor: 'pointer',
+                        fontSize: 13, fontWeight: 700, color: '#D4500A', fontFamily: 'Outfit', width: '100%', justifyContent: 'center',
+                    }}>
+                        <FiPlus size={15} /> Add subject
+                    </button>
+                </div>
+            </motion.div>
+        );
+    }
+
+    /* ── Desktop Layout (unchanged) ── */
     return (
         <motion.div
             key={semLabel}
@@ -275,7 +484,6 @@ function SemSlide({
                     {/* scrollable image area */}
                     <div
                         ref={containerRef}
-                        onWheel={handleWheel}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
                         onMouseUp={handleMouseUp}
@@ -623,7 +831,7 @@ function iconBtn(color: string) {
 }
 
 /* ─── Main Component ─────────────────────────────────────────────────────── */
-export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }: PreviewSectionProps) {
+export default function PreviewSection({ imageUrls, ocrData, fileSemesters, onConfirm, onBack }: PreviewSectionProps) {
     /*
       A single ocrData object covers all subjects for potentially multiple sems.
       We treat each marksheet image as one "slide" — if only one image, one slide.
@@ -632,6 +840,16 @@ export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }
       The user confirms the whole set on the final slide.
     */
     const totalSlides = Math.max(imageUrls.length, 1);
+
+    // Mobile detection
+    const [isMobileMain, setIsMobileMain] = useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 768px)');
+        setIsMobileMain(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setIsMobileMain(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
 
     // Per-slide subject arrays — prioritising exact mapping from OCR
     const [slideSubjects, setSlideSubjects] = useState<PreviewSubject[][]>(() => {
@@ -648,10 +866,13 @@ export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }
     });
 
     const [currentIdx, setCurrentIdx] = useState(0);
-    const [direction, setDirection]   = useState(1);
-    const [skipped, setSkipped]       = useState<Set<number>>(new Set());
+    const [direction, setDirection] = useState(1);
+    const [skipped, setSkipped] = useState<Set<number>>(new Set());
 
-    const semLabel = `Sem ${currentIdx + 1} of ${totalSlides}`;
+    const currentSemNum = fileSemesters?.[currentIdx];
+    const semLabel = currentSemNum
+        ? `Semester ${currentSemNum}`
+        : `Sem ${currentIdx + 1} of ${totalSlides}`;
     const curSubjects = slideSubjects[currentIdx] || [];
     const gpa = calcGPA(curSubjects);
     const issues = hasIssues(curSubjects);
@@ -696,10 +917,14 @@ export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }
             onTouchEnd={onDragEnd}
             style={{
                 display: 'flex', flexDirection: 'column',
-                minHeight: '85vh', maxWidth: 1100, margin: '0 auto',
-                background: '#FFFDF9', borderRadius: 28, overflow: 'hidden',
-                border: '1.5px solid #FDE8D8',
-                boxShadow: '0 8px 48px rgba(212,80,10,0.08)',
+                minHeight: isMobileMain ? '100vh' : '85vh',
+                maxWidth: isMobileMain ? '100%' : 1100,
+                margin: '0 auto',
+                background: '#FFFDF9',
+                borderRadius: isMobileMain ? 0 : 28,
+                overflow: 'hidden',
+                border: isMobileMain ? 'none' : '1.5px solid #FDE8D8',
+                boxShadow: isMobileMain ? 'none' : '0 8px 48px rgba(212,80,10,0.08)',
             }}
         >
             {/* ══ TOP BAR ══ */}
@@ -778,6 +1003,7 @@ export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }
                         subjects={curSubjects}
                         semLabel={semLabel}
                         direction={direction}
+                        semNum={currentSemNum}
                         onChange={updated => setSlideSubjects(prev => prev.map((s, i) => i === currentIdx ? updated : s))}
                     />
                 </AnimatePresence>
@@ -785,23 +1011,27 @@ export default function PreviewSection({ imageUrls, ocrData, onConfirm, onBack }
 
             {/* ══ BOTTOM BAR ══ */}
             <div style={{
-                padding: '16px 28px', borderTop: '1.5px solid #FDE8D8',
+                padding: isMobileMain ? '12px 16px' : '16px 28px',
+                borderTop: '1.5px solid #FDE8D8',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 background: '#FFFAF6', flexShrink: 0,
+                ...(isMobileMain ? { position: 'sticky' as const, bottom: 0, zIndex: 20, boxShadow: '0 -4px 16px rgba(0,0,0,0.06)' } : {}),
+                flexWrap: isMobileMain ? 'wrap' as const : 'nowrap' as const,
+                gap: isMobileMain ? 8 : 0,
             }}>
                 {/* GPA this sem */}
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, ...(isMobileMain ? { width: '100%', borderBottom: '1px solid #F5EFE8', paddingBottom: 8 } : {}) }}>
                     <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#B2A49A', fontFamily: 'Outfit' }}>
-                        GPA this sem
+                        GPA:
                     </span>
-                    <span style={{ fontSize: 26, fontWeight: 900, fontFamily: 'Outfit', color: '#D4500A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                    <span style={{ fontSize: isMobileMain ? 22 : 26, fontWeight: 900, fontFamily: 'Outfit', color: '#D4500A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                         {gpa ?? '—'}
                     </span>
                     <span style={{ fontSize: 11, color: '#B2A49A', fontFamily: 'Outfit' }}>/ 10</span>
                 </div>
 
                 {/* actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobileMain ? 8 : 10, ...(isMobileMain ? { width: '100%', justifyContent: 'space-between' } : {}) }}>
                     {/* prev */}
                     {currentIdx > 0 && (
                         <button
