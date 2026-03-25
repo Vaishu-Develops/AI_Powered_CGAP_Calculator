@@ -764,7 +764,7 @@ class AnnaUniversityCGPA:
                     if grade in self.PASSING_GRADES:
                         sem_total_points += (scale[grade]['points'] * credits)
             
-            sem_gpa = sem_total_points / sem_total_credits if sem_total_credits > 0 else 0.0
+            current_sem_gpa = sem_total_points / sem_total_credits if sem_total_credits > 0 else 0.0
             
             # 4. CGPA & Stats
             cgpa_total_points = 0.0
@@ -808,7 +808,11 @@ class AnnaUniversityCGPA:
             # Build semester journey metrics from real subject data (not UI-derived mocks).
             # Group by original semester and compute GPA as Σ(Ci×GPi)/ΣCi for that semester.
             sem_buckets: Dict[int, Dict[str, float]] = {}
-            for info in best_attempts.values():
+            for info in subjects_dict.values():
+                # Skip arrear subjects - they should not count toward semester GPA
+                if info.get('is_arrear', False):
+                    continue
+                    
                 orig_sem = info.get('original_semester')
                 try:
                     sem = int(orig_sem) if orig_sem is not None else int(semester)
@@ -822,22 +826,25 @@ class AnnaUniversityCGPA:
                 credits = float(info.get('credits', 3))
                 grade_points = float(scale.get(grade, {}).get('points', 0))
 
-                sem_buckets[sem]['weighted'] += grade_points * credits
-                sem_buckets[sem]['credits'] += credits
+                # Filter: only accumulate passing subjects (grade_points > 0) for semester GPA
+                # This matches the frontend logic where failures are excluded from denominator
+                if grade_points > 0:
+                    sem_buckets[sem]['weighted'] += grade_points * credits
+                    sem_buckets[sem]['credits'] += credits
 
             semester_gpas = []
             for sem in sorted(sem_buckets.keys()):
                 vals = sem_buckets[sem]
                 sem_credits = vals['credits']
-                sem_gpa = (vals['weighted'] / sem_credits) if sem_credits > 0 else 0.0
+                journey_gpa = (vals['weighted'] / sem_credits) if sem_credits > 0 else 0.0
                 semester_gpas.append({
                     'semester': sem,
-                    'gpa': round(sem_gpa, 2),
+                    'gpa': round(journey_gpa, 2),
                     'credits': round(sem_credits, 1)
                 })
             
             return {
-                'gpa': round(sem_gpa, 2),
+                'gpa': round(current_sem_gpa, 2),
                 'cgpa': round(cgpa, 2),
                 'percentage': f"{round(cgpa * 10, 1)}%",
                 'class': class_division,
