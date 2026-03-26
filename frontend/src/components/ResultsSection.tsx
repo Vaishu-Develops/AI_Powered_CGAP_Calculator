@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     FiAward,
@@ -82,6 +82,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
     const [sortConfig, setSortConfig] = useState<{ key: keyof SubjectDetail | 'code', direction: 'asc' | 'desc' } | null>(null);
     const [isSimOpen, setIsSimOpen] = useState(false);
     const [selectedSem, setSelectedSem] = useState<number | null>(null);
+    const [chartView, setChartView] = useState<'bar' | 'line' | 'radar'>('bar');
 
     const isSingle = mode === 'single_sem';
 
@@ -122,6 +123,44 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                 credits: semData[sem].credits,
             }));
     }, [data.subjects, isSingle, data.semester_info, data.semester_gpas]);
+
+    // Per-semester arrear check
+    const semHasArrears = useMemo(() => {
+        const map: Record<number, boolean> = {};
+        Object.values(data.subjects).forEach((subj: any) => {
+            const sem = subj.original_semester || data.semester_info?.semester || 1;
+            const g = String(subj.grade || '').toUpperCase();
+            if (['U', 'RA', 'SA', 'W', 'AB', 'F'].includes(g)) map[sem] = true;
+        });
+        return map;
+    }, [data.subjects, data.semester_info]);
+
+    // Chart trendline refs & state
+    const maxGpa = 10;
+    const containerRef = useRef<HTMLDivElement>(null);
+    const barRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [trendPts, setTrendPts] = useState<{ x: number; y: number }[]>([]);
+
+    const measureBars = useCallback(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const cRect = container.getBoundingClientRect();
+        const pts = barRefs.current.map((el, i) => {
+            if (!el) return { x: 0, y: 0 };
+            const r = el.getBoundingClientRect();
+            return {
+                x: r.left + r.width / 2 - cRect.left,
+                y: cRect.top + cRect.height - (cRect.height * Math.max((semesterGpas[i]?.gpa ?? 0) / maxGpa, 0.08)) - cRect.top,
+            };
+        });
+        setTrendPts(pts);
+    }, [semesterGpas, maxGpa]);
+
+    useEffect(() => {
+        const timer = setTimeout(measureBars, 1600); // after bar animation
+        window.addEventListener('resize', measureBars);
+        return () => { clearTimeout(timer); window.removeEventListener('resize', measureBars); };
+    }, [measureBars]);
 
     useEffect(() => {
         setMounted(true);
@@ -348,76 +387,130 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
             </div>
 
             {/* ── INTERACTIVE SEMESTER JOURNEY (MULTI SEM ONLY) ── */}
-            {!isSingle && semesterGpas.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.1 }}
-                    className="bg-white rounded-[40px] p-8 md:p-10 border border-[#FADFD0]/30 shadow-[0_15px_50px_-12px_rgba(210,84,25,0.03)]"
-                >
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="w-10 h-10 rounded-xl bg-[#FADFD0]/50 flex items-center justify-center text-[#D25419]">
-                                    <FiTrendingUp className="text-xl" />
+            {!isSingle && semesterGpas.length > 0 && (() => {
+                const chartH = 200;
+                const maxGpa = 10;
+                return (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.1 }}
+                        className="bg-white rounded-[40px] p-8 md:p-10 border border-[#FADFD0]/30 shadow-[0_15px_50px_-12px_rgba(210,84,25,0.03)]"
+                    >
+                        {/* Header */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                            <div>
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-10 h-10 rounded-xl bg-[#FADFD0]/50 flex items-center justify-center text-[#D25419]">
+                                        <FiTrendingUp className="text-xl" />
+                                    </div>
+                                    <h3 className="font-black text-xl text-[#38352F] tracking-tight">Semester Journey</h3>
                                 </div>
-                                <h3 className="font-black text-xl text-[#38352F] tracking-tight">Semester Journey</h3>
+                                <p className="text-sm font-medium text-[#89858E] ml-13">Visualizing your performance across terms.</p>
                             </div>
-                            <p className="text-sm font-medium text-[#89858E] ml-13">Visualizing your performance across terms.</p>
+                            {selectedSem && (
+                                <button onClick={() => setSelectedSem(null)}
+                                    className="text-[10px] font-black uppercase tracking-widest text-[#D25419] hover:bg-[#FADFD0]/40 transition-colors flex items-center gap-2 bg-[#FADFD0]/20 px-4 py-2 rounded-full border border-[#FADFD0]/50"
+                                ><FiRefreshCw /> Reset View</button>
+                            )}
                         </div>
-                        {selectedSem && (
-                            <button
-                                onClick={() => setSelectedSem(null)}
-                                className="text-[10px] font-black uppercase tracking-widest text-[#D25419] hover:bg-[#FADFD0]/40 transition-colors flex items-center gap-2 bg-[#FADFD0]/20 px-4 py-2 rounded-full border border-[#FADFD0]/50"
-                            >
-                                <FiRefreshCw /> Reset View
-                            </button>
-                        )}
-                    </div>
 
-                    <div className="flex items-end justify-between gap-3 h-48 px-2">
-                        {semesterGpas.map((item, i) => {
-                            const isSelected = selectedSem === item.sem;
-                            const heightPct = Math.max((item.gpa / 10) * 100, 10);
+                        {/* ═══ BAR CHART ═══ */}
+                        <div ref={containerRef} className="relative" style={{ height: chartH + 56 }}>
+                            {/* Bars */}
+                            <div className="flex items-end justify-between gap-3 px-2 relative" style={{ height: chartH }}>
+                                {semesterGpas.map((item, i) => {
+                                    const isSelected = selectedSem === item.sem;
+                                    const heightPct = Math.max((item.gpa / maxGpa) * 100, 8);
+                                    const hasArr = !!semHasArrears[item.sem];
+                                    const dimmed = selectedSem !== null && !isSelected;
 
-                            let barStyle = "";
-                            if (isSelected) {
-                                barStyle = "bg-gradient-to-t from-[#D25419] to-[#FAD6A5] shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)]";
-                            } else if (selectedSem === null) {
-                                if (item.gpa >= 8.5) barStyle = "bg-gradient-to-t from-[#4FA37D] to-[#A0D8B4]";
-                                else if (item.gpa >= 7.0) barStyle = "bg-gradient-to-t from-[#D25419] to-[#FAD6A5]";
-                                else barStyle = "bg-gradient-to-t from-[#89858E] to-[#C0BFC4]";
-                            } else {
-                                barStyle = "bg-[#F3F1EF]"; // Dimmed
-                            }
+                                    return (
+                                        <motion.div key={item.sem}
+                                            ref={el => { barRefs.current[i] = el; }}
+                                            initial={{ height: 0, opacity: 0 }} animate={{ height: '100%', opacity: 1 }}
+                                            transition={{ delay: 1.2 + i * 0.1 }}
+                                            className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
+                                            onClick={() => setSelectedSem(isSelected ? null : item.sem)}
+                                        >
+                                            {/* GPA floating label */}
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 1.5 + i * 0.08 }}
+                                                className={`mb-2 z-20 font-black text-[12px] px-3 py-1 rounded-full whitespace-nowrap transition-all pointer-events-none ${isSelected
+                                                    ? 'bg-[#D25419] text-white shadow-[0_4px_12px_rgba(210,84,25,0.3)]'
+                                                    : dimmed
+                                                        ? 'text-[#D1D5DB] opacity-50'
+                                                        : hasArr
+                                                            ? 'text-[#89858E] bg-[#F3F1EF]'
+                                                            : 'text-[#D25419] bg-[#FFF5EE]'
+                                                    }`}
+                                                style={{ fontFamily: 'Outfit' }}
+                                            >
+                                                {item.gpa.toFixed(2)}
+                                            </motion.div>
+                                            {/* Bar */}
+                                            <div
+                                                className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${dimmed ? 'bg-[#F3F1EF]'
+                                                    : hasArr ? 'bg-gradient-to-t from-[#B0ADA8] to-[#D6D4D0]'
+                                                        : 'bg-gradient-to-t from-[#D25419] to-[#F7C59F]'
+                                                    } ${isSelected ? 'shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)] scale-105' : 'hover:scale-[1.02]'}`}
+                                                style={{ height: `${heightPct}%`, transition: 'height 0.5s, transform 0.3s, box-shadow 0.3s' }}
+                                            >
+                                                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
 
-                            return (
-                                <motion.div
-                                    key={item.sem}
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: '100%', opacity: 1 }}
-                                    transition={{ delay: 1.2 + (i * 0.1) }}
-                                    className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
-                                    onClick={() => setSelectedSem(isSelected ? null : item.sem)}
-                                >
-                                    <div className={`absolute -top-10 ${isSelected ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'} transition-all font-black text-xs px-2 py-1 bg-[#38352F] text-white rounded-md z-10 whitespace-nowrap pointer-events-none`}>
-                                        {item.gpa.toFixed(2)}
+                            {/* Trend line — uses measured positions */}
+                            {trendPts.length > 1 && (
+                                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" style={{ overflow: 'visible' }}>
+                                    {trendPts.slice(0, -1).map((pt, i) => {
+                                        const next = trendPts[i + 1];
+                                        return (
+                                            <motion.line key={i}
+                                                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                                transition={{ delay: 1.8 + i * 0.1 }}
+                                                x1={pt.x} y1={pt.y} x2={next.x} y2={next.y}
+                                                stroke="#D25419" strokeWidth="1.5" strokeOpacity="0.3"
+                                                strokeDasharray="4 3" strokeLinecap="round"
+                                            />
+                                        );
+                                    })}
+                                    {trendPts.map((pt, i) => (
+                                        <motion.circle key={i}
+                                            initial={{ r: 0 }} animate={{ r: 3 }}
+                                            transition={{ delay: 1.9 + i * 0.08, type: 'spring', stiffness: 400 }}
+                                            cx={pt.x} cy={pt.y}
+                                            fill="#D25419" stroke="#FFF" strokeWidth="1.5"
+                                        />
+                                    ))}
+                                </svg>
+                            )}
+
+                            {/* X-axis labels */}
+                            <div className="flex justify-between gap-3 px-2 mt-3">
+                                {semesterGpas.map(item => (
+                                    <div key={item.sem} className={`flex-1 text-center text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${selectedSem === item.sem ? 'text-[#D25419]' : semHasArrears[item.sem] ? 'text-[#B0ADA8]' : 'text-[#89858E]'
+                                        }`}>
+                                        S{item.sem}{semHasArrears[item.sem] ? ' ⚠' : ''}
                                     </div>
-                                    <div
-                                        className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${barStyle}`}
-                                        style={{ height: `${heightPct}%` }}
-                                    >
-                                        <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
-                                    </div>
-                                    <div className={`mt-4 text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${isSelected ? 'text-[#D25419]' : 'text-[#89858E]'}`}>
-                                        S{item.sem}
-                                    </div>
-                                </motion.div>
-                            )
-                        })}
-                    </div>
-                </motion.div>
-            )}
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Legend */}
+                        <div className="flex items-center gap-6 mt-6 pt-4 border-t border-[#F3F1EF]">
+                            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-gradient-to-r from-[#D25419] to-[#F7C59F]" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Clean</span></div>
+                            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#B0ADA8]" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Has Arrears</span></div>
+                            <div className="flex items-center gap-2"><div className="w-6 border-t border-dashed border-[#D25419]/40" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Trend</span></div>
+                        </div>
+                    </motion.div>
+                );
+            })()}
 
             {/* ── BLOCK 2: STATS TILES ── */}
             <motion.div
@@ -616,7 +709,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                 </div>
             </motion.div>
 
-        </motion.div>
+        </motion.div >
     );
 }
 
