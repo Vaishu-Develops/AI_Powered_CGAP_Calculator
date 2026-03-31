@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import shutil
@@ -6,6 +6,9 @@ import os
 from calculator import AnnaUniversityCGPA
 from ocr_service_v3 import SevenLayerOCRService
 from curriculum_service import CurriculumService
+from sqlalchemy.orm import Session
+from database import Base, engine, get_db
+from models import User, Report, SubjectRow
 
 # Initialize App
 app = FastAPI(
@@ -13,6 +16,9 @@ app = FastAPI(
     description="API to extract grades from marksheets and calculate CGPA/GPA using production-grade 7-layer OCR pipeline.",
     version="3.0.0"
 )
+
+# Ensure tables exist for local/dev runs (safe no-op when already migrated)
+Base.metadata.create_all(bind=engine)
 
 # CORS (Allow Frontend)
 origins = [
@@ -49,6 +55,33 @@ def read_root():
 from pydantic import BaseModel
 from typing import List, Optional
 
+
+class FirebaseLoginRequest(BaseModel):
+    firebase_uid: str
+    email: str
+    name: Optional[str] = None
+
+
+class SaveSubjectRequest(BaseModel):
+    subject_code: str
+    grade: str
+    credits: float
+    original_semester: Optional[int] = None
+    is_arrear: Optional[bool] = False
+
+
+class SaveReportRequest(BaseModel):
+    firebase_uid: str
+    email: Optional[str] = None
+    name: Optional[str] = None
+    semester: int
+    regulation: str = "2021"
+    branch: str = "CSE"
+    gpa: float
+    cgpa: float
+    total_credits: float = 0
+    subjects: List[SaveSubjectRequest]
+
 class ManualSubject(BaseModel):
     subject_code: str
     grade: str
@@ -60,6 +93,167 @@ class CalculateRequest(BaseModel):
     semester: int = 1
     regulation: str = "2021"
     branch: str = "CSE"
+
+
+@app.post("/auth/firebase-login")
+def firebase_login(request: FirebaseLoginRequest, db: Session = Depends(get_db)):
+    """
+    Upsert user profile using Firebase UID from frontend auth flow.
+    Handles merging when same email logs in with different UID (rare case).
+    """
+    try:
+        uid = request.firebase_uid.strip()
+        if not uid:
+            raise HTTPException(status_code=400, detail="firebase_uid is required")
+
+        # First, try to find by firebase_uid
+        user = db.query(User).filter(User.firebase_uid == uid).first()
+        
+        if not user and request.email:
+            # If not found by UID, try to find by email (handles email-based login reconciliation)
+            user = db.query(User).filter(User.email == request.email.strip()).first()
+            if user:
+                # Update existing user's firebase_uid if it was missing or different
+                user.firebase_uid = uid
+        
+        if user:
+            # Update existing user record
+            if request.email:
+                user.email = request.email.strip()
+            if request.name:
+                user.name = request.name
+        else:
+            # Create new user
+            user = User(firebase_uid=uid, email=request.email.strip() if request.email else None, name=request.name)
+            db.add(user)
+
+        db.commit()
+        db.refresh(user)
+        return {
+            "status": "success",
+            "user": {
+                "id": user.id,
+                "firebase_uid": user.firebase_uid,
+                "email": user.email,
+                "name": user.name,
+            },
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to save user: {e}")
+
+
+@app.post("/reports/save")
+def save_report(request: SaveReportRequest, db: Session = Depends(get_db)):
+    """
+    Persist calculated report + subject rows for an authenticated Firebase user.
+    Upserts user by firebase_uid or email to handle login reconciliation.
+    """
+    try:
+        uid = request.firebase_uid.strip()
+        if not uid:
+            raise HTTPException(status_code=400, detail="firebase_uid is required")
+
+        # First, try to find by firebase_uid
+        user = db.query(User).filter(User.firebase_uid == uid).first()
+        
+        if not user and request.email:
+            # If not found by UID, try to find by email
+            user = db.query(User).filter(User.email == request.email.strip()).first()
+            if user:
+                # Update existing user's firebase_uid if missing or different
+                user.firebase_uid = uid
+        
+        if not user:
+            # Create new user
+            user = User(firebase_uid=uid, email=request.email.strip() if request.email else None, name=request.name)
+            db.add(user)
+            db.flush()
+        else:
+            # Update existing user info
+            if request.email:
+                user.email = request.email.strip()
+            if request.name:
+                user.name = request.name
+
+        inferred_semester = max(
+            [
+                int(s.original_semester)
+                for s in request.subjects
+                if s.original_semester is not None and int(s.original_semester) > 0
+            ]
+            or [int(request.semester)]
+        )
+
+        report = Report(
+            user_id=user.id,
+            semester=inferred_semester,
+            gpa=request.gpa,
+            cgpa=request.cgpa,
+            regulation=request.regulation,
+            branch=request.branch,
+            total_credits=request.total_credits,
+        )
+        db.add(report)
+        db.flush()
+
+        for subj in request.subjects:
+            grade_u = (subj.grade or "").upper()
+            subject_row = SubjectRow(
+                report_id=report.id,
+                subject_code=subj.subject_code,
+                title=None,
+                credits=subj.credits,
+                grade=grade_u,
+                original_semester=subj.original_semester,
+                is_arrear=bool(subj.is_arrear),
+                is_pass=grade_u not in {"U", "RA", "SA", "W", "AB", "F", "-"},
+            )
+            db.add(subject_row)
+
+        db.commit()
+        return {
+            "status": "success",
+            "report_id": report.id,
+            "subject_count": len(request.subjects),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to save report: {e}")
+
+
+@app.get("/reports/user/{firebase_uid}")
+def get_user_reports(firebase_uid: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if not user:
+        return {"status": "success", "reports": []}
+
+    reports = (
+        db.query(Report)
+        .filter(Report.user_id == user.id)
+        .order_by(Report.created_at.desc())
+        .all()
+    )
+    return {
+        "status": "success",
+        "reports": [
+            {
+                "id": r.id,
+                "semester": r.semester,
+                "gpa": r.gpa,
+                "cgpa": r.cgpa,
+                "branch": r.branch,
+                "regulation": r.regulation,
+                "total_credits": r.total_credits,
+                "created_at": r.created_at,
+            }
+            for r in reports
+        ],
+    }
 
 @app.post("/preview-ocr/")
 async def preview_ocr(file: UploadFile = File(...)):
@@ -179,9 +373,15 @@ async def calculate_from_data(request: CalculateRequest):
         gpa = calc_result.get('gpa', 0.0)
         cgpa = calc_result.get('cgpa', 0.0)
         details = calc_result.get('subjects', {})
-        
+
+        # For single-sem calculations, show class from semester GPA (not cumulative CGPA with arrears)
+        if not is_multi_sem_payload:
+            cgpa = gpa
+            class_div = cgpa_calculator.get_class_division(gpa, has_arrears=False)
+        else:
+            class_div = calc_result.get('class', cgpa_calculator.get_class_division(cgpa))
+
         percentage = cgpa_calculator.calculate_percentage(cgpa)
-        class_div = calc_result.get('class', cgpa_calculator.get_class_division(cgpa))
         
         return {
             "gpa": gpa,
