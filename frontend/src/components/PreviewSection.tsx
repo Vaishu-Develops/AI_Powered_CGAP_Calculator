@@ -36,7 +36,7 @@ interface PreviewSectionProps {
         confidence?: { overall?: number };
     };
     fileSemesters?: number[]; // Added to map slides to semesters
-    onConfirm: (editedSubjects: PreviewSubject[]) => void;
+    onConfirm: (editedSubjects: PreviewSubject[], selectedSemester?: number) => void;
     onBack: () => void;
 }
 
@@ -55,8 +55,12 @@ const GRADE_COLOR: Record<string, string> = {
 };
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
-function calcGPA(subjects: PreviewSubject[]) {
-    const passing = subjects.filter(s => !['U', 'RA', 'SA', 'W', '-'].includes(s.grade));
+function calcGPA(subjects: PreviewSubject[], currentSemester?: number) {
+    const currentSemSubjects = typeof currentSemester === 'number'
+        ? subjects.filter(s => Number((s as any).original_semester || (s as any).semester || currentSemester) === currentSemester)
+        : subjects;
+
+    const passing = currentSemSubjects.filter(s => !['U', 'RA', 'SA', 'W', '-'].includes(s.grade));
     const tw = passing.reduce((a, s) => a + (GP[s.grade] ?? 0) * (s.credits ?? 0), 0);
     const tc = passing.reduce((a, s) => a + (s.credits ?? 0), 0);
     return tc > 0 ? (tw / tc).toFixed(2) : null;
@@ -223,10 +227,13 @@ function SemSlide({
         if (!edited) return;
 
         const newSubjects = [...subjects];
-        // Ensure credits is number
+        // Ensure numeric fields are normalized before saving edits.
         if (typeof edited.credits === 'string') {
             edited.credits = Number(edited.credits) || 0;
         }
+        const parsedSem = Number((edited as any).original_semester);
+        (edited as any).original_semester = parsedSem > 0 ? Math.floor(parsedSem) : undefined;
+
         newSubjects[idx] = edited;
         onChange(newSubjects);
 
@@ -354,6 +361,15 @@ function SemSlide({
                                                 >
                                                     {VALID_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
                                                 </select>
+                                                <input
+                                                    value={editing[idx].original_semester ?? ''}
+                                                    inputMode="numeric"
+                                                    min={1}
+                                                    max={8}
+                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], original_semester: e.target.value } as any }))}
+                                                    title="Semester"
+                                                    style={{ width: 52, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px', fontSize: 13, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF', textAlign: 'center' }}
+                                                />
                                                 <input value={editing[idx].credits} inputMode="decimal"
                                                     onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], credits: e.target.value } }))}
                                                     style={{ width: 48, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px', fontSize: 13, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF', textAlign: 'center' }}
@@ -641,17 +657,34 @@ function SemSlide({
 
                                     {/* code */}
                                     {isEditing ? (
-                                        <input
-                                            autoFocus
-                                            value={editing[idx].subject_code}
-                                            onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], subject_code: e.target.value.toUpperCase() } }))}
-                                            style={{
-                                                border: '1.5px solid #FDE8D8', borderRadius: 6,
-                                                padding: '3px 8px', fontSize: 13, fontWeight: 800,
-                                                fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
-                                                width: '100%', background: '#FFF',
-                                            }}
-                                        />
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+                                            <input
+                                                autoFocus
+                                                value={editing[idx].subject_code}
+                                                onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], subject_code: e.target.value.toUpperCase() } }))}
+                                                style={{
+                                                    border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                    padding: '3px 8px', fontSize: 13, fontWeight: 800,
+                                                    fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                    width: '100%', background: '#FFF',
+                                                }}
+                                            />
+                                            <input
+                                                value={editing[idx].original_semester ?? ''}
+                                                inputMode="numeric"
+                                                min={1}
+                                                max={8}
+                                                title="Semester"
+                                                onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], original_semester: e.target.value } as any }))}
+                                                style={{
+                                                    width: 42,
+                                                    border: '1.5px solid #FDE8D8', borderRadius: 6,
+                                                    padding: '3px 6px', fontSize: 12, fontWeight: 800,
+                                                    fontFamily: 'Outfit', color: '#D4500A', outline: 'none',
+                                                    background: '#FFF', textAlign: 'center',
+                                                }}
+                                            />
+                                        </div>
                                     ) : (
                                         <span style={{ fontSize: 13, fontWeight: 800, color: '#1A1A2E', fontFamily: 'Outfit', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 5 }}>
                                             {subj.subject_code}
@@ -868,13 +901,46 @@ export default function PreviewSection({ imageUrls, ocrData, fileSemesters, onCo
     const [currentIdx, setCurrentIdx] = useState(0);
     const [direction, setDirection] = useState(1);
     const [skipped, setSkipped] = useState<Set<number>>(new Set());
+    const [editingSemester, setEditingSemester] = useState(false);
+    const [tempSem, setTempSem] = useState<string>('');
 
-    const currentSemNum = fileSemesters?.[currentIdx];
-    const semLabel = currentSemNum
-        ? `Semester ${currentSemNum}`
-        : `Sem ${currentIdx + 1} of ${totalSlides}`;
     const curSubjects = slideSubjects[currentIdx] || [];
-    const gpa = calcGPA(curSubjects);
+    
+    // Derive current semester from subjects on the slide (most common, or max if varied)
+    const semestersInSlide = curSubjects
+        .map(subj => Number(subj.original_semester || subj.semester || currentIdx + 1))
+        .filter(s => s > 0);
+    const currentSemNum = semestersInSlide.length > 0
+        ? Math.max(...semestersInSlide)  // Use max to handle mixed semesters
+        : fileSemesters?.[currentIdx] || (currentIdx + 1);
+    
+    const semLabel = `Semester ${currentSemNum}`;
+
+    const handleSemesterSave = () => {
+        const newSem = Number(tempSem);
+        if (newSem > 0 && newSem <= 8) {
+            // Update all subjects on current slide to have new semester
+            setSlideSubjects(prev => prev.map((subjList, idx) => {
+                if (idx === currentIdx) {
+                    return subjList.map(subj => ({
+                        ...subj,
+                        original_semester: newSem,
+                        semester: newSem,
+                        home_semester: newSem,
+                    }));
+                }
+                return subjList;
+            }));
+        }
+        setEditingSemester(false);
+        setTempSem('');
+    };
+
+    const handleSemesterClick = () => {
+        setTempSem(String(currentSemNum || 1));
+        setEditingSemester(true);
+    };
+    const gpa = calcGPA(curSubjects, currentSemNum);
     const issues = hasIssues(curSubjects);
 
     const go = (delta: number) => {
@@ -897,7 +963,7 @@ export default function PreviewSection({ imageUrls, ocrData, fileSemesters, onCo
 
     const confirmAll = () => {
         const all = slideSubjects.flat();
-        onConfirm(all);
+        onConfirm(all, currentSemNum);
     };
 
     const isLast = currentIdx === totalSlides - 1;
@@ -984,13 +1050,90 @@ export default function PreviewSection({ imageUrls, ocrData, fileSemesters, onCo
                             <FiAlertTriangle size={11} /> Needs review
                         </span>
                     )}
-                    <span style={{
-                        fontSize: 12, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A',
-                        background: 'rgba(212,80,10,0.08)', borderRadius: 999, padding: '4px 14px',
-                        border: '1px solid rgba(212,80,10,0.15)',
-                    }}>
-                        {semLabel}
-                    </span>
+                    {editingSemester ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <input
+                                autoFocus
+                                type="number"
+                                min={1}
+                                max={8}
+                                value={tempSem}
+                                onChange={e => setTempSem(e.target.value)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter') handleSemesterSave();
+                                    if (e.key === 'Escape') { setEditingSemester(false); setTempSem(''); }
+                                }}
+                                style={{
+                                    width: 50,
+                                    border: '1.5px solid #D4500A',
+                                    borderRadius: 6,
+                                    padding: '4px 8px',
+                                    fontSize: 12,
+                                    fontWeight: 800,
+                                    fontFamily: 'Outfit',
+                                    color: '#D4500A',
+                                    outline: 'none',
+                                    background: '#FFF',
+                                    textAlign: 'center',
+                                }}
+                            />
+                            <button
+                                onClick={handleSemesterSave}
+                                style={{
+                                    padding: '4px 10px',
+                                    borderRadius: 6,
+                                    border: '1px solid #059669',
+                                    background: '#059669',
+                                    color: 'white',
+                                    fontFamily: 'Outfit',
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <FiCheck size={13} />
+                            </button>
+                            <button
+                                onClick={() => { setEditingSemester(false); setTempSem(''); }}
+                                style={{
+                                    padding: '4px 10px',
+                                    borderRadius: 6,
+                                    border: '1px solid #EF4444',
+                                    background: '#EF4444',
+                                    color: 'white',
+                                    fontFamily: 'Outfit',
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <FiX size={13} />
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={handleSemesterClick}
+                            style={{
+                                fontSize: 12, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A',
+                                background: 'rgba(212,80,10,0.08)', borderRadius: 999, padding: '4px 14px',
+                                border: '1px solid rgba(212,80,10,0.15)',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s',
+                            }}
+                            onMouseEnter={e => {
+                                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(212,80,10,0.14)';
+                            }}
+                            onMouseLeave={e => {
+                                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(212,80,10,0.08)';
+                            }}
+                        >
+                            {semLabel}
+                        </button>
+                    )}
                 </div>
             </div>
 
