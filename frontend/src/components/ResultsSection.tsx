@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import {
     FiAward,
@@ -56,6 +57,7 @@ interface ResultsSectionProps {
         semester_info?: { semester?: number; regulation?: string };
     };
     onReset: () => void;
+    onBackToPreview?: () => void;
     mode?: 'single_sem' | 'multi_sem';
     context?: any;
 }
@@ -85,7 +87,8 @@ function sanitizeClassLabel(value: string | undefined | null): string {
         .trim();
 }
 
-export default function ResultsSection({ data, onReset, mode = 'single_sem', context }: ResultsSectionProps) {
+export default function ResultsSection({ data, onReset, onBackToPreview, mode = 'single_sem', context }: ResultsSectionProps) {
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof SubjectDetail | 'code', direction: 'asc' | 'desc' } | null>(null);
     const [isSimOpen, setIsSimOpen] = useState(false);
@@ -222,28 +225,72 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
         return entries;
     }, [data.subjects, sortConfig, selectedSem, data.semester_info]);
 
+    const failSet = useMemo(() => new Set(['U', 'RA', 'AB', 'W', 'SA', 'F', '-']), []);
+
+    const singleActiveSemester = useMemo(() => {
+        if (!isSingle) return null;
+        const fromInfo = Number(data.semester_info?.semester || 0);
+        if (fromInfo > 0) return fromInfo;
+
+        const allSems = Object.values(data.subjects || {})
+            .map((s: any) => Number(s.original_semester || 0))
+            .filter((s: number) => s > 0);
+        return allSems.length ? Math.max(...allSems) : 1;
+    }, [isSingle, data.semester_info, data.subjects]);
+
+    const singleSemEntries = useMemo(() => {
+        if (!isSingle) return [] as Array<[string, SubjectDetail]>;
+        const sem = Number(singleActiveSemester || 1);
+        return Object.entries(data.subjects || {}).filter(([_, subj]) =>
+            Number((subj as any).original_semester || sem) === sem
+        );
+    }, [isSingle, singleActiveSemester, data.subjects]);
+
+    const singleSemCreditsEarned = useMemo(() => {
+        if (!isSingle) return 0;
+        return singleSemEntries.reduce((sum, [_, subj]) => {
+            const g = String(subj.grade || '').toUpperCase();
+            const cr = Number(subj.credits || 0);
+            if (!failSet.has(g) && cr > 0) return sum + cr;
+            return sum;
+        }, 0);
+    }, [isSingle, singleSemEntries, failSet]);
+
     const highestGrade = useMemo(() => {
         let maxGradePoints = -1;
         let count = 0;
         let topGrade = 'C';
 
-        Object.values(data.subjects).forEach((d) => {
-            if (selectedSem !== null && (d.original_semester || data.semester_info?.semester || 1) !== selectedSem) return;
-            if (d.grade_points > maxGradePoints) {
-                maxGradePoints = d.grade_points;
-                topGrade = d.grade;
+        const source: SubjectDetail[] = selectedSem !== null
+            ? subjectEntries.map(([_, subj]) => subj)
+            : isSingle
+                ? singleSemEntries.map(([_, subj]) => subj)
+                : Object.values(data.subjects || {});
+
+        source.forEach((d) => {
+            const g = String(d.grade || '').toUpperCase();
+            if (failSet.has(g)) return;
+
+            const gp = Number(d.grade_points ?? GP_MAP[g] ?? 0);
+            if (gp > maxGradePoints) {
+                maxGradePoints = gp;
+                topGrade = String(d.grade || 'C').toUpperCase();
                 count = 1;
-            } else if (d.grade_points === maxGradePoints) {
+            } else if (gp === maxGradePoints) {
                 count++;
             }
         });
+
+        if (maxGradePoints < 0 || count === 0) return '-';
         return `${topGrade} × ${count}`;
-    }, [data.subjects, selectedSem, data.semester_info]);
+    }, [data.subjects, selectedSem, data.semester_info, subjectEntries, isSingle, singleSemEntries, failSet]);
 
     const currentArrearsCount = useMemo(() => {
-        const failSet = new Set(['U', 'RA', 'AB', 'W', 'SA', 'F']);
+        if (isSingle) {
+            return singleSemEntries.filter(([_, s]) => failSet.has(String(s.grade || '').toUpperCase())).length;
+        }
         return Object.values(data.subjects || {}).filter((s) => failSet.has(String(s.grade || '').toUpperCase())).length;
-    }, [data.subjects]);
+    }, [data.subjects, isSingle, singleSemEntries, failSet]);
 
     const primaryValue = isSingle ? data.gpa : data.cgpa;
     const classLabel = sanitizeClassLabel(data.class);
@@ -727,7 +774,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
             >
                 {isSingle ? (
                     <>
-                        <StatTile label="Credits Earned" value={data.semester_credits?.toString() || '-'} sub="This Semester" />
+                        <StatTile label="Credits Earned" value={singleSemCreditsEarned.toString()} sub="This Semester" />
                         <StatTile label="Subjects" value={data.current_semester_subjects?.toString() || data.total_subjects.toString()} sub="Total Attempted" />
                         <StatTile label="Arrears" value={currentArrearsCount.toString()} sub={currentArrearsCount ? 'Needs Attention' : 'Clean!'} highlight={currentArrearsCount === 0 ? 'success' : 'danger'} />
                         <StatTile label="Highest" value={highestGrade} sub="Grade Achieved" highlight="primary" />
@@ -899,6 +946,12 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                 )}
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    {onBackToPreview && (
+                        <button onClick={onBackToPreview} className="px-8 py-4 bg-bg-card border border-border text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
+                            <FiArrowLeft className="text-lg" /> Back To Preview
+                        </button>
+                    )}
+
                     {isSingle && (context?.files?.length === 1 || Object.keys(context?.gradesData || {}).length === 1) && (
                         <button onClick={onReset} className="px-8 py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
                             <FiPlusSquare className="text-lg" /> Add Another Semester
@@ -913,7 +966,7 @@ export default function ResultsSection({ data, onReset, mode = 'single_sem', con
                         <FiDownload className="text-lg" /> {isExporting ? 'Exporting...' : 'Export PDF'}
                     </button>
 
-                    <button onClick={onReset} className="px-8 py-4 bg-bg-card border border-border text-text-muted hover:text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
+                    <button onClick={() => router.push('/home')} className="px-8 py-4 bg-bg-card border border-border text-text-muted hover:text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors">
                         <FiHome className="text-lg" /> Go Home
                     </button>
                 </div>
