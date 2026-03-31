@@ -9,6 +9,7 @@ import UploadSection from '@/components/UploadSection';
 import ResultsSection from '@/components/ResultsSection';
 import PreviewSection from '@/components/PreviewSection';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import { useUser } from '@/context/UserContext';
 import ManualEntryGrid from '@/components/ManualEntryGrid';
 import SemesterSelector, { SemSlot } from '@/components/SemesterSelector';
 import SlotMismatchModal, { SlotMismatch } from '@/components/SlotMismatchModal';
@@ -46,7 +47,9 @@ function normalizeSubjectsByHome(rawSubjectsPerFile: any[][], fileSems: number[]
       if (!code) continue;
 
       const credits = typeof raw.credits === 'number' ? raw.credits : null;
-      const semFromRow = Number(raw.original_semester || raw.semester || fileSems[slideIdx] || 0) || fileSems[slideIdx] || 0;
+      // In slot-based multi-sem flow, fileSems carries the user-selected semester.
+      // Always prefer that over OCR-detected semester to avoid false Sem-1 tagging.
+      const semFromRow = Number(fileSems[slideIdx] || raw.original_semester || raw.semester || 0) || 0;
       // Key by code only; we resolve credits compatibility below to handle OCR misses
       const key = code;
 
@@ -130,6 +133,7 @@ function normalizeSubjectsByHome(rawSubjectsPerFile: any[][], fileSems: number[]
 export default function InputPage() {
   const router = useRouter();
   const { state } = useCalcFlow();
+  const { user, isDemo } = useUser();
 
   // Enforce flow: If user bypassed steps, redirect to start
   useEffect(() => {
@@ -152,6 +156,49 @@ export default function InputPage() {
   const [fileSemestersState, setFileSemestersState] = useState<number[]>([]); // New state for PreviewSection
   const filesRef = useRef<File[]>([]);
 
+  const persistReport = async (resultData: any) => {
+    if (!user || isDemo) return;
+
+    const subjects = Object.entries(resultData?.subjects || {}).map(([code, subj]: [string, any]) => ({
+      subject_code: String(code || '').toUpperCase(),
+      grade: String(subj?.grade || '').toUpperCase(),
+      credits: Number(subj?.credits || 0),
+      original_semester: Number(subj?.original_semester || resultData?.semester_info?.semester || 1),
+      is_arrear: Boolean(subj?.is_arrear),
+    }));
+
+    if (subjects.length === 0) return;
+
+    const inferredSemester = subjects.reduce((maxSem, s) => {
+      const sem = Number(s.original_semester || 0);
+      return sem > maxSem ? sem : maxSem;
+    }, 0);
+
+    const payload = {
+      firebase_uid: user.id,
+      email: user.email,
+      name: user.name,
+      semester: Number(inferredSemester || resultData?.semester_info?.semester || 1),
+      regulation: String(resultData?.semester_info?.regulation || '2021'),
+      branch: String(resultData?.semester_info?.branch || 'CSE'),
+      gpa: Number(resultData?.gpa || 0),
+      cgpa: Number(resultData?.cgpa || 0),
+      total_credits: Number(resultData?.total_credits || 0),
+      subjects,
+    };
+
+    const res = await fetch('http://localhost:8000/reports/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to save report');
+    }
+  };
+
   // ── Step 1: Files Selected → Upload to /preview-ocr/ sequentially ──
   // slotMap: optional map of fileIndex → slotSem (for multi-sem mismatch detection)
   const handleFilesSelected = async (files: File[], slotMap?: number[]) => {
@@ -159,6 +206,9 @@ export default function InputPage() {
     const urls = files.map(f => URL.createObjectURL(f));
     setImageUrls(urls);
     setError(null); setResults(null); setOcrData(null);
+    setPendingOcrData(null);
+    setMismatches([]);
+    setFileSemestersState([]);
     setStage('uploading');
     setStatusMsg(`Uploading ${files.length} marksheet(s)...`);
     await sleep(300);
@@ -188,10 +238,11 @@ export default function InputPage() {
 
         const data = await res.json();
         const detectedSem: number = data.semester_info?.semester || 0;
-        if (!fileSems[i]) fileSems[i] = detectedSem || (i + 1);
+        const slotSem = slotMap?.[i] || 0;
+        fileSems[i] = slotSem || detectedSem || (i + 1);
 
         // ── Layer 2: Slot mismatch detection ──
-        if (slotMap && slotMap[i] && detectedSem > 0 && detectedSem !== slotMap[i]) {
+        if (!slotSem && slotMap && slotMap[i] && detectedSem > 0 && detectedSem !== slotMap[i]) {
           const slot = semSlots.find(s => s.sem === slotMap[i]);
           foundMismatches.push({
             slotSem: slotMap[i],
@@ -205,7 +256,14 @@ export default function InputPage() {
 
         const newSubjects = data.subjects || [];
         // Keep per-file raw extraction; we will run a home-subject normalization pass after all files are scanned.
-        rawSubjectsPerFile[i] = Array.isArray(newSubjects) ? [...newSubjects] : [];
+        rawSubjectsPerFile[i] = Array.isArray(newSubjects)
+          ? newSubjects.map((s: any) => ({
+            ...s,
+            semester: fileSems[i],
+            original_semester: fileSems[i],
+            home_semester: fileSems[i],
+          }))
+          : [];
 
         overallConfidence += data.confidence?.overall || 0;
         if (detectedSem > highestSem) {
@@ -301,6 +359,11 @@ export default function InputPage() {
       }
 
       const data = await res.json();
+      try {
+        await persistReport(data);
+      } catch (saveErr) {
+        console.error('Report save error:', saveErr);
+      }
       setResults(data);
       setStage('done');
       setStatusMsg('Done!');
@@ -311,16 +374,25 @@ export default function InputPage() {
   };
 
   // ── Step 2: Confirmed from Preview → Calculate ──
-  const handleConfirm = async (editedSubjects: any[]) => {
+  const handleConfirm = async (editedSubjects: any[], selectedSemester?: number) => {
     setStage('calculating');
     setStatusMsg('Computing CGPA...');
 
     try {
       await sleep(400);
 
+      const inferredSemFromRows = editedSubjects.reduce((maxSem: number, subj: any) => {
+        const sem = Number(subj.original_semester || subj.semester || subj.home_semester || 0);
+        return sem > maxSem ? sem : maxSem;
+      }, 0);
+
+      const effectiveSemester = Number(
+        selectedSemester || inferredSemFromRows || ocrData?.semester_info?.semester || 1
+      );
+
       const payload = {
         subjects: editedSubjects,
-        semester: ocrData?.semester_info?.semester || 1,
+        semester: effectiveSemester,
         regulation: ocrData?.semester_info?.regulation || "2021"
       };
 
@@ -336,6 +408,12 @@ export default function InputPage() {
       }
 
       const data = await res.json();
+
+      // Keep the active semester context in sync with preview edits.
+      data.semester_info = {
+        ...(data.semester_info || {}),
+        semester: effectiveSemester,
+      };
 
       // ── Compute semester_gpas on frontend using the SAME formula as Preview table ──
       // This ensures the Semester Journey chart always matches what the user saw in Preview.
@@ -400,6 +478,47 @@ export default function InputPage() {
 
       // Override backend's semester_gpas with our frontend-computed values
       data.semester_gpas = frontendSemGpas;
+
+      // For single-semester mode, force Result GPA/Class to use current semester only
+      // with the same pass-only formula used in Preview.
+      if (state.mode === 'single_sem') {
+        const currentSem = Number(effectiveSemester || 1);
+
+        const currentSemRows = editedSubjects.filter((subj) => {
+          const semTag = Number(subj.semester || subj.home_semester || subj.original_semester || currentSem);
+          return semTag === currentSem;
+        });
+
+        const semWeighted = currentSemRows.reduce((sum, subj) => {
+          const grade = String(subj.grade || '').toUpperCase();
+          const credits = Number(subj.credits || 0);
+          const gp = Number(subj.grade_points ?? GP_MAP[grade] ?? 0);
+          if (!FAIL_GRADES.has(grade) && credits > 0) return sum + (gp * credits);
+          return sum;
+        }, 0);
+
+        const semCredits = currentSemRows.reduce((sum, subj) => {
+          const grade = String(subj.grade || '').toUpperCase();
+          const credits = Number(subj.credits || 0);
+          if (!FAIL_GRADES.has(grade) && credits > 0) return sum + credits;
+          return sum;
+        }, 0);
+
+        const computedGpa = semCredits > 0 ? Math.round((semWeighted / semCredits) * 100) / 100 : 0;
+        data.gpa = computedGpa;
+        data.cgpa = computedGpa;
+
+        if (computedGpa >= 8.5) data.class = 'First Class with Distinction';
+        else if (computedGpa >= 6.5) data.class = 'First Class';
+        else if (computedGpa >= 5.0) data.class = 'Second Class';
+        else data.class = 'Fail';
+      }
+
+      try {
+        await persistReport(data);
+      } catch (saveErr) {
+        console.error('Report save error:', saveErr);
+      }
 
       setResults(data);
       setStage('done');
@@ -631,7 +750,13 @@ export default function InputPage() {
         )}
 
         {stage === 'done' && results && (
-          <ResultsSection data={results} onReset={handleReset} mode={(state.mode as 'single_sem' | 'multi_sem') || 'single_sem'} context={state} />
+          <ResultsSection
+            data={results}
+            onReset={handleReset}
+            onBackToPreview={() => setStage('preview')}
+            mode={(state.mode as 'single_sem' | 'multi_sem') || 'single_sem'}
+            context={state}
+          />
         )}
       </div>
     </main>
