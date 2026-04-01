@@ -230,14 +230,57 @@ def save_report(request: SaveReportRequest, db: Session = Depends(get_db)):
 def get_user_reports(firebase_uid: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
     if not user:
-        return {"status": "success", "reports": []}
+        return {"status": "success", "reports": [], "semesters_present": [], "semester_gpas": []}
 
     reports = (
         db.query(Report)
         .filter(Report.user_id == user.id)
-        .order_by(Report.created_at.desc())
+        .order_by(Report.created_at.desc(), Report.id.desc())
         .all()
     )
+
+    # Compatibility layer: derive semester presence + GPA from subject rows.
+    # This recovers multi-sem uploads that were previously saved under a single report semester.
+    latest_by_sem_code = {}
+    for report in reports:
+        for subj in report.subjects:
+            sem = int(subj.original_semester or 0)
+            code = (subj.subject_code or "").upper().strip()
+            if sem <= 0 or not code:
+                continue
+            key = (sem, code)
+            if key not in latest_by_sem_code:
+                latest_by_sem_code[key] = subj
+
+    semester_buckets = {}
+    for (sem, _), subj in latest_by_sem_code.items():
+        if sem not in semester_buckets:
+            semester_buckets[sem] = {"weighted": 0.0, "credits": 0.0}
+
+        grade_u = str(subj.grade or "").upper()
+        credits = float(subj.credits or 0)
+        gp_map = {
+            "S": 10,
+            "O": 10,
+            "A+": 9,
+            "A": 8,
+            "B+": 7,
+            "B": 6,
+            "C": 5,
+        }
+        if grade_u in gp_map and credits > 0:
+            semester_buckets[sem]["weighted"] += gp_map[grade_u] * credits
+            semester_buckets[sem]["credits"] += credits
+
+    semester_gpas = [
+        {
+            "semester": sem,
+            "gpa": round((vals["weighted"] / vals["credits"]), 2) if vals["credits"] > 0 else 0.0,
+        }
+        for sem, vals in sorted(semester_buckets.items(), key=lambda x: x[0])
+    ]
+    semesters_present = [item["semester"] for item in semester_gpas]
+
     return {
         "status": "success",
         "reports": [
@@ -253,6 +296,135 @@ def get_user_reports(firebase_uid: str, db: Session = Depends(get_db)):
             }
             for r in reports
         ],
+        "semesters_present": semesters_present,
+        "semester_gpas": semester_gpas,
+    }
+
+
+@app.get("/reports/user/{firebase_uid}/semester/{semester}")
+def get_user_semester_report(firebase_uid: str, semester: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if not user:
+        return {"status": "success", "report": None}
+
+    report = (
+        db.query(Report)
+        .filter(Report.user_id == user.id, Report.semester == semester)
+        .order_by(Report.created_at.desc(), Report.id.desc())
+        .first()
+    )
+
+    if not report:
+        return {"status": "success", "report": None}
+
+    subjects = sorted(
+        report.subjects,
+        key=lambda s: ((s.subject_code or "").upper(), s.id),
+    )
+    arrears_count = sum(1 for s in subjects if not bool(s.is_pass))
+
+    return {
+        "status": "success",
+        "report": {
+            "id": report.id,
+            "semester": report.semester,
+            "gpa": report.gpa,
+            "cgpa": report.cgpa,
+            "branch": report.branch,
+            "regulation": report.regulation,
+            "total_credits": report.total_credits,
+            "created_at": report.created_at,
+            "subject_count": len(subjects),
+            "arrears_count": arrears_count,
+            "subjects": [
+                {
+                    "id": s.id,
+                    "subject_code": s.subject_code,
+                    "credits": s.credits,
+                    "grade": s.grade,
+                    "original_semester": s.original_semester,
+                    "is_arrear": s.is_arrear,
+                    "is_pass": s.is_pass,
+                }
+                for s in subjects
+            ],
+        },
+    }
+
+
+@app.get("/reports/user/{firebase_uid}/subjects")
+def get_user_subjects(firebase_uid: str, db: Session = Depends(get_db)):
+    """
+    Returns a normalized latest snapshot of subjects per semester for a user.
+    This is used to re-run intelligence across old + new semesters and for edit-all UI.
+    """
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if not user:
+        return {"status": "success", "subjects": [], "by_semester": {}, "semester_gpas": []}
+
+    reports = (
+        db.query(Report)
+        .filter(Report.user_id == user.id)
+        .order_by(Report.created_at.desc(), Report.id.desc())
+        .all()
+    )
+
+    latest_by_sem_code = {}
+    for report in reports:
+        for subj in report.subjects:
+            sem = int(subj.original_semester or report.semester or 0)
+            code = (subj.subject_code or "").upper().strip()
+            if sem <= 0 or not code:
+                continue
+            key = (sem, code)
+            if key not in latest_by_sem_code:
+                latest_by_sem_code[key] = {
+                    "subject_code": code,
+                    "grade": str(subj.grade or "").upper(),
+                    "credits": float(subj.credits or 0),
+                    "original_semester": sem,
+                    "is_arrear": bool(subj.is_arrear),
+                    "is_pass": bool(subj.is_pass),
+                }
+
+    by_semester = {}
+    semester_buckets = {}
+    gp_map = {
+        "S": 10,
+        "O": 10,
+        "A+": 9,
+        "A": 8,
+        "B+": 7,
+        "B": 6,
+        "C": 5,
+    }
+
+    for (sem, _), subj in sorted(latest_by_sem_code.items(), key=lambda item: (item[0][0], item[0][1])):
+        if sem not in by_semester:
+            by_semester[sem] = []
+        by_semester[sem].append(subj)
+
+        if sem not in semester_buckets:
+            semester_buckets[sem] = {"weighted": 0.0, "credits": 0.0}
+        grade_u = str(subj["grade"]).upper()
+        credits = float(subj["credits"])
+        if grade_u in gp_map and credits > 0:
+            semester_buckets[sem]["weighted"] += gp_map[grade_u] * credits
+            semester_buckets[sem]["credits"] += credits
+
+    semester_gpas = [
+        {
+            "semester": sem,
+            "gpa": round((vals["weighted"] / vals["credits"]), 2) if vals["credits"] > 0 else 0.0,
+        }
+        for sem, vals in sorted(semester_buckets.items(), key=lambda x: x[0])
+    ]
+
+    return {
+        "status": "success",
+        "subjects": list(latest_by_sem_code.values()),
+        "by_semester": {str(k): v for k, v in sorted(by_semester.items(), key=lambda x: x[0])},
+        "semester_gpas": semester_gpas,
     }
 
 @app.post("/preview-ocr/")
