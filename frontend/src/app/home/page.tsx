@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
+import { useCalcFlow } from '@/context/CalcFlowContext';
 import dynamic from 'next/dynamic';
-import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle } from 'react-icons/fi';
+import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle, FiChevronDown, FiUserPlus, FiUpload, FiEdit3 } from 'react-icons/fi';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
@@ -19,6 +20,12 @@ type SavedReport = {
     created_at?: string;
 };
 
+type HomeReportsResponse = {
+    reports?: SavedReport[];
+    semesters_present?: number[];
+    semester_gpas?: Array<{ semester: number; gpa: number }>;
+};
+
 function classFromCgpa(cgpa: number): string {
     if (cgpa >= 8.5) return 'First Class with Distinction';
     if (cgpa >= 6.5) return 'First Class';
@@ -29,8 +36,12 @@ function classFromCgpa(cgpa: number): string {
 export default function HomePage() {
     const router = useRouter();
     const { user, isDemo, logout } = useUser();
+    const { resetFlow, setSource, startQuickAddFromHome, startUploadMissingFromHome, startFriendMode } = useCalcFlow();
     const [reports, setReports] = useState<SavedReport[]>([]);
+    const [semestersPresent, setSemestersPresent] = useState<number[]>([]);
+    const [semesterGpas, setSemesterGpas] = useState<Array<{ semester: number; gpa: number }>>([]);
     const [reportsLoading, setReportsLoading] = useState(false);
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
 
     useEffect(() => {
         const loadReports = async () => {
@@ -39,11 +50,15 @@ export default function HomePage() {
             try {
                 const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}`);
                 if (!res.ok) throw new Error('Failed to load reports');
-                const data = await res.json();
+                const data: HomeReportsResponse = await res.json();
                 setReports(Array.isArray(data?.reports) ? data.reports : []);
+                setSemestersPresent(Array.isArray(data?.semesters_present) ? data.semesters_present : []);
+                setSemesterGpas(Array.isArray(data?.semester_gpas) ? data.semester_gpas : []);
             } catch (err) {
                 console.error('Failed to load home reports:', err);
                 setReports([]);
+                setSemestersPresent([]);
+                setSemesterGpas([]);
             } finally {
                 setReportsLoading(false);
             }
@@ -58,8 +73,11 @@ export default function HomePage() {
         ).sort((a, b) => a - b);
 
         if (fromReports.length > 0) return fromReports;
+        if (semestersPresent.length > 0) {
+            return Array.from(new Set(semestersPresent)).sort((a, b) => a - b);
+        }
         return user?.semestersCalculated || [];
-    }, [reports, user]);
+    }, [reports, semestersPresent, user]);
 
     const latestReport = useMemo(() => {
         if (!reports.length) return null;
@@ -73,15 +91,25 @@ export default function HomePage() {
 
     const gpaBySem = useMemo(() => {
         const m: Record<number, number> = {};
+
+        // Prefer backend-computed semester snapshot first (latest normalized subjects).
+        for (const row of semesterGpas) {
+            const sem = Number(row.semester);
+            if (!Number.isFinite(sem) || sem <= 0) continue;
+            m[sem] = Number(row.gpa || 0);
+        }
+
+        // Fallback: latest report per semester, never max historical GPA.
+        // reports is loaded in descending created_at/id order.
         for (const r of reports) {
             const sem = Number(r.semester);
             if (!Number.isFinite(sem) || sem <= 0) continue;
-            if (!(sem in m) || Number(r.gpa) > Number(m[sem])) {
+            if (!(sem in m)) {
                 m[sem] = Number(r.gpa || 0);
             }
         }
         return m;
-    }, [reports]);
+    }, [reports, semesterGpas]);
 
     const latestCgpa = latestReport ? Number(latestReport.cgpa || 0) : 0;
     const latestGpa = latestReport ? Number(latestReport.gpa || 0) : 0;
@@ -101,15 +129,49 @@ export default function HomePage() {
         }
     }, [user, isDemo, router]);
 
+    const missingSems = useMemo(
+        () => [1, 2, 3, 4, 5, 6, 7, 8].filter((sem) => !activeSems.includes(sem)),
+        [activeSems]
+    );
+
     if (!user && !isDemo) {
         return null;
     }
 
     const handleStartCalc = () => {
+        resetFlow();
+        setSource('fresh');
         router.push('/calculate/who');
     };
 
+    const handleQuickAddSemester = (semester: number) => {
+        startQuickAddFromHome(semester);
+        router.push(`/calculate/add-semester/${semester}`);
+    };
+
+    const handleViewSemester = (semester: number) => {
+        router.push(`/home/semester/${semester}`);
+    };
+
+    const handleFriendCalc = () => {
+        resetFlow();
+        startFriendMode();
+        router.push('/calculate/who');
+    };
+
+    const handleUploadAllMissing = () => {
+        if (missingSems.length === 0) return;
+        startUploadMissingFromHome(missingSems);
+        router.push('/calculate/input');
+    };
+
+    const handleEditAll = () => {
+        router.push('/home/edit-all');
+    };
+
     const displayName = user?.name || 'Guest Explorer';
+    const includedSemsText = activeSems.length > 0 ? activeSems.join(', ') : 'None';
+    const missingCount = Math.max(0, 8 - activeSems.length);
 
     return (
         <main className="min-h-screen bg-bg-primary text-text-primary relative overflow-hidden font-outfit">
@@ -123,30 +185,66 @@ export default function HomePage() {
             <div className="relative z-10 max-w-[1200px] mx-auto px-6 pt-6 pb-32">
 
                 {/* Navbar */}
-                <nav className="flex justify-between items-center py-6 mb-8 border-b border-border/50">
+                <nav className="flex flex-wrap justify-between items-center gap-3 py-6 mb-8 border-b border-border/50">
                     <div className="text-xl font-black tracking-tighter cursor-pointer" onClick={() => router.push('/')}>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1">CGPA</span> Intel
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 sm:gap-4 ml-auto">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary shadow-sm">
                                 {displayName.charAt(0).toUpperCase()}
                             </div>
-                            <span className="font-bold hidden sm:block">{displayName}</span>
-                        </div>
-                        {user ? (
-                            <button onClick={() => { logout(); router.push('/'); }} className="text-sm font-bold text-text-muted hover:text-text-primary transition-colors bg-primary/5 border border-primary/10 px-4 py-2 rounded-full">
-                                Sign Out
+                            <button
+                                onClick={() => setShowProfileMenu((prev) => !prev)}
+                                className="font-bold flex items-center gap-2 min-w-0"
+                            >
+                                <span className="truncate max-w-[120px] sm:max-w-[180px]">{displayName}</span>
+                                <FiChevronDown className="w-4 h-4 text-text-muted" />
                             </button>
-                        ) : (
+                        </div>
+                        {!user && (
                             <button onClick={() => router.push('/auth')} className="text-sm font-bold text-primary border border-primary/30 px-4 py-2 rounded-full hover:bg-primary/10 transition-colors shadow-sm">
                                 Save Progress
                             </button>
                         )}
+                        {showProfileMenu && (
+                            <div className="absolute top-24 right-3 sm:right-6 md:right-0 bg-bg-card border border-border rounded-2xl p-2 w-[min(18rem,calc(100vw-1.5rem))] shadow-xl z-30">
+                                <button
+                                    onClick={() => {
+                                        setShowProfileMenu(false);
+                                        handleStartCalc();
+                                    }}
+                                    className="w-full text-left px-4 py-3 rounded-xl hover:bg-bg-card-alt font-semibold"
+                                >
+                                    + New Calculation
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowProfileMenu(false);
+                                        handleFriendCalc();
+                                    }}
+                                    className="w-full text-left px-4 py-3 rounded-xl hover:bg-bg-card-alt font-semibold flex items-center gap-2"
+                                >
+                                    <FiUserPlus className="w-4 h-4" /> Calculate for a friend
+                                </button>
+                                {user && (
+                                    <button
+                                        onClick={() => {
+                                            setShowProfileMenu(false);
+                                            logout();
+                                            router.push('/');
+                                        }}
+                                        className="w-full text-left px-4 py-3 rounded-xl hover:bg-bg-card-alt font-semibold text-text-muted"
+                                    >
+                                        Sign Out
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </nav>
 
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     {reportsLoading && (
                         <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 text-center text-text-muted font-semibold">
                             Loading your saved report data...
@@ -191,6 +289,7 @@ export default function HomePage() {
                                     {latestGpa > 0 ? latestGpa.toFixed(2) : '0.00'}
                                 </h1>
                                 <p className="text-xl font-bold uppercase tracking-widest">Semester {latestSem || activeSems[0]} GPA</p>
+                                <p className="text-xs text-text-muted font-semibold">This number is for this semester only, not overall CGPA.</p>
                                 <div className="inline-flex items-center gap-2 text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
                                     <FiAward className="w-4 h-4" /> {currentClass}
                                 </div>
@@ -206,7 +305,15 @@ export default function HomePage() {
                             </div>
 
                             {/* SECTION B - SEMESTER JOURNEY */}
-                            <JourneyRow activeSems={activeSems} gpaBySem={gpaBySem} />
+                            <JourneyRow
+                                activeSems={activeSems}
+                                gpaBySem={gpaBySem}
+                                missingSems={missingSems}
+                                onAddSemester={handleQuickAddSemester}
+                                onOpenSemester={handleViewSemester}
+                                onUploadAllMissing={handleUploadAllMissing}
+                                onEditAll={handleEditAll}
+                            />
 
                             {/* SECTION C - QUICK INSIGHTS */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -252,12 +359,18 @@ export default function HomePage() {
                             {/* SECTION A - PERFORMANCE SUMMARY */}
                             <div className="bg-bg-card border border-border p-10 md:p-14 rounded-[40px] shadow-lg relative overflow-hidden flex flex-col items-center text-center gap-4">
                                 <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-2">PERFORMANCE SUMMARY</h3>
-                                <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1 leading-none">
+                                <h1
+                                    title={`Overall CGPA based on Sem ${includedSemsText} (${activeSems.length} uploaded, ${missingCount} missing)`}
+                                    className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1 leading-none"
+                                >
                                     {latestCgpa > 0 ? latestCgpa.toFixed(2) : '0.00'}
                                 </h1>
                                 <p className="text-xl font-bold uppercase tracking-widest">CGPA so far · Sem 1 to {Math.max(0, ...activeSems)}</p>
                                 <div className="inline-flex items-center gap-2 text-primary bg-primary/10 border border-primary/20 px-4 py-2 rounded-full text-sm font-bold shadow-sm mb-6">
                                     <FiAward className="w-4 h-4" /> {currentClass}
+                                </div>
+                                <div className="text-sm font-semibold text-text-muted bg-bg-primary border border-border rounded-xl px-4 py-3">
+                                    Overall CGPA includes Sem {includedSemsText} ({activeSems.length} sems, {missingCount} missing).
                                 </div>
 
                                 {/* ASCII stylized visual progress */}
@@ -271,7 +384,15 @@ export default function HomePage() {
                             </div>
 
                             {/* SECTION B - SEMESTER JOURNEY */}
-                            <JourneyRow activeSems={activeSems} gpaBySem={gpaBySem} />
+                            <JourneyRow
+                                activeSems={activeSems}
+                                gpaBySem={gpaBySem}
+                                missingSems={missingSems}
+                                onAddSemester={handleQuickAddSemester}
+                                onOpenSemester={handleViewSemester}
+                                onUploadAllMissing={handleUploadAllMissing}
+                                onEditAll={handleEditAll}
+                            />
 
                             {/* SECTION C - INSIGHTS */}
                             <div className="px-2">
@@ -314,7 +435,10 @@ export default function HomePage() {
                             {/* SECTION A - PERFORMANCE SUMMARY */}
                             <div className="bg-gradient-to-br from-bg-card to-[#FFF0E5] border border-primary/30 p-10 md:p-14 rounded-[40px] shadow-2xl relative overflow-hidden flex flex-col items-center text-center gap-4">
                                 <h3 className="text-sm font-bold tracking-widest text-[#D4500A] uppercase mb-2 opacity-80">PERFORMANCE SUMMARY</h3>
-                                <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#D4500A] to-accent-1 leading-none drop-shadow-sm">
+                                <h1
+                                    title="Overall degree CGPA across all completed semesters"
+                                    className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#D4500A] to-accent-1 leading-none drop-shadow-sm"
+                                >
                                     {latestCgpa > 0 ? latestCgpa.toFixed(2) : '0.00'}
                                 </h1>
                                 <p className="text-xl font-bold uppercase tracking-widest text-text-primary">Final Degree CGPA</p>
@@ -331,7 +455,15 @@ export default function HomePage() {
                             </div>
 
                             {/* SECTION B - SEMESTER JOURNEY */}
-                            <JourneyRow activeSems={activeSems} gpaBySem={gpaBySem} />
+                            <JourneyRow
+                                activeSems={activeSems}
+                                gpaBySem={gpaBySem}
+                                missingSems={missingSems}
+                                onAddSemester={handleQuickAddSemester}
+                                onOpenSemester={handleViewSemester}
+                                onUploadAllMissing={handleUploadAllMissing}
+                                onEditAll={handleEditAll}
+                            />
 
                             {/* SECTION C - INSIGHTS */}
                             <div className="px-2">
@@ -368,21 +500,36 @@ export default function HomePage() {
 }
 
 // Reusable Journey Row Component representing 8 semesters
-function JourneyRow({ activeSems, gpaBySem }: { activeSems: number[]; gpaBySem: Record<number, number> }) {
-    const router = useRouter();
-    const handleAdd = () => router.push('/calculate/who');
+function JourneyRow({
+    activeSems,
+    gpaBySem,
+    missingSems,
+    onAddSemester,
+    onOpenSemester,
+    onUploadAllMissing,
+    onEditAll,
+}: {
+    activeSems: number[];
+    gpaBySem: Record<number, number>;
+    missingSems: number[];
+    onAddSemester: (sem: number) => void;
+    onOpenSemester: (sem: number) => void;
+    onUploadAllMissing: () => void;
+    onEditAll?: () => void;
+}) {
 
     return (
-        <div className="bg-bg-card border border-border p-8 rounded-[32px] overflow-x-auto shadow-sm">
+        <div className="bg-bg-card border border-border p-6 md:p-8 rounded-[32px] overflow-hidden md:overflow-x-auto shadow-sm">
             <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-8">SEMESTER JOURNEY</h3>
-            <div className="flex gap-4 min-w-max pb-4">
+            <div className="grid grid-cols-4 gap-3 md:flex md:gap-4 md:min-w-max pb-4">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => {
                     const isActive = activeSems.includes(sem);
                     return (
-                        <div key={sem} className="flex flex-col items-center gap-3">
+                        <div key={sem} className="flex flex-col items-center gap-2 md:gap-3">
                             {isActive ? (
                                 <button
-                                    title="Click to view inline data"
+                                    onClick={() => onOpenSemester(sem)}
+                                    title="Open semester details"
                                     className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 border border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary shadow-sm hover:bg-primary/20 transition-all hover:scale-105"
                                 >
                                     <FiCheckCircle className="w-4 h-4 md:w-5 md:h-5 md:mb-1" />
@@ -390,8 +537,8 @@ function JourneyRow({ activeSems, gpaBySem }: { activeSems: number[]; gpaBySem: 
                                 </button>
                             ) : (
                                 <button
-                                    onClick={handleAdd}
-                                    title="Click to start upload"
+                                    onClick={() => onAddSemester(sem)}
+                                    title={`Add Semester ${sem}`}
                                     className="w-16 h-16 md:w-20 md:h-20 bg-bg-primary border border-border border-dashed rounded-2xl flex items-center justify-center text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/10 transition-colors group relative shadow-sm"
                                 >
                                     <FiPlus className="w-6 h-6 group-hover:scale-125 transition-transform" />
@@ -408,9 +555,30 @@ function JourneyRow({ activeSems, gpaBySem }: { activeSems: number[]; gpaBySem: 
             </div>
             {/* Added instructions snippet for Journey row click behaviors */}
             <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 text-xs text-text-muted font-medium pt-4 border-t border-border/50">
-                <span className="flex items-center gap-2"><div className="bg-primary/10 text-primary p-1 rounded"><FiCheckCircle className="w-3 h-3" /></div> Click <FiCheckCircle className="w-3 h-3 text-primary" /> to expand that semester details</span>
-                <span className="flex items-center gap-2"><div className="bg-bg-primary border border-dashed border-border p-1 rounded"><FiPlus className="w-3 h-3" /></div> Click <FiPlus className="w-3 h-3 text-text-muted" /> to upload marksheet for that semester</span>
+                <span className="flex items-center gap-2"><div className="bg-primary/10 text-primary p-1 rounded"><FiCheckCircle className="w-3 h-3" /></div> Click a filled box to open semester details</span>
+                <span className="flex items-center gap-2"><div className="bg-bg-primary border border-dashed border-border p-1 rounded"><FiPlus className="w-3 h-3" /></div> Click + to directly add that semester</span>
             </div>
+            {missingSems.length > 0 && (
+                <div className="mt-4 p-4 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <p className="text-sm font-bold text-primary">{missingSems.length} sems missing</p>
+                    <button
+                        onClick={onUploadAllMissing}
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-primary text-white font-bold text-sm hover:opacity-95 w-full sm:w-auto"
+                    >
+                        <FiUpload className="w-4 h-4" /> Upload all missing at once
+                    </button>
+                </div>
+            )}
+            {activeSems.length > 0 && onEditAll && (
+                <div className="mt-3 flex justify-end">
+                    <button
+                        onClick={onEditAll}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-bg-primary hover:border-primary/40 hover:text-primary font-bold text-sm"
+                    >
+                        <FiEdit3 className="w-4 h-4" /> Edit all semesters
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
