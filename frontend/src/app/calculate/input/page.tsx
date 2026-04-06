@@ -1055,7 +1055,13 @@ export default function InputPage() {
           <ResultsSection
             data={results}
             onReset={handleReset}
-            onBackToPreview={() => setStage('preview')}
+            onBackToPreview={() => {
+              if (isEditAllPreviewMode) {
+                router.push('/home/edit-all');
+                return;
+              }
+              setStage('preview');
+            }}
             mode={(state.mode as 'single_sem' | 'multi_sem') || 'single_sem'}
             context={state}
           />
