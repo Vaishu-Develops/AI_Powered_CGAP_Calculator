@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import jsPDF from 'jspdf';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import dynamic from 'next/dynamic';
 import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle, FiChevronDown, FiUserPlus, FiUpload, FiEdit3 } from 'react-icons/fi';
+import WhatIfSimulator from '@/components/WhatIfSimulator';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
@@ -26,11 +28,55 @@ type HomeReportsResponse = {
     semester_gpas?: Array<{ semester: number; gpa: number }>;
 };
 
+type HomeSubjectsResponse = {
+    subjects?: Array<{
+        subject_code: string;
+        grade: string;
+        credits: number;
+        original_semester?: number;
+        is_arrear?: boolean;
+    }>;
+};
+
 function classFromCgpa(cgpa: number): string {
     if (cgpa >= 8.5) return 'First Class with Distinction';
     if (cgpa >= 6.5) return 'First Class';
     if (cgpa >= 5.0) return 'Second Class';
     return 'Needs Improvement';
+}
+
+function buildAiInsight(params: {
+    activeSems: number[];
+    gpaBySem: Record<number, number>;
+    latestCgpa: number;
+    missingCount: number;
+}) {
+    const { activeSems, gpaBySem, latestCgpa, missingCount } = params;
+    const completed = activeSems.length;
+    if (completed === 0) {
+        return 'Upload your first semester to get a personalized performance insight and realistic target for your next term.';
+    }
+
+    const sorted = [...activeSems].sort((a, b) => a - b);
+    const lastSem = sorted[sorted.length - 1];
+    const prevSem = sorted.length > 1 ? sorted[sorted.length - 2] : null;
+    const lastGpa = Number(gpaBySem[lastSem] || 0);
+    const prevGpa = prevSem ? Number(gpaBySem[prevSem] || 0) : null;
+    const trend = prevGpa === null ? 'steady start' : lastGpa >= prevGpa ? 'improving trend' : 'dip from previous semester';
+
+    const nextSem = Math.min(lastSem + 1, 8);
+    const targetForDistinctionNext = (((8.5 * (completed + 1)) - (latestCgpa * completed)));
+    const cappedTarget = Math.max(5, Math.min(10, targetForDistinctionNext));
+
+    if (latestCgpa >= 8.5) {
+        return `You are already in Distinction (${latestCgpa.toFixed(2)} CGPA). Keep Sem ${nextSem} at ${(Math.max(8.0, lastGpa)).toFixed(1)}+ to preserve your current standing.`;
+    }
+
+    if (targetForDistinctionNext <= 10) {
+        return `Current CGPA is ${latestCgpa.toFixed(2)} with a ${trend}. A realistic target for Sem ${nextSem} is ${cappedTarget.toFixed(1)}+ to move toward Distinction while ${missingCount} semester${missingCount === 1 ? '' : 's'} remain.`;
+    }
+
+    return `Current CGPA is ${latestCgpa.toFixed(2)} with a ${trend}. Focus on a strong Sem ${nextSem} target around ${(Math.max(7.0, lastGpa + 0.4)).toFixed(1)}+ to strengthen First Class momentum across the remaining ${missingCount} semester${missingCount === 1 ? '' : 's'}.`;
 }
 
 export default function HomePage() {
@@ -42,6 +88,12 @@ export default function HomePage() {
     const [semesterGpas, setSemesterGpas] = useState<Array<{ semester: number; gpa: number }>>([]);
     const [reportsLoading, setReportsLoading] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+    const [simulatorLoading, setSimulatorLoading] = useState(false);
+    const [simulatorSubjects, setSimulatorSubjects] = useState<Record<string, { grade: string; credits: number }>>({});
+    const [simulatorCurrentGpa, setSimulatorCurrentGpa] = useState(0);
+    const [simulatorIsSingle, setSimulatorIsSingle] = useState(true);
+    const [reportExporting, setReportExporting] = useState(false);
 
     useEffect(() => {
         const loadReports = async () => {
@@ -134,6 +186,16 @@ export default function HomePage() {
         [activeSems]
     );
 
+    const missingCount = Math.max(0, 8 - activeSems.length);
+    const aiInsightText = useMemo(() => {
+        return buildAiInsight({
+            activeSems,
+            gpaBySem,
+            latestCgpa,
+            missingCount,
+        });
+    }, [activeSems, gpaBySem, latestCgpa, missingCount]);
+
     if (!user && !isDemo) {
         return null;
     }
@@ -169,9 +231,145 @@ export default function HomePage() {
         router.push('/home/edit-all');
     };
 
+    const handleTrySimulator = async () => {
+        if (!user || isDemo) {
+            handleStartCalc();
+            return;
+        }
+
+        setSimulatorLoading(true);
+        try {
+            const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
+            if (!res.ok) throw new Error('Failed to load simulator data');
+            const data: HomeSubjectsResponse = await res.json();
+            const flatSubjects = Array.isArray(data?.subjects) ? data.subjects : [];
+
+            const mappedSubjects = flatSubjects.reduce<Record<string, { grade: string; credits: number; subject_code: string }>>((acc, subject, index) => {
+                const code = String(subject.subject_code || '').trim().toUpperCase();
+                if (!code) return acc;
+                acc[`${code}__${index}`] = {
+                    grade: String(subject.grade || '').toUpperCase(),
+                    credits: Number(subject.credits || 0),
+                    subject_code: code,
+                };
+                return acc;
+            }, {});
+
+            const latestSnapshotGpa = activeSemsCount === 1 ? latestGpa : latestCgpa;
+            setSimulatorSubjects(mappedSubjects);
+            setSimulatorCurrentGpa(Number.isFinite(latestSnapshotGpa) ? latestSnapshotGpa : 0);
+            setSimulatorIsSingle(activeSemsCount === 1);
+            setIsSimulatorOpen(true);
+        } catch (err) {
+            console.error('Failed to open simulator:', err);
+            handleStartCalc();
+        } finally {
+            setSimulatorLoading(false);
+        }
+    };
+
+    const handleDownloadDegreeReport = async () => {
+        if (typeof window === 'undefined' || reportExporting) return;
+
+        setReportExporting(true);
+        try {
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 12;
+            const contentWidth = pageWidth - margin * 2;
+            const colors = {
+                brand: [212, 84, 25] as const,
+                soft: [250, 223, 208] as const,
+                ink: [30, 41, 59] as const,
+                line: [230, 232, 236] as const,
+                zebra: [248, 249, 251] as const,
+                white: [255, 255, 255] as const,
+            };
+
+            const semSummary = activeSems.map((sem) => ({
+                sem,
+                gpa: Number(gpaBySem[sem] || 0),
+            }));
+
+            const drawFooter = () => {
+                pdf.setDrawColor(...colors.line);
+                pdf.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10);
+                pdf.setTextColor(...colors.ink);
+                pdf.setFont('helvetica', 'italic');
+                pdf.setFontSize(8);
+                pdf.text('Generated by CGPA Intel', margin, pageHeight - 6);
+            };
+
+            let y = 16;
+            pdf.setFillColor(...colors.brand);
+            pdf.roundedRect(margin, y - 8, contentWidth, 18, 2, 2, 'F');
+            pdf.setTextColor(...colors.white);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(16);
+            pdf.text('Degree Report', margin + 4, y + 1);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(8.5);
+            pdf.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin - 4, y + 1, { align: 'right' });
+            y += 18;
+
+            pdf.setFillColor(...colors.soft);
+            pdf.roundedRect(margin, y, contentWidth, 18, 2, 2, 'F');
+            pdf.setTextColor(...colors.ink);
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(11);
+            pdf.text('Summary', margin + 3, y + 5);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            pdf.text(`CGPA: ${latestCgpa > 0 ? latestCgpa.toFixed(2) : '0.00'}`, margin + 3, y + 11);
+            pdf.text(`Class: ${currentClass}`, margin + 55, y + 11);
+            pdf.text(`Semesters: ${activeSems.length}/8`, margin + 110, y + 11);
+            y += 26;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(11);
+            pdf.text('Semester-wise GPA', margin, y);
+            y += 6;
+
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            semSummary.forEach((row) => {
+                if (y > pageHeight - 20) {
+                    drawFooter();
+                    pdf.addPage();
+                    y = 16;
+                }
+                pdf.setFillColor(...colors.zebra);
+                pdf.roundedRect(margin, y - 4, contentWidth, 7, 1.5, 1.5, 'F');
+                pdf.text(`Semester ${row.sem}`, margin + 3, y);
+                pdf.text(row.gpa.toFixed(2), pageWidth - margin - 6, y, { align: 'right' });
+                y += 8;
+            });
+
+            drawFooter();
+
+            const fileName = `Degree-Report-${new Date().toISOString().slice(0, 10)}.pdf`;
+            const blob = pdf.output('blob');
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = fileName;
+            document.body.appendChild(anchor);
+            anchor.click();
+            setTimeout(() => {
+                anchor.remove();
+                URL.revokeObjectURL(url);
+            }, 1000);
+        } catch (err) {
+            console.error('Degree report download failed:', err);
+            alert('Unable to download the degree report right now. Please try again.');
+        } finally {
+            setReportExporting(false);
+        }
+    };
+
     const displayName = user?.name || 'Guest Explorer';
     const includedSemsText = activeSems.length > 0 ? activeSems.join(', ') : 'None';
-    const missingCount = Math.max(0, 8 - activeSems.length);
 
     return (
         <main className="min-h-screen bg-bg-primary text-text-primary relative overflow-hidden font-outfit">
@@ -285,7 +483,7 @@ export default function HomePage() {
                             {/* SECTION A - PERFORMANCE SUMMARY */}
                             <div className="bg-bg-card border border-border p-10 md:p-14 rounded-[40px] shadow-lg relative overflow-hidden flex flex-col items-center text-center gap-4">
                                 <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-2">PERFORMANCE SUMMARY</h3>
-                                <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1 leading-none">
+                                <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#E67A38] leading-none">
                                     {latestGpa > 0 ? latestGpa.toFixed(2) : '0.00'}
                                 </h1>
                                 <p className="text-xl font-bold uppercase tracking-widest">Semester {latestSem || activeSems[0]} GPA</p>
@@ -361,7 +559,7 @@ export default function HomePage() {
                                 <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-2">PERFORMANCE SUMMARY</h3>
                                 <h1
                                     title={`Overall CGPA based on Sem ${includedSemsText} (${activeSems.length} uploaded, ${missingCount} missing)`}
-                                    className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1 leading-none"
+                                    className="text-6xl md:text-[6rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#E67A38] leading-none"
                                 >
                                     {latestCgpa > 0 ? latestCgpa.toFixed(2) : '0.00'}
                                 </h1>
@@ -404,12 +602,9 @@ export default function HomePage() {
                                                 <FiStar className="text-primary" /> AI Insight
                                             </h3>
                                             <p className="text-text-primary text-lg font-medium leading-relaxed italic border-l-4 border-primary/30 pl-4 py-1 mb-8">
-                                                "Maintain Sem {Math.max(0, ...activeSems) + 1} GPA above 8.0 and your final CGPA reaches 8.52 — Distinction"
+                                                {aiInsightText}
                                             </p>
                                         </div>
-                                        <button className="w-full py-4 bg-primary text-white font-bold rounded-xl mt-auto shadow-sm hover:translate-y-[-2px] transition-all">
-                                            Simulate →
-                                        </button>
                                     </div>
 
                                     <div className="bg-bg-card border border-border p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
@@ -419,8 +614,13 @@ export default function HomePage() {
                                             </h3>
                                             <p className="text-text-muted text-lg mb-8 font-medium">Explore grade scenarios for your {8 - activeSems.length} upcoming semesters.</p>
                                         </div>
-                                        <button className="w-full flex items-center justify-center gap-2 py-4 bg-bg-primary text-text-primary font-bold rounded-xl mt-auto shadow-sm border border-border hover:bg-bg-card-alt transition-all">
-                                            <FiActivity /> Try Simulator →
+                                        <button
+                                            type="button"
+                                            onClick={handleTrySimulator}
+                                            disabled={simulatorLoading}
+                                            className="w-full flex items-center justify-center gap-2 py-4 bg-primary text-white font-bold rounded-xl mt-auto shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all disabled:cursor-not-allowed disabled:opacity-70"
+                                        >
+                                            <FiActivity /> {simulatorLoading ? 'Loading...' : 'Try Simulator →'}
                                         </button>
                                     </div>
                                 </div>
@@ -447,8 +647,12 @@ export default function HomePage() {
                                 </div>
 
                                 <div className="w-full max-w-sm mt-6 relative z-20">
-                                    <button className="w-full px-8 py-5 bg-primary text-white font-black text-lg rounded-full shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-3">
-                                        <FiDownload className="w-6 h-6" /> Download Degree Report
+                                    <button
+                                        onClick={handleDownloadDegreeReport}
+                                        disabled={reportExporting}
+                                        className="w-full px-8 py-5 bg-primary text-white font-black text-lg rounded-full shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        <FiDownload className="w-6 h-6" /> {reportExporting ? 'Exporting...' : 'Download Degree Report'}
                                     </button>
                                 </div>
                                 <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[150%] bg-[radial-gradient(circle,rgba(212,80,10,0.15)_0%,transparent_70%)] rounded-full blur-[80px] pointer-events-none z-0" />
@@ -494,6 +698,18 @@ export default function HomePage() {
                     )}
 
                 </AnimatePresence>
+
+                <AnimatePresence>
+                    {isSimulatorOpen && (
+                        <WhatIfSimulator
+                            isOpen={isSimulatorOpen}
+                            initialSubjects={simulatorSubjects}
+                            currentGpa={simulatorCurrentGpa}
+                            isSingle={simulatorIsSingle}
+                            onClose={() => setIsSimulatorOpen(false)}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </main>
     );
@@ -525,16 +741,22 @@ function JourneyRow({
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => {
                     const isActive = activeSems.includes(sem);
                     return (
-                        <div key={sem} className="flex flex-col items-center gap-2 md:gap-3">
+                        <div key={sem} className="flex flex-col items-center gap-2 md:gap-3 relative group/sem">
                             {isActive ? (
-                                <button
-                                    onClick={() => onOpenSemester(sem)}
-                                    title="Open semester details"
-                                    className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 border border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary shadow-sm hover:bg-primary/20 transition-all hover:scale-105"
-                                >
-                                    <FiCheckCircle className="w-4 h-4 md:w-5 md:h-5 md:mb-1" />
-                                    <span className="text-xs md:text-sm font-bold">{(gpaBySem[sem] || 0).toFixed(2)}</span>
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => onOpenSemester(sem)}
+                                        title="Click to edit semester"
+                                        aria-label={`Edit Semester ${sem}`}
+                                        className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 border border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary shadow-sm hover:bg-primary/20 transition-all hover:scale-105"
+                                    >
+                                        <FiCheckCircle className="w-4 h-4 md:w-5 md:h-5 md:mb-1" />
+                                        <span className="text-xs md:text-sm font-bold">{(gpaBySem[sem] || 0).toFixed(2)}</span>
+                                    </button>
+                                    <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-text-primary text-white text-[10px] font-bold px-2 py-1 opacity-0 translate-y-1 transition-all duration-150 group-hover/sem:opacity-100 group-hover/sem:translate-y-0 group-focus-within/sem:opacity-100 group-focus-within/sem:translate-y-0">
+                                        Click to edit semester
+                                    </span>
+                                </>
                             ) : (
                                 <button
                                     onClick={() => onAddSemester(sem)}
