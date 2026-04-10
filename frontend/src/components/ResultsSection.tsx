@@ -87,6 +87,13 @@ function sanitizeClassLabel(value: string | undefined | null): string {
         .trim();
 }
 
+function displaySubjectCode(code: string | undefined | null, fallback?: string): string {
+    return String(code || fallback || '')
+        .toUpperCase()
+        .split('__SEM')[0]
+        .trim();
+}
+
 export default function ResultsSection({ data, onReset, onBackToPreview, mode = 'single_sem', context }: ResultsSectionProps) {
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
@@ -469,7 +476,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                     pdf.rect(margin, y - 3.8, contentWidth, 5, 'F');
                 }
 
-                pdf.text(String(code || '').slice(0, 28), colX.code + 2, y);
+                pdf.text(displaySubjectCode((subj as SubjectDetail & { subject_code?: string }).subject_code, code).slice(0, 28), colX.code + 2, y);
                 pdf.text(String(subj.grade || '-'), colX.grade, y);
                 pdf.text(Number(subj.grade_points || 0).toFixed(1), colX.gp, y);
                 pdf.text(String(subj.credits ?? '-'), colX.cr, y);
@@ -482,7 +489,19 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
 
             const semLabel = data.semester_info?.semester ? `-Sem-${data.semester_info.semester}` : '';
             const stamp = new Date().toISOString().slice(0, 10);
-            pdf.save(`CGPA-Report${semLabel}-${stamp}.pdf`);
+            const fileName = `CGPA-Report${semLabel}-${stamp}.pdf`;
+            const blob = pdf.output('blob');
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = fileName;
+            anchor.rel = 'noopener';
+            document.body.appendChild(anchor);
+            anchor.click();
+            setTimeout(() => {
+                anchor.remove();
+                URL.revokeObjectURL(url);
+            }, 1000);
         } catch (err) {
             console.error('PDF export failed:', err);
             alert('Unable to export PDF right now. Please try again.');
@@ -500,10 +519,10 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
             className="w-full max-w-5xl mx-auto pb-24 space-y-12"
         >
             {/* ── TOP NAV BAR ── */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 px-2">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 px-2">
                 <button
                     onClick={onReset}
-                    className="flex items-center gap-2 text-text-muted hover:text-text-primary transition-colors font-bold uppercase tracking-widest text-xs"
+                    className="flex items-center gap-2 text-text-muted hover:text-text-primary transition-colors font-bold uppercase tracking-widest text-xs self-start md:self-auto"
                 >
                     <FiArrowLeft className="text-lg" /> Back
                 </button>
@@ -512,13 +531,13 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         {isSingle ? `Semester ${data.semester_info?.semester || '?'} Result` : 'Cumulative Result'}
                     </h2>
                 </div>
-                <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-xs">
+                <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-xs self-end md:self-auto">
                     Share <FiShare2 className="text-lg" />
                 </button>
             </div>
 
             {/* ── BLOCK 1: THE REVEAL (Saffron Glass Redesign) ── */}
-            <div className="bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] rounded-[60px] pt-16 pb-24 px-8 md:px-16 shadow-[0_50px_100px_-20px_rgba(210,84,25,0.12),0_20px_40px_-15px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col items-center justify-center relative overflow-hidden text-center mx-auto max-w-5xl border border-[#FADFD0]/60 group">
+            <div className="bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] rounded-[34px] md:rounded-[60px] pt-12 md:pt-16 pb-16 md:pb-24 px-4 sm:px-6 md:px-16 shadow-[0_50px_100px_-20px_rgba(210,84,25,0.12),0_20px_40px_-15px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col items-center justify-center relative overflow-hidden text-center mx-auto max-w-5xl border border-[#FADFD0]/60 group">
                 {/* Texture Overlay */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#D4500A 0.5px, transparent 0.5px)`, backgroundSize: '24px 24px' }} />
 
@@ -549,9 +568,10 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="mb-16 px-6 py-2.5 bg-[#D4500A]/5 border border-[#D4500A]/20 rounded-full inline-flex items-center gap-2.5 text-[#D4500A] font-black uppercase tracking-[0.25em] text-[10px] shadow-[0_2px_10px_rgba(212,80,10,0.05)] backdrop-blur-sm"
+                        className="mb-12 md:mb-16 px-4 sm:px-6 py-2.5 bg-[#D4500A]/5 border border-[#D4500A]/20 rounded-full inline-flex max-w-full items-center gap-2.5 text-[#D4500A] font-black uppercase tracking-[0.18em] sm:tracking-[0.25em] text-[10px] shadow-[0_2px_10px_rgba(212,80,10,0.05)] backdrop-blur-sm"
                     >
-                        <FiAward className="text-base text-[#D4500A]" /> {classLabel.toUpperCase()}
+                        <FiAward className="text-base text-[#D4500A] shrink-0" />
+                        <span className="truncate max-w-[220px] sm:max-w-none">{classLabel.toUpperCase()}</span>
                     </motion.div>
                 )}
 
@@ -619,22 +639,12 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         </motion.div>
                     </div>
 
-                    {/* Milestone Labels (High Contrast) */}
-                    <div className="relative w-full mt-6 h-10 text-[9px] font-black uppercase tracking-[0.25em]">
-                        {/* Dynamic Highlighting with Monochrome Saffron Scale */}
-                        <div className={`absolute left-0 transition-opacity duration-300 ${primaryValue < 5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Fail</div>
-
-                        <div className={`absolute left-[50%] -translate-x-1/2 transition-opacity duration-300 ${primaryValue >= 5 && primaryValue < 7 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>
-                            Pass
-                        </div>
-
-                        <div className={`absolute left-[70%] -translate-x-1/2 transition-opacity duration-300 ${primaryValue >= 7 && primaryValue < 8.5 ? 'text-[#D4500A] opacity-100 drop-shadow-sm' : 'text-[#1E293B] opacity-60'}`}>
-                            First
-                        </div>
-
-                        <div className={`absolute right-0 transition-opacity duration-300 ${primaryValue >= 8.5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>
-                            Distinction
-                        </div>
+                    {/* Milestone Labels (Mobile-safe layout) */}
+                    <div className="grid grid-cols-4 gap-2 mt-6 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.12em] sm:tracking-[0.2em]">
+                        <div className={`text-left transition-opacity duration-300 ${primaryValue < 5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Fail</div>
+                        <div className={`text-center transition-opacity duration-300 ${primaryValue >= 5 && primaryValue < 7 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Pass</div>
+                        <div className={`text-center transition-opacity duration-300 ${primaryValue >= 7 && primaryValue < 8.5 ? 'text-[#D4500A] opacity-100 drop-shadow-sm' : 'text-[#1E293B] opacity-60'}`}>First</div>
+                        <div className={`text-right transition-opacity duration-300 ${primaryValue >= 8.5 ? 'text-[#D4500A] opacity-100' : 'text-[#1E293B] opacity-60'}`}>Distinction</div>
                     </div>
                 </motion.div>
             </div>
@@ -648,7 +658,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.1 }}
-                        className="bg-white rounded-[40px] p-8 md:p-10 border border-[#FADFD0]/30 shadow-[0_15px_50px_-12px_rgba(210,84,25,0.03)]"
+                        className="bg-white rounded-[40px] p-5 sm:p-8 md:p-10 border border-[#FADFD0]/30 shadow-[0_15px_50px_-12px_rgba(210,84,25,0.03)]"
                     >
                         {/* Header */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
@@ -669,9 +679,10 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         </div>
 
                         {/* ═══ BAR CHART ═══ */}
-                        <div ref={containerRef} className="relative" style={{ height: chartH + 56 }}>
-                            {/* Bars */}
-                            <div className="flex items-end justify-between gap-3 px-2 relative" style={{ height: chartH }}>
+                        <div className="w-full overflow-x-auto custom-scrollbar pb-2 -mx-1 px-1">
+                            <div ref={containerRef} className="relative min-w-[520px] md:min-w-0" style={{ height: chartH + 56 }}>
+                                {/* Bars */}
+                                <div className="flex items-end justify-between gap-2 md:gap-3 px-1 md:px-2 relative" style={{ height: chartH }}>
                                 {semesterGpas.map((item, i) => {
                                     const isSelected = selectedSem === item.sem;
                                     const heightPct = Math.max((item.gpa / maxGpa) * 100, 8);
@@ -705,7 +716,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                                             </motion.div>
                                             {/* Bar */}
                                             <div
-                                                className={`w-full max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${dimmed ? 'bg-[#F3F1EF]'
+                                                className={`w-full max-w-[40px] md:max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${dimmed ? 'bg-[#F3F1EF]'
                                                     : hasArr ? 'bg-gradient-to-t from-[#B0ADA8] to-[#D6D4D0]'
                                                         : 'bg-gradient-to-t from-[#D25419] to-[#F7C59F]'
                                                     } ${isSelected ? 'shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)] scale-105' : 'hover:scale-[1.02]'}`}
@@ -716,47 +727,48 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                                         </motion.div>
                                     );
                                 })}
-                            </div>
+                                </div>
 
-                            {/* Trend line — uses measured positions */}
-                            {trendPts.length > 1 && (
-                                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" style={{ overflow: 'visible' }}>
-                                    {trendPts.slice(0, -1).map((pt, i) => {
-                                        const next = trendPts[i + 1];
-                                        return (
-                                            <motion.line key={i}
-                                                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                                transition={{ delay: 1.8 + i * 0.1 }}
-                                                x1={pt.x} y1={pt.y} x2={next.x} y2={next.y}
-                                                stroke="#D25419" strokeWidth="1.5" strokeOpacity="0.3"
-                                                strokeDasharray="4 3" strokeLinecap="round"
+                                {/* Trend line — uses measured positions */}
+                                {trendPts.length > 1 && (
+                                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" style={{ overflow: 'visible' }}>
+                                        {trendPts.slice(0, -1).map((pt, i) => {
+                                            const next = trendPts[i + 1];
+                                            return (
+                                                <motion.line key={i}
+                                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                                    transition={{ delay: 1.8 + i * 0.1 }}
+                                                    x1={pt.x} y1={pt.y} x2={next.x} y2={next.y}
+                                                    stroke="#D25419" strokeWidth="1.5" strokeOpacity="0.3"
+                                                    strokeDasharray="4 3" strokeLinecap="round"
+                                                />
+                                            );
+                                        })}
+                                        {trendPts.map((pt, i) => (
+                                            <motion.circle key={i}
+                                                initial={{ r: 0 }} animate={{ r: 3 }}
+                                                transition={{ delay: 1.9 + i * 0.08, type: 'spring', stiffness: 400 }}
+                                                cx={pt.x} cy={pt.y}
+                                                fill="#D25419" stroke="#FFF" strokeWidth="1.5"
                                             />
-                                        );
-                                    })}
-                                    {trendPts.map((pt, i) => (
-                                        <motion.circle key={i}
-                                            initial={{ r: 0 }} animate={{ r: 3 }}
-                                            transition={{ delay: 1.9 + i * 0.08, type: 'spring', stiffness: 400 }}
-                                            cx={pt.x} cy={pt.y}
-                                            fill="#D25419" stroke="#FFF" strokeWidth="1.5"
-                                        />
-                                    ))}
-                                </svg>
-                            )}
+                                        ))}
+                                    </svg>
+                                )}
 
-                            {/* X-axis labels */}
-                            <div className="flex justify-between gap-3 px-2 mt-3">
-                                {semesterGpas.map(item => (
-                                    <div key={item.sem} className={`flex-1 text-center text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${selectedSem === item.sem ? 'text-[#D25419]' : semHasArrears[item.sem] ? 'text-[#B0ADA8]' : 'text-[#89858E]'
-                                        }`}>
-                                        S{item.sem}{semHasArrears[item.sem] ? ' ⚠' : ''}
-                                    </div>
-                                ))}
+                                {/* X-axis labels */}
+                                <div className="flex justify-between gap-2 md:gap-3 px-1 md:px-2 mt-3">
+                                    {semesterGpas.map(item => (
+                                        <div key={item.sem} className={`flex-1 text-center text-[9px] md:text-[10px] font-black uppercase tracking-[0.12em] md:tracking-[0.15em] transition-colors ${selectedSem === item.sem ? 'text-[#D25419]' : semHasArrears[item.sem] ? 'text-[#B0ADA8]' : 'text-[#89858E]'
+                                            }`}>
+                                            S{item.sem}{semHasArrears[item.sem] ? ' ⚠' : ''}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
                         {/* Legend */}
-                        <div className="flex items-center gap-6 mt-6 pt-4 border-t border-[#F3F1EF]">
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-6 pt-4 border-t border-[#F3F1EF]">
                             <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-gradient-to-r from-[#D25419] to-[#F7C59F]" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Clean</span></div>
                             <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#B0ADA8]" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Has Arrears</span></div>
                             <div className="flex items-center gap-2"><div className="w-6 border-t border-dashed border-[#D25419]/40" /><span className="text-[10px] font-bold text-[#89858E] uppercase tracking-widest">Trend</span></div>
@@ -831,7 +843,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                 transition={{ delay: 1.4 }}
                 className="bg-white border border-[#FADFD0]/40 rounded-[40px] overflow-hidden shadow-[0_20px_60px_-15px_rgba(210,84,25,0.05)]"
             >
-                <div className="p-8 border-b border-[#FADFD0]/40 flex items-center gap-5">
+                <div className="p-5 sm:p-8 border-b border-[#FADFD0]/40 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
                     <div className="w-14 h-14 rounded-2xl bg-[#FADFD0]/40 flex items-center justify-center text-[#D25419] text-2xl shadow-sm">
                         <FiPackage />
                     </div>
@@ -863,17 +875,13 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         <tbody className="divide-y divide-[#FADFD0]/20">
                             {subjectEntries.map(([code, subj], i) => {
                                 const theme = GRADE_THEMES[subj.grade.toUpperCase()] || GRADE_THEMES['C'];
+                                const displayCode = displaySubjectCode((subj as SubjectDetail & { subject_code?: string }).subject_code, code);
                                 return (
                                     <tr key={code} className="hover:bg-[#FADFD0]/10 transition-colors group">
                                         <td className="py-6 px-8 text-sm font-bold text-[#89858E]">{String(i + 1).padStart(2, '0')}</td>
                                         <td className="py-6 px-8">
-                                            <div className="font-black text-[#38352F] text-lg group-hover:text-[#D25419] transition-colors">{code}</div>
-                                            {/* Check if this failing subject was actually cleared in consolidated data */}
-                                            {['U', 'RA', 'AB'].includes(subj.grade) && data.subjects && data.subjects[code] && !['U', 'RA', 'AB'].includes(data.subjects[code].grade) ? (
-                                                <div className="text-[10px] font-black text-green-600/70 tracking-[0.15em] uppercase mt-1">
-                                                    Cleared ({data.subjects[code].grade})
-                                                </div>
-                                            ) : (!isSingle && subj.original_semester) ? (
+                                            <div className="font-black text-[#38352F] text-lg group-hover:text-[#D25419] transition-colors">{displayCode}</div>
+                                            {!isSingle && subj.original_semester ? (
                                                 <div className="text-[10px] font-black text-[#1E293B]/50 tracking-[0.15em] uppercase mt-1">
                                                     Semester {subj.original_semester}
                                                 </div>
@@ -998,7 +1006,7 @@ function StatTile({ label, value, sub, highlight }: { label: string, value: stri
     }
 
     return (
-        <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
+            <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-5 sm:p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
             <div className={`absolute top-0 right-0 w-24 h-24 ${highlight === 'primary' ? 'bg-[#D25419]/5' : 'bg-[#89858E]/5'} rounded-full -mr-12 -mt-12 transition-transform duration-700 group-hover:scale-150`} />
 
             <div className="flex items-center gap-2 mb-3">
@@ -1006,7 +1014,7 @@ function StatTile({ label, value, sub, highlight }: { label: string, value: stri
                 <div className="text-[10px] font-black text-[#89858E] uppercase tracking-[0.2em]">{label}</div>
             </div>
 
-            <div className={`text-4xl md:text-5xl font-black tracking-tight mb-2 ${textClass} relative z-10`}>{value}</div>
+            <div className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-2 ${textClass} relative z-10 break-words text-center`}>{value}</div>
 
             <div className="text-[10px] font-bold text-[#89858E]/60 uppercase tracking-[0.1em]">{sub}</div>
         </div>
