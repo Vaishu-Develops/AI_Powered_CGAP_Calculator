@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "CGPA Calculator — Anna University | AI-Powered",
   description:
-    "Instantly convert your Anna University marksheet into accurate GPA, CGPA, and Percentage. Powered by advanced 7-layer AI OCR pipeline.",
+    "Instantly convert your Anna University marksheet into accurate GPA, CGPA, and Percentage. Powered by advanced AI OCR technology.",
   keywords: ["CGPA", "Anna University", "GPA Calculator", "Marksheet", "OCR"],
 };
 
