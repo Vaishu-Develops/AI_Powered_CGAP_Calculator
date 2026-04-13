@@ -36,11 +36,14 @@ export default function AuthPage() {
                 const err = await res.json();
                 throw new Error(err.detail || 'Login sync failed');
             }
+            const data = await res.json();
 
+            // Use the actual name returned from the backend Postgres database!
+            // This prevents the email prefix local mapping from overwriting the UI Context.
             login({
-                id: firebaseUid,
-                name: userName,
-                email: email.trim(),
+                id: data.user.firebase_uid,
+                name: data.user.name,
+                email: data.user.email,
             });
             router.push('/home');
         } catch (err) {
