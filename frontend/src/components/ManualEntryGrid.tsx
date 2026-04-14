@@ -57,7 +57,7 @@ const BRANCHES = [
     { "id": "tt", "name": "TT" }
 ];
 
-const REGULATIONS = ['2017', '2019', '2021', '2025'];
+const REGULATIONS = ['2017', '2019', '2021', '2025', 'Others'];
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 const GRADES = ['O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', 'S'];
 
@@ -154,7 +154,7 @@ export default function ManualEntryGrid({
                             max="10"
                             value={row.credits}
                             onChange={(e) => updateRow(row.id, 'credits', e.target.value)}
-                            placeholder="Opt"
+                            placeholder={regulation === '2021' ? 'Opt' : 'Credits'}
                             className="w-full bg-bg-card-alt border border-border/50 rounded-2xl px-4 py-3 md:py-4 font-mono text-sm md:text-base font-bold text-text-primary focus:outline-none focus:border-primary/50 focus:bg-bg-card shadow-sm transition-all placeholder:text-text-muted/30"
                         />
                     </div>
@@ -186,7 +186,7 @@ export default function ManualEntryGrid({
                         <CustomSelect
                             value={regulation}
                             onChange={(val) => setRegulation(val)}
-                            options={REGULATIONS.map(r => ({ label: `AU R-${r}`, value: r }))}
+                            options={REGULATIONS.map(r => ({ label: r === 'Others' ? 'Others' : `AU R-${r}`, value: r }))}
                         />
                     </div>
 
@@ -305,7 +305,7 @@ export default function ManualEntryGrid({
             {/* Action Section */}
             <div className="hidden md:flex mt-10 pt-8 border-t border-border/50 flex-col sm:flex-row justify-between items-center gap-6 relative z-10">
                 <div className="text-xs font-medium text-text-muted bg-primary/5 px-4 py-2 rounded-full border border-primary/10">
-                    Calculated against <span className="text-primary font-bold">R-{regulation}</span> regulations
+                    Calculated against <span className="text-primary font-bold">{regulation === 'Others' ? 'Others' : `R-${regulation}`}</span> regulations
                 </div>
                 <button
                     onClick={handleSubmit}
