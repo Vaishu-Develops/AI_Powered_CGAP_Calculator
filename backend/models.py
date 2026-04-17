@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import JSONB
 from database import Base
 
 class User(Base):
@@ -10,6 +11,19 @@ class User(Base):
     firebase_uid = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True)
     name = Column(String)
+    
+    # Subscription & Engagement (Phase 5)
+    is_pro = Column(Boolean, default=False)
+    streak_count = Column(Integer, default=1)
+    last_active_at = Column(DateTime(timezone=True), server_default=func.now())
+    badges = Column(JSONB, default=[]) # Array of unlocked badge IDs
+    scan_count = Column(Integer, default=0)
+    
+    # Referral System
+    referral_code = Column(String, unique=True, index=True, nullable=True)
+    referrals_count = Column(Integer, default=0)
+    applied_referral_code = Column(String, nullable=True)
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
@@ -57,4 +71,13 @@ class CurriculumSubject(Base):
     semester = Column(Integer, nullable=False)
     is_elective = Column(Boolean, default=False)
     elective_vertical = Column(String) # For vertical-based electives like 'V2'
+
+class Feedback(Base):
+    __tablename__ = "feedback"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    reaction = Column(Integer, nullable=False) # 1-5
+    comment = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
