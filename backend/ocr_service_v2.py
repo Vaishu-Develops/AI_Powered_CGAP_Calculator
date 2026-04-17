@@ -150,7 +150,7 @@ class EnhancedOCRService:
     # ── image preprocessing ───────────────────────────────────────────────
 
     def _preprocess_image(self, img: np.ndarray) -> np.ndarray:
-        """Enhanced image preprocessing with 7-layer inspired improvements."""
+        """Enhanced image preprocessing with curated improvements."""
         if img is None:
             return img
 
