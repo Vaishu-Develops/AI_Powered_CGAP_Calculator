@@ -1158,6 +1158,55 @@ class CurriculumService:
             'subject_count': len(results)
         }
 
+    def get_subjects_by_semester(self, branch: str, regulation: str, semester: int) -> List[Dict]:
+        """Get subjects for a specific branch and semester"""
+        branch = branch.upper().strip()
+        regulation = str(regulation).strip()
+        
+        # Combine subjects from _subject_db that match branch and semester
+        sem_subjects = []
+        found_codes = set()
+
+        # 1. First priority: Exact matches for branch and semester in unified DB
+        for code, info in self._subject_db.items():
+            if info.get('branch') == branch and info.get('semester') == semester:
+                sem_subjects.append({
+                    'subject_code': code,
+                    'title': info.get('name'),
+                    'credits': info.get('credits'),
+                    'type': info.get('type'),
+                    'category': info.get('category', 'PCC'),
+                    'semester': semester
+                })
+                found_codes.add(code)
+
+        # 2. Fallback: Check _branch_data if it exists (JSON fallback)
+        if not sem_subjects and branch in self._branch_data:
+            subjects = self._extract_subjects(self._branch_data[branch])
+            for code, info in subjects.items():
+                if info.get('semester') == semester and code not in found_codes:
+                    sem_subjects.append({
+                        'subject_code': code,
+                        'title': info.get('name'),
+                        'credits': info.get('credits'),
+                        'type': info.get('type'),
+                        'category': info.get('category', 'PCC'),
+                        'semester': semester
+                    })
+                    found_codes.add(code)
+
+        return sorted(sem_subjects, key=lambda x: x['subject_code'])
+
+    def get_available_branches(self) -> List[str]:
+        """Get list of loaded branches"""
+        return list(self._branch_data.keys())
+
+    def get_branch_total_credits(self, branch: str) -> int:
+        """Get total credits for a branch"""
+        if branch.upper() in self._branch_data:
+            return self._branch_data[branch.upper()].get('total_credits', 0)
+        return 0
+
 
 # Global instance
 _curriculum_service = None
@@ -1194,6 +1243,10 @@ def is_lab(subject_code: str, branch: str = "CSE") -> bool:
     """Quick function to check if subject is lab"""
     return get_curriculum_service().is_lab_subject(subject_code, branch)
 
+
+def get_subjects_by_semester(branch: str, regulation: str, semester: int) -> List[Dict]:
+    """Quick function to get subjects by semester"""
+    return get_curriculum_service().get_subjects_by_semester(branch, regulation, semester)
 
 if __name__ == "__main__":
     # Test the enhanced service
