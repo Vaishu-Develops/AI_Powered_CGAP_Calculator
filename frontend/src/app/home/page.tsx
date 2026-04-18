@@ -83,6 +83,88 @@ function buildAiInsight(params: {
     return `Current CGPA is ${latestCgpa.toFixed(2)} with a ${trend}. Focus on a strong Sem ${nextSem} target around ${(Math.max(7.0, lastGpa + 0.4)).toFixed(1)}+ to strengthen First Class momentum across the remaining ${missingCount} semester${missingCount === 1 ? '' : 's'}.`;
 }
 
+const SemesterPlannerCard = ({ onClick, remainingSems }: { onClick: () => void, remainingSems: number }) => (
+    <div
+        onClick={onClick}
+        className="bg-bg-card border border-border p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer group hover:border-primary/30 transition-all hover:shadow-xl h-full"
+    >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-accent-1/5 blur-2xl -mr-16 -mt-16 group-hover:bg-accent-1/10 transition-colors" />
+        <div className="relative z-10 flex flex-col h-full">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-xl">
+                    <FiTarget />
+                </div>
+                <h3 className="text-2xl font-black">Semester Planner</h3>
+            </div>
+            <p className="text-text-muted font-medium mb-8 leading-relaxed">
+                {remainingSems > 0
+                    ? `Set a target CGPA and we'll calculate the performance needed in your remaining ${remainingSems} semester${remainingSems !== 1 ? 's' : ''} to hit it.`
+                    : "Review your completed journey and see how your target CGPA evolved over time."
+                }
+            </p>
+            <div className="mt-auto flex items-center gap-2 text-primary font-black text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
+                {remainingSems > 0 ? 'Start Planning' : 'View Roadmap'} <Icon icon="solar:alt-arrow-right-bold-duotone" />
+            </div>
+        </div>
+    </div>
+);
+
+const ReferAndEarnCard = ({ user, referralCode, setReferralCode, handleApplyReferral, handleCopyCode, referralLoading, copySuccess }: any) => (
+    <div className="bg-gradient-to-br from-bg-card to-bg-card-alt border border-border p-8 rounded-[40px] shadow-sm relative overflow-hidden flex flex-col justify-between group h-full">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-2xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
+        <div className="relative z-10 flex flex-col h-full">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl">
+                    <FiUserPlus />
+                </div>
+                <h3 className="text-2xl font-black">Refer & Earn</h3>
+            </div>
+            <p className="text-text-muted font-medium mb-6 leading-relaxed">
+                Invite 10 friends to join Saffron and unlock <span className="text-primary font-bold">1 Year of Pro</span> for free!
+            </p>
+
+            {user?.referral_code && (
+                <div className="bg-bg-primary rounded-2xl p-4 border border-border mb-6 group/code relative overflow-hidden">
+                    <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Your Referral Code</p>
+                    <div className="flex items-center justify-between">
+                        <span className="text-xl font-black tracking-widest text-primary">{user.referral_code}</span>
+                        <button
+                            onClick={handleCopyCode}
+                            className="p-2 hover:bg-bg-card rounded-xl transition-colors text-text-muted hover:text-primary"
+                        >
+                            <Icon icon={copySuccess ? "solar:check-read-bold" : "solar:copy-bold-duotone"} className="w-5 h-5" />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {!user?.applied_referral_code ? (
+                <div className="flex items-center gap-2 mt-auto">
+                    <input
+                        type="text"
+                        placeholder="Friend's Code"
+                        value={referralCode}
+                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                        className="flex-1 min-w-0 bg-bg-card border border-border rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest outline-none focus:border-primary/50 transition-colors"
+                    />
+                    <button
+                        onClick={handleApplyReferral}
+                        disabled={referralLoading || !referralCode}
+                        className="px-6 py-3 bg-primary text-white font-black text-sm rounded-xl hover:bg-primary-hover disabled:opacity-50 transition-all flex items-center gap-2 shrink-0"
+                    >
+                        {referralLoading ? <Icon icon="solar:refresh-bold" className="animate-spin" /> : 'Apply'}
+                    </button>
+                </div>
+            ) : (
+                <div className="flex items-center gap-2 text-success bg-success/10 border border-success/20 px-4 py-3 rounded-2xl mt-auto">
+                    <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
+                    <span className="text-xs font-black uppercase tracking-tight">Referral Reward Active</span>
+                </div>
+            )}
+        </div>
+    </div>
+);
+
 import { persistenceService } from '@/lib/persistenceService';
 
 export default function HomePage() {
@@ -173,20 +255,16 @@ export default function HomePage() {
     }, [user?.firebase_uid, isDemo]);
 
     useEffect(() => {
-        // Hydrate from cache immediately to avoid "Loading" flash
-        if (homeData) {
-            setReports(homeData.reports || []);
-            setSemestersPresent(homeData.semesters_present || []);
-            setSemesterGpas(homeData.semester_gpas || []);
-        }
-
+        // Always re-fetch when user changes — prevents stale data across account switches
         const loadReports = async () => {
-            if (!user || isDemo) return;
-
-            // Only show loader on the very first load or if cache is empty
-            if (!homeData) {
-                setReportsLoading(true);
+            if (!user || isDemo) {
+                setReports([]);
+                setSemestersPresent([]);
+                setSemesterGpas([]);
+                return;
             }
+
+            setReportsLoading(true);
 
             try {
                 const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}`);
@@ -203,18 +281,16 @@ export default function HomePage() {
                 setHomeData({ reports: reportsVal, semesters_present: semsVal, semester_gpas: gpasVal });
             } catch (err) {
                 console.error('Failed to load home reports:', err);
-                if (!homeData) {
-                    setReports([]);
-                    setSemestersPresent([]);
-                    setSemesterGpas([]);
-                }
+                setReports([]);
+                setSemestersPresent([]);
+                setSemesterGpas([]);
             } finally {
                 setReportsLoading(false);
             }
         };
 
         loadReports();
-    }, [user, isDemo, homeData, setHomeData]);
+    }, [user?.id, isDemo]);
 
     const activeSems = useMemo(() => {
         const fromReports = Array.from(
@@ -672,19 +748,10 @@ export default function HomePage() {
                                     </div>
                                 </div>
 
-                                <div className="bg-bg-card-alt border border-border p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
-                                    <div>
-                                        <h3 className="text-2xl font-black flex items-center gap-3 mb-6">
-                                            <FiTrendingUp className="text-primary" /> What-if for Sem {activeSems[0] + 1}
-                                        </h3>
-                                        <p className="text-text-primary text-lg font-medium leading-relaxed italic border-l-4 border-primary/30 pl-4 py-1 mb-8">
-                                            "Score O in all Sem {activeSems[0] + 1} subjects → <br />Sem {activeSems[0] + 1} GPA could reach 9.2"
-                                        </p>
-                                    </div>
-                                    <button className="w-full py-4 bg-primary text-white font-bold rounded-xl mt-auto shadow-sm hover:translate-y-[-2px] transition-all">
-                                        Try Simulator →
-                                    </button>
-                                </div>
+                                <SemesterPlannerCard
+                                    onClick={() => router.push('/home/planner')}
+                                    remainingSems={8 - activeSems.length}
+                                />
                             </div>
 
                             {/* Achievements Section */}
@@ -742,36 +809,34 @@ export default function HomePage() {
                             <div className="px-2">
                                 <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-4">INSIGHTS</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="bg-gradient-to-br from-bg-card to-bg-card-alt border border-primary/20 p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
+                                    <div className="col-span-full bg-gradient-to-br from-bg-card to-bg-card-alt border border-primary/20 p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm mb-4">
                                         <div>
                                             <h3 className="text-2xl font-black flex items-center gap-3 mb-6">
                                                 <FiStar className="text-primary" /> AI Insight
                                             </h3>
-                                            <p className="text-text-primary text-lg font-medium leading-relaxed italic border-l-4 border-primary/30 pl-4 py-1 mb-8">
+                                            <p className="text-text-primary text-lg font-medium leading-relaxed italic border-l-4 border-primary/30 pl-4 py-1">
                                                 {aiInsightText}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="bg-bg-card border border-border p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
-                                        <div>
-                                            <h3 className="text-2xl font-black flex items-center gap-3 mb-6">
-                                                <FiTrendingUp className="text-primary" /> What-if Scenario
-                                            </h3>
-                                            <p className="text-text-muted text-lg mb-8 font-medium">Explore grade scenarios for your {8 - activeSems.length} upcoming semesters.</p>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={handleTrySimulator}
-                                            disabled={simulatorLoading}
-                                            className="w-full flex items-center justify-center gap-2 py-4 bg-primary text-white font-bold rounded-xl mt-auto shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all disabled:cursor-not-allowed disabled:opacity-70"
-                                        >
-                                            <FiActivity /> {simulatorLoading ? 'Loading...' : 'Try Simulator →'}
-                                        </button>
-                                    </div>
+                                    <ReferAndEarnCard
+                                        user={user}
+                                        referralCode={referralCode}
+                                        setReferralCode={setReferralCode}
+                                        handleApplyReferral={handleApplyReferral}
+                                        handleCopyCode={handleCopyCode}
+                                        referralLoading={referralLoading}
+                                        copySuccess={copySuccess}
+                                    />
+
+                                    <SemesterPlannerCard
+                                        onClick={() => router.push('/home/planner')}
+                                        remainingSems={8 - activeSems.length}
+                                    />
 
                                     {/* Placement Section for Partial */}
-                                    <div className="col-span-full bg-bg-card border border-border p-10 rounded-[40px] shadow-sm">
+                                    <div className="col-span-full mt-4">
                                         <PlacementEligiblityCard cgpa={latestCgpa} isPro={user?.is_pro || false} />
                                     </div>
                                 </div>
@@ -838,81 +903,20 @@ export default function HomePage() {
                                     </div>
 
                                     {/* Refer & Earn Card */}
-                                    <div className="bg-gradient-to-br from-bg-card to-bg-card-alt border border-border p-8 rounded-[40px] shadow-sm relative overflow-hidden flex flex-col justify-between group">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-2xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
-                                        <div className="relative z-10">
-                                            <div className="flex items-center gap-3 mb-6">
-                                                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl">
-                                                    <FiUserPlus />
-                                                </div>
-                                                <h3 className="text-2xl font-black">Refer & Earn</h3>
-                                            </div>
-                                            <p className="text-text-muted font-medium mb-6">
-                                                Invite 10 friends to join Saffron and unlock <span className="text-primary font-bold">1 Year of Pro</span> for free!
-                                            </p>
+                                    <ReferAndEarnCard
+                                        user={user}
+                                        referralCode={referralCode}
+                                        setReferralCode={setReferralCode}
+                                        handleApplyReferral={handleApplyReferral}
+                                        handleCopyCode={handleCopyCode}
+                                        referralLoading={referralLoading}
+                                        copySuccess={copySuccess}
+                                    />
 
-                                            {user?.referral_code && (
-                                                <div className="bg-bg-primary rounded-2xl p-4 border border-border mb-6 group/code relative overflow-hidden">
-                                                    <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Your Referral Code</p>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-xl font-black tracking-widest text-primary">{user.referral_code}</span>
-                                                        <button
-                                                            onClick={handleCopyCode}
-                                                            className="p-2 hover:bg-bg-card rounded-xl transition-colors text-text-muted hover:text-primary"
-                                                        >
-                                                            <Icon icon={copySuccess ? "solar:check-read-bold" : "solar:copy-bold-duotone"} className="w-5 h-5" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {!user?.applied_referral_code ? (
-                                                <div className="flex items-center gap-2">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Enter friend's code"
-                                                        value={referralCode}
-                                                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                                                        className="flex-1 bg-bg-card border border-border rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest outline-none focus:border-primary/50 transition-colors"
-                                                    />
-                                                    <button
-                                                        onClick={handleApplyReferral}
-                                                        disabled={referralLoading || !referralCode}
-                                                        className="px-6 py-3 bg-primary text-white font-black text-sm rounded-xl hover:bg-primary-hover disabled:opacity-50 transition-all flex items-center gap-2"
-                                                    >
-                                                        {referralLoading ? <Icon icon="solar:refresh-bold" className="animate-spin" /> : 'Apply'}
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-2 text-success bg-success/10 border border-success/20 px-4 py-3 rounded-2xl">
-                                                    <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
-                                                    <span className="text-xs font-black uppercase tracking-tight">Referral Reward Active</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Semester Planner Card */}
-                                    <div
+                                    <SemesterPlannerCard
                                         onClick={() => router.push('/home/planner')}
-                                        className="bg-bg-card border border-border p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer group hover:border-primary/30 transition-all hover:shadow-xl"
-                                    >
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-accent-1/5 blur-2xl -mr-16 -mt-16 group-hover:bg-accent-1/10 transition-colors" />
-                                        <div className="relative z-10">
-                                            <div className="flex items-center gap-3 mb-6">
-                                                <div className="w-12 h-12 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-xl">
-                                                    <FiTarget />
-                                                </div>
-                                                <h3 className="text-2xl font-black">Semester Planner</h3>
-                                            </div>
-                                            <p className="text-text-muted font-medium mb-8">
-                                                Set a target CGPA and we'll calculate the performance needed in your remaining semesters to hit it.
-                                            </p>
-                                            <div className="flex items-center gap-2 text-primary font-black text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
-                                                Start Planning <Icon icon="solar:alt-arrow-right-bold-duotone" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                        remainingSems={8 - activeSems.length}
+                                    />
                                 </div>
                             </div>
 
