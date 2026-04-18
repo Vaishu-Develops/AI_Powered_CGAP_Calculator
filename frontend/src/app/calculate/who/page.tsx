@@ -8,13 +8,15 @@ import { FiUser, FiUsers, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
 
 export default function WhoPage() {
     const router = useRouter();
-    const { setTarget } = useCalcFlow();
-    const [selected, setSelected] = useState<TargetType | null>(null);
+    const { state, setTarget, setSource, setPreselectedSemester } = useCalcFlow();
+    const [selected, setSelected] = useState<TargetType | null>(state.target || null);
     const [friendName, setFriendName] = useState('');
 
     const handleNext = () => {
         if (!selected) return;
         if (selected === 'friend' && !friendName.trim()) return;
+        setSource(selected === 'friend' ? 'friend_mode' : 'fresh');
+        setPreselectedSemester(null);
         setTarget(selected, friendName);
         router.push('/calculate/what');
     };
@@ -87,6 +89,13 @@ export default function WhoPage() {
                     <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3">Who is this for?</h1>
                     <p className="text-text-muted font-medium text-lg">Select whose CGPA you are calculating today.</p>
                 </div>
+
+                {state.source === 'friend_mode' && (
+                    <div className="mb-8 border border-accent-1/30 bg-accent-1/10 rounded-2xl p-4">
+                        <p className="text-sm font-bold text-accent-1">Guest mode from your dashboard</p>
+                        <p className="text-sm text-text-muted font-medium mt-1">This report will stay separate from your personal semester timeline.</p>
+                    </div>
+                )}
 
                 {/* Selection cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">

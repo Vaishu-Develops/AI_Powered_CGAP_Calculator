@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUser } from '@/context/UserContext';
+import { persistenceService } from '@/lib/persistenceService';
 import {
     FiX,
     FiRefreshCw,
@@ -16,6 +18,7 @@ import {
 interface SubjectSim {
     grade: string;
     credits: number;
+    subject_code?: string;
 }
 
 interface WhatIfSimulatorProps {
@@ -26,22 +29,64 @@ interface WhatIfSimulatorProps {
     onClose: () => void;
 }
 
-const GRADE_POINTS: Record<string, number> = {
-    'S': 10, 'O': 10, 'A+': 9, 'A': 8, 'B+': 7, 'B': 6, 'C': 5, 'P': 5, 'D': 4, 'E': 3, 'U': 0, 'RA': 0, 'SA': 0, 'W': 0, 'AB': 0, 'F': 0, 'FE': 0, 'NC': 0
+const GRADE_OPTIONS = ['S', 'O', 'A+', 'A', 'B+', 'B', 'C', 'RA', 'SA', 'W'] as const;
+
+const GRADE_POINTS: Record<(typeof GRADE_OPTIONS)[number], number> = {
+    S: 10,
+    O: 10,
+    'A+': 9,
+    A: 8,
+    'B+': 7,
+    B: 6,
+    C: 5,
+    RA: 0,
+    SA: 0,
+    W: 0,
 };
 
+function normalizeGrade(grade: string | undefined | null): (typeof GRADE_OPTIONS)[number] {
+    const value = String(grade || '').trim().toUpperCase();
+    if (GRADE_OPTIONS.includes(value as (typeof GRADE_OPTIONS)[number])) {
+        return value as (typeof GRADE_OPTIONS)[number];
+    }
+
+    if (value === 'S') return 'S';
+    if (['P', 'D', 'E', 'U', 'AB', 'F', 'FE', 'NC'].includes(value)) return 'RA';
+    return 'RA';
+}
+
 export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, isSingle, onClose }: WhatIfSimulatorProps) {
+    const { user } = useUser();
     const [simulatedGrades, setSimulatedGrades] = useState<Record<string, string>>(
-        Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, det.grade]))
+        Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, normalizeGrade(det.grade)]))
     );
+
+    // Phase 5: Trigger Badge Unlock on open
+    useEffect(() => {
+        if (isOpen) {
+            persistenceService.unlockBadge(user?.id || null, 'sniper');
+        }
+    }, [isOpen, user?.id]);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        setSimulatedGrades(
+            Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, normalizeGrade(det.grade)]))
+        );
+    }, [isOpen, initialSubjects]);
+
+    const getDisplayCode = (code: string) => {
+        return String(initialSubjects[code]?.subject_code || code || '').toUpperCase().split('__SEM')[0];
+    };
 
     const calculateMetrics = (grades: Record<string, string>) => {
         let totalWeighted = 0;
         let totalCredits = 0;
         Object.entries(grades).forEach(([code, grade]) => {
             const credits = initialSubjects[code]?.credits || 0;
-            const points = GRADE_POINTS[grade] || 0;
-            
+            const points = GRADE_POINTS[grade as keyof typeof GRADE_POINTS] || 0;
+
             // Anna University Formula: CGPA = Σ(Ci × GPi) / ΣCi
             // ALL subjects contribute to denominator (including failed with 0 points)
             totalWeighted += points * credits;
@@ -60,7 +105,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
     };
 
     const handleReset = () => {
-        setSimulatedGrades(Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, det.grade])));
+        setSimulatedGrades(Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, normalizeGrade(det.grade)])));
     };
 
     return (
@@ -100,7 +145,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                         {Object.entries(initialSubjects).map(([code, det]) => (
                             <div key={code} className="p-6 rounded-3xl bg-bg-card-alt border border-border group hover:border-primary/30 transition-all flex items-center justify-between">
                                 <div>
-                                    <div className="font-black text-text-primary mb-1">{code}</div>
+                                    <div className="font-black text-text-primary mb-1">{getDisplayCode(code)}</div>
                                     <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest">{det.credits} Credits</div>
                                 </div>
                                 <select
@@ -108,7 +153,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                     onChange={(e) => handleGradeChange(code, e.target.value)}
                                     className="bg-bg-card border-2 border-border rounded-xl px-4 py-2 font-black text-primary focus:border-primary focus:outline-none transition-all cursor-pointer hover:bg-primary/5"
                                 >
-                                    {Object.keys(GRADE_POINTS).filter(g => g !== 'SA' && g !== 'W' && g !== 'AB').map(g => (
+                                    {GRADE_OPTIONS.map(g => (
                                         <option key={g} value={g}>{g}</option>
                                     ))}
                                 </select>
@@ -167,9 +212,9 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                     </div>
                                 </div>
                                 <div className="h-2 w-full bg-bg-primary rounded-full relative overflow-hidden">
-                                     {/* Baseline ghost bar */}
-                                     <div 
-                                        className="absolute inset-y-0 left-0 bg-text-muted/10 transition-all duration-500" 
+                                    {/* Baseline ghost bar */}
+                                    <div
+                                        className="absolute inset-y-0 left-0 bg-text-muted/10 transition-all duration-500"
                                         style={{ width: `${(currentGpa / 10) * 100}%` }}
                                     />
                                     <motion.div
@@ -178,7 +223,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                         className={`h-full ${diff >= 0 ? 'bg-primary' : 'bg-accent-2'}`}
                                     />
                                     {/* Tick for exact current position */}
-                                    <div 
+                                    <div
                                         className="absolute inset-y-0 w-0.5 bg-text-muted/30 z-10"
                                         style={{ left: `${(currentGpa / 10) * 100}%` }}
                                     />

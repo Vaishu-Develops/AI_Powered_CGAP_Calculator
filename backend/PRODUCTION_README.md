@@ -32,7 +32,7 @@ This CGPA calculator uses **Enhanced OCR Service v2** with proven accuracy for A
 - **[requirements.txt](requirements.txt)** - Production dependencies
 
 ### Research Files (Kept for Reference)
-- **[ocr_service_v3.py](ocr_service_v3.py)** - 7-layer pipeline (research only)
+- **[ocr_service_v3.py](ocr_service_v3.py)** - Saffron OCR v3 engine (advanced)
 
 ## 🔧 Production Setup
 
@@ -93,7 +93,7 @@ graph TB
 
 ## 🔍 Why v2 Over v3?
 
-While the 7-layer pipeline (v3) showed promise in theory, comprehensive testing revealed:
+While the Saffron Engine v3 showed promise in theory, comprehensive testing revealed:
 
 - **v3 Performance**: 5/63 subjects (7.9% recall) ❌
 - **v2 Performance**: 50/63 subjects (79.4% recall) ✅
@@ -116,7 +116,7 @@ The v2 enhanced system provides production-grade reliability with proven accurac
 2. **Template matching**: Add support for newer marksheet formats
 3. **Confidence thresholding**: Implement adaptive confidence filtering
 4. **Batch processing**: Support multiple marksheet upload
-5. **v3 debugging**: Address layer 5 parsing issues in 7-layer pipeline
+5. **v3 debugging**: Address layer processing issues in Saffron Engine
 
 ---
 
