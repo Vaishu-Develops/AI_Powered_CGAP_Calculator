@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { FiArrowLeft, FiEdit3, FiRefreshCw, FiUploadCloud } from 'react-icons/fi';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import LoadingSaffron from '@/components/LoadingSaffron';
 
 type SemesterSubject = {
     id: number;
@@ -114,7 +115,7 @@ export default function SemesterDetailPage() {
                         )}
                     </div>
 
-                    {loading && <p className="text-text-muted font-semibold">Loading semester details...</p>}
+                    {loading && <div className="py-20"><LoadingSaffron message="Fetching semester insights..." /></div>}
                     {error && <p className="text-red-500 font-semibold">{error}</p>}
 
                     {!loading && !error && !report && (
