@@ -57,30 +57,32 @@ const BRANCHES = [
     { "id": "tt", "name": "TT" }
 ];
 
-const REGULATIONS = ['2017', '2019', '2021', '2025'];
+const REGULATIONS = ['2017', '2019', '2021', '2025', 'Others'];
 const SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
 const GRADES = ['O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', 'S'];
 
 export default function ManualEntryGrid({
     isMultiSem = false,
+    initialSemester = 1,
     onCalculate
 }: {
     isMultiSem?: boolean;
+    initialSemester?: number;
     onCalculate: (subjects: any[], metadata: { semester: number; branch: string; regulation: string }) => void;
 }) {
     const [regulation, setRegulation] = useState('2021');
-    const [semester, setSemester] = useState(1);
+    const [semester, setSemester] = useState(initialSemester);
     const [branch, setBranch] = useState('cse');
 
     const [rows, setRows] = useState([
-        { id: '1', subject_code: '', grade: '', credits: '', semester: 1 },
-        { id: '2', subject_code: '', grade: '', credits: '', semester: 1 },
-        { id: '3', subject_code: '', grade: '', credits: '', semester: 1 },
-        { id: '4', subject_code: '', grade: '', credits: '', semester: 1 },
-        { id: '5', subject_code: '', grade: '', credits: '', semester: 1 },
+        { id: '1', subject_code: '', grade: '', credits: '', semester: initialSemester },
+        { id: '2', subject_code: '', grade: '', credits: '', semester: initialSemester },
+        { id: '3', subject_code: '', grade: '', credits: '', semester: initialSemester },
+        { id: '4', subject_code: '', grade: '', credits: '', semester: initialSemester },
+        { id: '5', subject_code: '', grade: '', credits: '', semester: initialSemester },
     ]);
 
-    const [activeSemesters, setActiveSemesters] = useState<number[]>([1]);
+    const [activeSemesters, setActiveSemesters] = useState<number[]>([initialSemester]);
 
     const addRow = (targetSem?: number) => {
         const sem = targetSem !== undefined ? targetSem : semester;
@@ -126,16 +128,17 @@ export default function ManualEntryGrid({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex gap-4 items-center group mb-3"
+                    className="grid grid-cols-12 gap-3 items-center group mb-3"
                 >
                     <input
                         type="text"
                         value={row.subject_code}
                         onChange={(e) => updateRow(row.id, 'subject_code', e.target.value)}
                         placeholder="e.g. CS8601"
-                        className="flex-[2] bg-bg-card-alt border border-border/50 rounded-2xl px-6 py-4 font-mono text-base font-bold text-text-primary focus:outline-none focus:border-primary/50 focus:bg-bg-card shadow-sm transition-all uppercase placeholder:text-text-muted/30"
+                        className="col-span-12 md:col-span-6 bg-bg-card-alt border border-border/50 rounded-2xl px-4 md:px-6 py-3 md:py-4 font-mono text-sm md:text-base font-bold text-text-primary focus:outline-none focus:border-primary/50 focus:bg-bg-card shadow-sm transition-all uppercase placeholder:text-text-muted/30"
                     />
-                    <div className="flex-[1] relative">
+                    <div className="col-span-5 md:col-span-3 relative min-w-0">
+                        <p className="md:hidden text-[10px] font-black uppercase tracking-[0.16em] text-text-muted mb-1 ml-1">Grade</p>
                         <CustomSelect
                             value={row.grade}
                             onChange={(val) => updateRow(row.id, 'grade', val)}
@@ -143,18 +146,21 @@ export default function ManualEntryGrid({
                             placeholder="--"
                         />
                     </div>
-                    <input
-                        type="number"
-                        min="0"
-                        max="10"
-                        value={row.credits}
-                        onChange={(e) => updateRow(row.id, 'credits', e.target.value)}
-                        placeholder="Opt"
-                        className="flex-[1] bg-bg-card-alt border border-border/50 rounded-2xl px-4 py-4 font-mono text-base font-bold text-text-primary focus:outline-none focus:border-primary/50 focus:bg-bg-card shadow-sm transition-all placeholder:text-text-muted/30"
-                    />
+                    <div className="col-span-5 md:col-span-2">
+                        <p className="md:hidden text-[10px] font-black uppercase tracking-[0.16em] text-text-muted mb-1 ml-1">CR</p>
+                        <input
+                            type="number"
+                            min="0"
+                            max="10"
+                            value={row.credits}
+                            onChange={(e) => updateRow(row.id, 'credits', e.target.value)}
+                            placeholder={regulation === '2021' ? 'Opt' : 'Credits'}
+                            className="w-full bg-bg-card-alt border border-border/50 rounded-2xl px-4 py-3 md:py-4 font-mono text-sm md:text-base font-bold text-text-primary focus:outline-none focus:border-primary/50 focus:bg-bg-card shadow-sm transition-all placeholder:text-text-muted/30"
+                        />
+                    </div>
                     <button
                         onClick={() => removeRow(row.id)}
-                        className="w-12 h-12 flex items-center justify-center rounded-2xl text-text-muted hover:bg-error/10 hover:text-error transition-all focus:outline-none group-hover:scale-105"
+                        className="col-span-2 md:col-span-1 justify-self-end w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-2xl text-text-muted hover:bg-error/10 hover:text-error transition-all focus:outline-none group-hover:scale-105"
                         title="Remove Row"
                     >
                         <FiTrash2 className="w-5 h-5" />
@@ -165,7 +171,7 @@ export default function ManualEntryGrid({
     );
 
     return (
-        <div className="w-full max-w-3xl mx-auto bg-bg-card rounded-[40px] border border-border p-10 shadow-2xl relative">
+        <div className="w-full max-w-3xl mx-auto bg-bg-card rounded-[32px] md:rounded-[40px] border border-border p-5 md:p-10 pb-24 md:pb-10 shadow-2xl relative">
             {/* Header section with Metadata selectors */}
             <div className="mb-10 text-center relative z-10">
                 <h2 className="text-3xl font-black tracking-tighter mb-2">Manual Grade Entry</h2>
@@ -180,7 +186,7 @@ export default function ManualEntryGrid({
                         <CustomSelect
                             value={regulation}
                             onChange={(val) => setRegulation(val)}
-                            options={REGULATIONS.map(r => ({ label: `AU R-${r}`, value: r }))}
+                            options={REGULATIONS.map(r => ({ label: r === 'Others' ? 'Others' : `AU R-${r}`, value: r }))}
                         />
                     </div>
 
@@ -218,7 +224,7 @@ export default function ManualEntryGrid({
                 {isMultiSem ? (
                     <>
                         {activeSemesters.map(sem => (
-                            <div key={sem} className="bg-bg-card-alt/30 border border-border/50 rounded-3xl p-6 shadow-sm">
+                            <div key={sem} className="bg-bg-card-alt/30 border border-border/50 rounded-3xl p-4 md:p-6 shadow-sm">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-xl font-black tracking-tight text-text-primary">
                                         Semester {sem}
@@ -233,7 +239,7 @@ export default function ManualEntryGrid({
                                     )}
                                 </div>
 
-                                <div className="flex gap-4 px-6 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-4">
+                                <div className="hidden md:flex gap-4 px-6 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted mb-4">
                                     <div className="flex-[2] flex items-center gap-2"><FiAward className="w-3 h-3" /> Subject Code</div>
                                     <div className="flex-[1] flex items-center gap-2">Grade</div>
                                     <div className="flex-[1] flex items-center gap-2">Credits</div>
@@ -275,7 +281,7 @@ export default function ManualEntryGrid({
                     </>
                 ) : (
                     <div>
-                        <div className="flex gap-4 px-6 text-xs font-black uppercase tracking-[0.2em] text-text-muted mb-4">
+                        <div className="hidden md:flex gap-4 px-6 text-xs font-black uppercase tracking-[0.2em] text-text-muted mb-4">
                             <div className="flex-[2] flex items-center gap-2"><FiAward className="w-3 h-3" /> Subject Code</div>
                             <div className="flex-[1] flex items-center gap-2">Grade</div>
                             <div className="flex-[1] flex items-center gap-2">Credits</div>
@@ -297,15 +303,25 @@ export default function ManualEntryGrid({
             </div>
 
             {/* Action Section */}
-            <div className="mt-10 pt-8 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-6 relative z-10">
+            <div className="hidden md:flex mt-10 pt-8 border-t border-border/50 flex-col sm:flex-row justify-between items-center gap-6 relative z-10">
                 <div className="text-xs font-medium text-text-muted bg-primary/5 px-4 py-2 rounded-full border border-primary/10">
-                    Calculated against <span className="text-primary font-bold">R-{regulation}</span> regulations
+                    Calculated against <span className="text-primary font-bold">{regulation === 'Others' ? 'Others' : `R-${regulation}`}</span> regulations
                 </div>
                 <button
                     onClick={handleSubmit}
                     className="w-full sm:w-auto px-10 py-4 bg-primary text-white font-black text-lg rounded-full shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
                 >
                     Calculate Results <FiArrowLeft className="rotate-180" />
+                </button>
+            </div>
+
+            {/* Sticky mobile CTA */}
+            <div className="md:hidden fixed bottom-3 left-3 right-3 z-50 rounded-2xl border border-primary/20 bg-bg-card/95 backdrop-blur px-3 py-3 shadow-xl">
+                <button
+                    onClick={handleSubmit}
+                    className="w-full px-6 py-3.5 bg-primary text-white font-black text-base rounded-xl shadow-lg shadow-primary/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                >
+                    Confirm & Calculate <FiArrowLeft className="rotate-180" />
                 </button>
             </div>
 

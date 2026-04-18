@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -23,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "CGPA Calculator — Anna University | AI-Powered",
   description:
-    "Instantly convert your Anna University marksheet into accurate GPA, CGPA, and Percentage. Powered by advanced 7-layer AI OCR pipeline.",
+    "Instantly convert your Anna University marksheet into accurate GPA, CGPA, and Percentage. Powered by advanced AI OCR technology.",
   keywords: ["CGPA", "Anna University", "GPA Calculator", "Marksheet", "OCR"],
 };
 
@@ -40,6 +41,31 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <Script id="performance-api-guard" strategy="beforeInteractive">
+          {`(function(){
+            if (typeof window === 'undefined' || typeof window.performance === 'undefined') return;
+            var perf = window.performance;
+            var ensureFn = function(name){
+              if (typeof perf[name] === 'function') return;
+              try {
+                Object.defineProperty(perf, name, {
+                  value: function(){},
+                  configurable: true,
+                  writable: true,
+                });
+              } catch (e) {
+                try { perf[name] = function(){}; } catch (_e) {}
+              }
+            };
+
+            // Next/React dev runtime may call these directly.
+            ensureFn('mark');
+            ensureFn('measure');
+            ensureFn('clearMarks');
+            ensureFn('clearMeasures');
+            ensureFn('clearResourceTimings');
+          })();`}
+        </Script>
         <UserProvider>
           <CalcFlowProvider>
             {children}

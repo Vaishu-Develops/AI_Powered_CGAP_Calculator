@@ -1,16 +1,13 @@
 """
-7-Layer OCR Pipeline v3 for Anna University Marksheet Processing
+ Saffron OCR Pipeline v3 for Anna University Marksheet Processing
 
 Architecture:
-Layer 1: Image Preprocessing (8 steps)
-Layer 2: Text Detection (bounding boxes)
-Layer 3: Text Recognition (with confidence)
-Layer 4: Row Grouping (intelligent line detection)
-Layer 5: Subject Row Parsing (fragment merging)
-Layer 6: Semester Detection (metadata extraction)
-Layer 7: Post-Processing & Validation
+Advanced multi-stage processing including:
+Image Preprocessing, Text Detection, Text Recognition,
+Row Grouping, Fragment Merging, Semester Detection,
+and Post-Processing Validation.
 
-Author: OCR Service v3
+Author: Saffron Engine v3
 Version: 3.2.0
 Date: February 10, 2026
 """
@@ -166,12 +163,12 @@ class ProcessingMetadata:
 
 
 # ============================================================================
-# 7-LAYER OCR PIPELINE
+# SAFFRON OCR PIPELINE
 # ============================================================================
 
-class SevenLayerOCRService:
+class SaffronOCRService:
     """
-    Production-grade 7-layer OCR pipeline for marksheet processing
+    Production-grade OCR pipeline for marksheet processing
     """
     
     # Valid grades for Anna University
@@ -211,14 +208,14 @@ class SevenLayerOCRService:
         self.debug = debug
         if debug: logger.setLevel(logging.DEBUG)
         self.ocr = None
-        logger.info("7-Layer OCR Service v3 initialized")
+        logger.info("Saffron OCR Service v3 initialized")
     
     def _ensure_initialized(self):
         if self.ocr is None:
             try:
-                logger.info("Initializing PaddleOCR engine...")
                 from paddleocr import PaddleOCR
-                self.ocr = PaddleOCR(use_angle_cls=True, lang='en', show_log=False)
+                # Use only core arguments to avoid Unknown Argument crashes
+                self.ocr = PaddleOCR(use_angle_cls=True, lang='en')
                 logger.info("PaddleOCR engine ready!")
             except Exception as e:
                 logger.error(f"Failed to initialize PaddleOCR: {e}")

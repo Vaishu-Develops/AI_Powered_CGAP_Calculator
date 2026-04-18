@@ -3,54 +3,45 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCalcFlow, ModeType } from '@/context/CalcFlowContext';
+import { useUser } from '@/context/UserContext';
 import { FiBookOpen, FiLayers, FiArrowLeft } from 'react-icons/fi';
 
 export default function WhatPage() {
     const router = useRouter();
     const { setMode } = useCalcFlow();
+    const { isDemoGPA } = useUser();
 
     const handleSelect = (mode: ModeType) => {
         setMode(mode);
         router.push('/calculate/how');
     };
 
-    const options: {
-        mode: ModeType;
-        label: string;
-        sublabel: string;
-        tag: string;
-        icon: React.ReactNode;
-        accentColor: string;
-        borderHover: string;
-        bgHover: string;
-        glowColor: string;
-        tagColor: string;
-    }[] = [
-            {
-                mode: 'single_sem',
-                label: 'Single Semester GPA',
-                sublabel: 'Calculate the GPA for one semester only. Perfect for a quick check or your most recent results.',
-                tag: 'Quick Check',
-                icon: <FiBookOpen className="w-7 h-7" />,
-                accentColor: 'text-primary',
-                borderHover: 'hover:border-primary/40',
-                bgHover: 'hover:bg-primary/5',
-                glowColor: 'bg-primary/10',
-                tagColor: 'bg-primary/10 text-primary border-primary/20',
-            },
-            {
-                mode: 'multi_sem',
-                label: 'Overall CGPA',
-                sublabel: 'Upload all marksheets and calculate your cumulative GPA, arrear history, and degree class across all semesters.',
-                tag: 'Full Analysis',
-                icon: <FiLayers className="w-7 h-7" />,
-                accentColor: 'text-accent-1',
-                borderHover: 'hover:border-accent-1/40',
-                bgHover: 'hover:bg-accent-1/5',
-                glowColor: 'bg-accent-1/10',
-                tagColor: 'bg-accent-1/10 text-accent-1 border-accent-1/20',
-            },
-        ];
+    const options = [
+        {
+            mode: 'single_sem' as ModeType,
+            label: 'Single Semester GPA',
+            sublabel: 'Calculate the GPA for one semester only. Perfect for a quick check or your most recent results.',
+            tag: 'Quick Check',
+            icon: <FiBookOpen className="w-7 h-7" />,
+            accentColor: 'text-primary',
+            borderHover: 'hover:border-primary/40',
+            bgHover: 'hover:bg-primary/5',
+            glowColor: 'bg-primary/10',
+            tagColor: 'bg-primary/10 text-primary border-primary/20',
+        },
+        {
+            mode: 'multi_sem' as ModeType,
+            label: 'Overall CGPA',
+            sublabel: 'Upload all marksheets and calculate your cumulative GPA, arrear history, and degree class across all semesters.',
+            tag: 'Full Analysis',
+            icon: <FiLayers className="w-7 h-7" />,
+            accentColor: 'text-accent-1',
+            borderHover: 'hover:border-accent-1/40',
+            bgHover: 'hover:bg-accent-1/5',
+            glowColor: 'bg-accent-1/10',
+            tagColor: 'bg-accent-1/10 text-accent-1 border-accent-1/20',
+        },
+    ].filter(opt => !isDemoGPA || opt.mode === 'single_sem');
 
     return (
         <main className="min-h-screen bg-bg flex flex-col items-center justify-center p-6 text-text-primary relative overflow-hidden">

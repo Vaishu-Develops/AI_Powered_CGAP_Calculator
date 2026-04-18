@@ -594,7 +594,7 @@ class CurriculumService:
         (r'^[A-Z]{2,4}8[0-9]{3}$', 3, 'theory'),
     ]
     
-    def __init__(self, data_dir: str = None):
+    def __init__(self, data_dir: str = None, db_session = None):
         if data_dir is None:
             # Default to 'data' directory in the same folder as this script
             self.data_dir = Path(__file__).parent / "data"
@@ -602,10 +602,29 @@ class CurriculumService:
             self.data_dir = Path(data_dir)
         self._subject_db: Dict[str, Dict] = {}  # Unified subject database
         self._branch_data: Dict[str, Dict] = {}  # Branch-wise curriculum
-        self._load_all_curricula()
+        self._load_all_curricula(db_session=db_session)
     
-    def _load_all_curricula(self):
-        """Load all 49 curriculum JSON files and build unified database"""
+    def _load_all_curricula(self, db_session=None):
+        """Load curriculum from Postgres database if available, otherwise fallback to JSON."""
+        if db_session:
+            try:
+                from models import CurriculumSubject
+                subjects = db_session.query(CurriculumSubject).all()
+                for s in subjects:
+                    # Construct dictionary exactly like the JSON parser
+                    self._subject_db[s.subject_code] = {
+                        'name': s.title,
+                        'credits': float(s.credits) if s.credits else 0.0,
+                        'branch': s.branch,
+                        'semester': s.semester,
+                        'type': self._determine_type(s.subject_code, s.title)
+                    }
+                print(f"Loaded {len(subjects)} unique subjects from Neon DB cache!")
+                return
+            except Exception as e:
+                print(f"Failed to load from Neon DB, falling back to JSON: {e}")
+
+        # Fallback to JSON files
         loaded = 0
         for json_file in self.data_dir.glob("curriculum_*.json"):
             try:
@@ -632,7 +651,7 @@ class CurriculumService:
             except Exception as e:
                 print(f"Error loading {json_file}: {e}")
         
-        print(f"Loaded {loaded} curricula | {len(self._subject_db)} unique subjects")
+        print(f"Loaded {loaded} curricula | {len(self._subject_db)} unique subjects (via JSON fallback)")
     
     def _extract_subjects(self, data: Dict) -> Dict[str, Dict]:
         """Extract subjects from JSON (handles all formats)"""

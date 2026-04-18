@@ -1,8 +1,8 @@
-# OCR Service v3 - 7-Layer Pipeline Guide
+# OCR Service v3 - Saffron Engine Guide
 
 ## 🚀 Overview
 
-The **7-Layer OCR Pipeline v3** is a production-grade marksheet processing system designed for **90%+ accuracy** (up from 80-85% in v2). It implements a sophisticated multi-stage architecture with intelligent row grouping, fragment merging, and comprehensive validation.
+The **Saffron OCR Engine v3** is a production-grade marksheet processing system designed for **90%+ accuracy** (up from 80-85% in v2). It implements a sophisticated multi-stage architecture with intelligent row grouping, fragment merging, and comprehensive validation.
 
 ## 📊 Architecture
 
@@ -141,12 +141,12 @@ Layer-wise confidence breakdown:
 
 ### Python Code
 ```python
-from ocr_service_v3 import SevenLayerOCRService
+from ocr_service_v3 import SaffronOCRService
 from curriculum_service import CurriculumService
 
 # Initialize services
 curriculum_service = CurriculumService()
-ocr_service = SevenLayerOCRService(
+ocr_service = SaffronOCRService(
     curriculum_service=curriculum_service,
     debug=False  # Set True for detailed logging
 )
@@ -229,7 +229,7 @@ ocr_service = SevenLayerOCRService(debug=True)
 Output example:
 ```
 ============================================================
-🚀 7-LAYER OCR PIPELINE v3 - STARTING
+🚀 SAFFRON OCR ENGINE v3 - STARTING
 ============================================================
 
 📸 LAYER 1: Image Preprocessing

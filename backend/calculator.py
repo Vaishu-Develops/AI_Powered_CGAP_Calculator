@@ -755,14 +755,14 @@ class AnnaUniversityCGPA:
             
             # 3. GPA Calculation
             sem_total_points = 0.0
-            sem_total_credits = 0
+            sem_total_credits = 0.0
             for subj_data in current_sem_subjects:
                 grade = subj_data['grade'].upper()
                 credits = float(subj_data['credits'])
-                if grade in scale:
+                if grade in scale and grade in self.PASSING_GRADES:
+                    # Match Preview formula: GPA uses only passing subjects
                     sem_total_credits += credits
-                    if grade in self.PASSING_GRADES:
-                        sem_total_points += (scale[grade]['points'] * credits)
+                    sem_total_points += (scale[grade]['points'] * credits)
             
             current_sem_gpa = sem_total_points / sem_total_credits if sem_total_credits > 0 else 0.0
             

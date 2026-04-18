@@ -34,11 +34,11 @@ export default function UploadSection({ onFilesSelected, isDisabled }: UploadSec
 
     const processFiles = (files: File[]) => {
         const validFiles = files.filter(f =>
-            (f.type.startsWith('image/') || f.type === 'application/pdf') && f.size <= 20 * 1024 * 1024
+            f.type.startsWith('image/') && f.size <= 20 * 1024 * 1024
         );
 
         if (validFiles.length === 0) {
-            setError('Please upload valid images or PDFs under 20MB.');
+            setError('Please upload valid images under 20MB.');
             return;
         }
 
@@ -124,7 +124,7 @@ export default function UploadSection({ onFilesSelected, isDisabled }: UploadSec
                         </p>
 
                         <div className="flex flex-wrap justify-center gap-3 mb-8">
-                            {['JPG', 'PNG', 'WEBP', 'PDF'].map((fmt) => (
+                            {['JPG', 'PNG', 'WEBP'].map((fmt) => (
                                 <span key={fmt} className="px-3 py-1 bg-bg-card-alt border border-border text-[10px] font-bold tracking-widest text-text-muted rounded-full uppercase">
                                     {fmt}
                                 </span>
@@ -184,7 +184,7 @@ export default function UploadSection({ onFilesSelected, isDisabled }: UploadSec
                             <input
                                 type="file"
                                 className="hidden"
-                                accept="image/*,application/pdf"
+                                accept="image/*"
                                 multiple
                                 onChange={handleChange}
                                 disabled={isDisabled}

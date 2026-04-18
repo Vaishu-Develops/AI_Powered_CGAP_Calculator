@@ -15,15 +15,61 @@ export default function AuthPage() {
     const router = useRouter();
     const { login } = useUser();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Mock Authentication Logic
-        login({
-            id: Math.random().toString(36).substr(2, 9),
-            name: isLogin ? (email.split('@')[0] || 'User') : name,
-            email: email,
-        });
-        router.push('/home');
+        const userName = isLogin ? (email.split('@')[0] || 'User') : name;
+        // Replace with real Firebase UID once Firebase auth is connected.
+        const firebaseUid = email.trim().toLowerCase();
+
+        try {
+            const res = await fetch('http://localhost:8000/auth/firebase-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firebase_uid: firebaseUid,
+                    email: email.trim(),
+                    name: userName,
+                }),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || 'Login sync failed');
+            }
+            const data = await res.json();
+
+            // Restored 'id' as the firebase_uid to preserve compatibility with existings report/stats routing.
+            login({
+                id: data.user.firebase_uid,
+                db_id: data.user.id,
+                firebase_uid: data.user.firebase_uid,
+                name: data.user.name,
+                email: data.user.email,
+                is_pro: data.user.is_pro,
+                streak_count: data.user.streak_count,
+                badges: data.user.badges,
+                scan_count: data.user.scan_count,
+                referral_code: data.user.referral_code,
+                referrals_count: data.user.referrals_count
+            });
+            router.push('/home');
+        } catch (err) {
+            console.error('Auth sync error:', err);
+            // Fallback to local session so UI is not blocked.
+            login({
+                id: firebaseUid,
+                db_id: 0,
+                firebase_uid: firebaseUid,
+                name: userName,
+                email: email.trim(),
+                is_pro: false,
+                streak_count: 0,
+                badges: [],
+                scan_count: 0,
+                referrals_count: 0
+            });
+            router.push('/home');
+        }
     };
 
     return (

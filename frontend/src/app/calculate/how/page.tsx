@@ -30,7 +30,7 @@ export default function HowPage() {
             {
                 method: 'ocr',
                 label: 'Auto-Extract via AI',
-                sublabel: 'Upload your marksheet screenshot. Our 7-layer AI pipeline extracts every grade instantly — no typing needed.',
+                sublabel: 'Upload your marksheet screenshot. Our AI engine extracts every grade instantly — no typing needed.',
                 badge: '',
                 badgeIcon: null,
                 icon: <FiUploadCloud className="w-8 h-8" />,
