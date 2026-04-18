@@ -226,15 +226,10 @@ export default function BadgeShowcase({ onViewFull, reports = [] }: { onViewFull
                     <Icon icon="solar:history-bold-duotone" className="w-5 h-5 text-primary" />
                     <div className="text-left">
                         <p className="text-xs font-black text-text-primary uppercase tracking-wider">View Full Evolution & Stats</p>
-                        {!isPro ? (
+                        {!isPro && (
                             <p className="text-[10px] font-bold text-text-muted/40 flex items-center gap-1 uppercase tracking-widest">
                                 <Icon icon="solar:lock-bold" className="w-2.5 h-2.5" />
                                 Unlocked via Saffron Pro
-                            </p>
-                        ) : (
-                            <p className="text-[10px] font-bold text-primary flex items-center gap-1 uppercase tracking-widest">
-                                <Icon icon="solar:star-bold" className="w-2.5 h-2.5" />
-                                Pro Access Active
                             </p>
                         )}
                     </div>
