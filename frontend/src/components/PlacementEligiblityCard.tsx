@@ -47,8 +47,11 @@ const TIERS: PlacementTier[] = [
     }
 ];
 
-export default function PlacementEligiblityCard({ cgpa }: { cgpa: number }) {
+export default function PlacementEligiblityCard({ cgpa, isPro = false }: { cgpa: number; isPro?: boolean }) {
     const qualifiedTiers = TIERS.filter(t => cgpa >= t.threshold);
+    const lockedTiers = TIERS.filter(t => cgpa < t.threshold).sort((a, b) => a.threshold - b.threshold);
+    const nextTier = lockedTiers[0];
+    const gap = nextTier ? (nextTier.threshold - cgpa).toFixed(2) : null;
     const qualPercentage = Math.round((qualifiedTiers.length / TIERS.length) * 100);
 
     const containerVariants = {
@@ -82,6 +85,28 @@ export default function PlacementEligiblityCard({ cgpa }: { cgpa: number }) {
                     <div className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Qualification Probability</div>
                 </div>
             </div>
+
+            {gap && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                            <FiStar className="animate-spin-slow" />
+                        </div>
+                        <p className="text-sm font-bold text-text-primary">
+                            Just <span className="text-primary text-lg">{gap}</span> more for <span className="text-primary uppercase tracking-wider">{nextTier?.name}</span> Tier!
+                        </p>
+                    </div>
+                    {!isPro && (
+                        <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-accent-1/10 rounded-full text-[10px] font-black text-accent-1 uppercase border border-accent-1/20">
+                            Pro Bonus +10% Edge
+                        </div>
+                    )}
+                </motion.div>
+            )}
 
             <motion.div
                 variants={containerVariants}
@@ -127,6 +152,12 @@ export default function PlacementEligiblityCard({ cgpa }: { cgpa: number }) {
                                             {company}
                                         </motion.div>
                                     ))}
+                                    {isQualified && !isPro && idx === 0 && (
+                                        <div className="pt-2 flex items-center gap-2 text-[10px] font-bold text-accent-1">
+                                            <FiLock className="shrink-0" />
+                                            <span>+12 more companies lock for Free users</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className={`pt-6 border-t font-black text-[10px] uppercase tracking-widest flex items-center gap-2 ${isQualified ? 'text-primary border-primary/10' : 'text-text-muted border-border'}`}>
@@ -158,11 +189,21 @@ export default function PlacementEligiblityCard({ cgpa }: { cgpa: number }) {
                     </motion.div>
                 </div>
             </div>
-            <div className="p-4 rounded-2xl bg-bg-card-alt border border-border flex items-center gap-3">
-                <FiInfo className="text-primary flex-shrink-0" />
-                <p className="text-[10px] text-text-muted font-bold leading-relaxed">
-                    Eligibility criteria may vary by company and regulation. This is an average based on 2025 placement data. Ensure you maintain zero standing arrears.
-                </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1 p-4 rounded-2xl bg-bg-card-alt border border-border flex items-center gap-3">
+                    <FiInfo className="text-primary flex-shrink-0" />
+                    <p className="text-[10px] text-text-muted font-bold leading-relaxed">
+                        Eligibility criteria may vary by company. This is an average based on 2025 placement data.
+                    </p>
+                </div>
+                {!isPro && (
+                    <button
+                        className="p-4 rounded-2xl bg-accent-1/10 border border-accent-1/30 text-accent-1 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-accent-1/20 transition-all shadow-sm"
+                    >
+                        <FiStar fill="currentColor" /> Unlock Saffron Pro CTC Insights
+                    </button>
+                )}
             </div>
         </div>
     );
