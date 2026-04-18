@@ -14,6 +14,7 @@ import ManualEntryGrid from '@/components/ManualEntryGrid';
 import SemesterSelector, { SemSlot } from '@/components/SemesterSelector';
 import SlotMismatchModal, { SlotMismatch } from '@/components/SlotMismatchModal';
 import OcrScanScreen from '@/components/OcrScanScreen';
+import { persistenceService } from '@/lib/persistenceService';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
@@ -383,8 +384,7 @@ export default function InputPage() {
   }, [isEditAllPreviewMode, user, isDemo]);
 
   const persistReport = async (resultData: any) => {
-    if (!user || isDemo || state.target !== 'me') return;
-
+    const firebaseUid = user?.id || null;
     const subjects = Object.entries(resultData?.subjects || {}).map(([code, subj]: [string, any]) => ({
       subject_code: String(subj?.subject_code || code || '').toUpperCase().split('__SEM')[0],
       grade: String(subj?.grade || '').toUpperCase(),
@@ -394,6 +394,12 @@ export default function InputPage() {
     }));
 
     if (subjects.length === 0) return;
+
+    // Phase 5: Trigger Badge Unlocks
+    await persistenceService.unlockBadge(firebaseUid, 'first_blood');
+    if (stage === 'done' && ocrData) {
+      await persistenceService.unlockBadge(firebaseUid, 'scanner_pro');
+    }
 
     const subjectsBySem: Record<number, typeof subjects> = {};
     for (const subject of subjects) {
@@ -420,8 +426,7 @@ export default function InputPage() {
       if (!Number.isFinite(gpa)) {
         const weighted = semSubjects.reduce((sum, s) => {
           const grade = String(s.grade || '').toUpperCase();
-          if (FAILING_GRADES.has(grade)) return sum;
-          const gp = grade === 'S' || grade === 'O' ? 10 : grade === 'A+' ? 9 : grade === 'A' ? 8 : grade === 'B+' ? 7 : grade === 'B' ? 6 : grade === 'C' ? 5 : 0;
+          const gp = GP_MAP[grade] || 0;
           return sum + gp * Number(s.credits || 0);
         }, 0);
         const credits = semSubjects.reduce((sum, s) => {
@@ -433,10 +438,7 @@ export default function InputPage() {
       }
 
       const totalCredits = semSubjects.reduce((sum, s) => sum + Number(s.credits || 0), 0);
-      const payload = {
-        firebase_uid: user.id,
-        email: user.email,
-        name: user.name,
+      const reportPayload = {
         semester: sem,
         regulation: String(resultData?.semester_info?.regulation || '2021'),
         branch: String(resultData?.semester_info?.branch || 'CSE'),
@@ -446,16 +448,8 @@ export default function InputPage() {
         subjects: semSubjects,
       };
 
-      const res = await fetch('http://localhost:8000/reports/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Failed to save report for semester ${sem}`);
-      }
+      // Use persistenceService for unified saving
+      await persistenceService.saveReport(firebaseUid, reportPayload);
     }
   };
 
