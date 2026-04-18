@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUser } from '@/context/UserContext';
+import { persistenceService } from '@/lib/persistenceService';
 import {
     FiX,
     FiRefreshCw,
@@ -54,9 +56,17 @@ function normalizeGrade(grade: string | undefined | null): (typeof GRADE_OPTIONS
 }
 
 export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, isSingle, onClose }: WhatIfSimulatorProps) {
+    const { user } = useUser();
     const [simulatedGrades, setSimulatedGrades] = useState<Record<string, string>>(
         Object.fromEntries(Object.entries(initialSubjects).map(([code, det]) => [code, normalizeGrade(det.grade)]))
     );
+
+    // Phase 5: Trigger Badge Unlock on open
+    useEffect(() => {
+        if (isOpen) {
+            persistenceService.unlockBadge(user?.id || null, 'sniper');
+        }
+    }, [isOpen, user?.id]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -75,8 +85,8 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
         let totalCredits = 0;
         Object.entries(grades).forEach(([code, grade]) => {
             const credits = initialSubjects[code]?.credits || 0;
-            const points = GRADE_POINTS[grade] || 0;
-            
+            const points = GRADE_POINTS[grade as keyof typeof GRADE_POINTS] || 0;
+
             // Anna University Formula: CGPA = Σ(Ci × GPi) / ΣCi
             // ALL subjects contribute to denominator (including failed with 0 points)
             totalWeighted += points * credits;
@@ -202,9 +212,9 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                     </div>
                                 </div>
                                 <div className="h-2 w-full bg-bg-primary rounded-full relative overflow-hidden">
-                                     {/* Baseline ghost bar */}
-                                     <div 
-                                        className="absolute inset-y-0 left-0 bg-text-muted/10 transition-all duration-500" 
+                                    {/* Baseline ghost bar */}
+                                    <div
+                                        className="absolute inset-y-0 left-0 bg-text-muted/10 transition-all duration-500"
                                         style={{ width: `${(currentGpa / 10) * 100}%` }}
                                     />
                                     <motion.div
@@ -213,7 +223,7 @@ export default function WhatIfSimulator({ isOpen, initialSubjects, currentGpa, i
                                         className={`h-full ${diff >= 0 ? 'bg-primary' : 'bg-accent-2'}`}
                                     />
                                     {/* Tick for exact current position */}
-                                    <div 
+                                    <div
                                         className="absolute inset-y-0 w-0.5 bg-text-muted/30 z-10"
                                         style={{ left: `${(currentGpa / 10) * 100}%` }}
                                     />
