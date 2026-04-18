@@ -1,7 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='requests')
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import shutil
@@ -558,6 +558,25 @@ def get_user_subjects(firebase_uid: str, db: Session = Depends(get_db)):
         "by_semester": {str(k): v for k, v in sorted(by_semester.items(), key=lambda x: x[0])},
         "semester_gpas": semester_gpas,
     }
+
+@app.get("/curriculum/subjects")
+def get_curriculum_subjects(branch: str, regulation: str, semester: int):
+    """
+    Get subjects for a specific branch, regulation, and semester.
+    Useful for the Semester Planner to auto-load upcoming subjects.
+    """
+    try:
+        subjects = curriculum_service.get_subjects_by_semester(branch, regulation, semester)
+        return {
+            "status": "success",
+            "branch": branch,
+            "regulation": regulation,
+            "semester": semester,
+            "subjects": subjects
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch curriculum: {e}")
+
 
 @app.post("/preview-ocr/")
 async def preview_ocr(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
