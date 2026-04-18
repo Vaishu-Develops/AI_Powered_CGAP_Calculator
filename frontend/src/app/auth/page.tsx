@@ -38,6 +38,10 @@ export default function AuthPage() {
             }
             const data = await res.json();
 
+            // Clear previous user's local data before login to prevent cross-account leakage
+            localStorage.removeItem('saffron_cgpa_reports');
+            localStorage.removeItem('cgpa_intel_badges');
+
             // Restored 'id' as the firebase_uid to preserve compatibility with existings report/stats routing.
             login({
                 id: data.user.firebase_uid,
@@ -55,6 +59,9 @@ export default function AuthPage() {
             router.push('/home');
         } catch (err) {
             console.error('Auth sync error:', err);
+            // Clear previous user's local data even in fallback
+            localStorage.removeItem('saffron_cgpa_reports');
+            localStorage.removeItem('cgpa_intel_badges');
             // Fallback to local session so UI is not blocked.
             login({
                 id: firebaseUid,
