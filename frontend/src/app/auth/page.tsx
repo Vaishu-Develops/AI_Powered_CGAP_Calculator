@@ -38,12 +38,19 @@ export default function AuthPage() {
             }
             const data = await res.json();
 
-            // Use the actual name returned from the backend Postgres database!
-            // This prevents the email prefix local mapping from overwriting the UI Context.
+            // Restored 'id' as the firebase_uid to preserve compatibility with existings report/stats routing.
             login({
                 id: data.user.firebase_uid,
+                db_id: data.user.id,
+                firebase_uid: data.user.firebase_uid,
                 name: data.user.name,
                 email: data.user.email,
+                is_pro: data.user.is_pro,
+                streak_count: data.user.streak_count,
+                badges: data.user.badges,
+                scan_count: data.user.scan_count,
+                referral_code: data.user.referral_code,
+                referrals_count: data.user.referrals_count
             });
             router.push('/home');
         } catch (err) {
@@ -51,8 +58,15 @@ export default function AuthPage() {
             // Fallback to local session so UI is not blocked.
             login({
                 id: firebaseUid,
+                db_id: 0,
+                firebase_uid: firebaseUid,
                 name: userName,
                 email: email.trim(),
+                is_pro: false,
+                streak_count: 0,
+                badges: [],
+                scan_count: 0,
+                referrals_count: 0
             });
             router.push('/home');
         }
