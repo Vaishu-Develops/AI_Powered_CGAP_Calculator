@@ -7,7 +7,11 @@ import jsPDF from 'jspdf';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import dynamic from 'next/dynamic';
-import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle, FiChevronDown, FiUserPlus, FiUpload, FiEdit3 } from 'react-icons/fi';
+import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle, FiChevronDown, FiUserPlus, FiUpload, FiEdit3, FiTarget } from 'react-icons/fi';
+import { Icon } from '@iconify/react';
+import BadgeShowcase from '@/components/BadgeShowcase';
+import AchievementDetailModal from '@/components/AchievementDetailModal';
+import PlacementEligiblityCard from '@/components/PlacementEligiblityCard';
 import WhatIfSimulator from '@/components/WhatIfSimulator';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
@@ -79,9 +83,11 @@ function buildAiInsight(params: {
     return `Current CGPA is ${latestCgpa.toFixed(2)} with a ${trend}. Focus on a strong Sem ${nextSem} target around ${(Math.max(7.0, lastGpa + 0.4)).toFixed(1)}+ to strengthen First Class momentum across the remaining ${missingCount} semester${missingCount === 1 ? '' : 's'}.`;
 }
 
+import { persistenceService } from '@/lib/persistenceService';
+
 export default function HomePage() {
     const router = useRouter();
-    const { user, isDemo, isDemoGPA, logout, homeData, setHomeData } = useUser();
+    const { user, isDemo, isDemoGPA, logout, homeData, setHomeData, setStats } = useUser();
     const { resetFlow, setSource, startQuickAddFromHome, startUploadMissingFromHome, startFriendMode, setMode } = useCalcFlow();
     const [reports, setReports] = useState<SavedReport[]>([]);
     const [semestersPresent, setSemestersPresent] = useState<number[]>([]);
@@ -94,6 +100,77 @@ export default function HomePage() {
     const [simulatorCurrentGpa, setSimulatorCurrentGpa] = useState(0);
     const [simulatorIsSingle, setSimulatorIsSingle] = useState(true);
     const [reportExporting, setReportExporting] = useState(false);
+    const [syncing, setSyncing] = useState(false);
+    const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
+    const [referralCode, setReferralCode] = useState('');
+    const [referralLoading, setReferralLoading] = useState(false);
+    const [copySuccess, setCopySuccess] = useState(false);
+
+    const handleApplyReferral = async () => {
+        if (!user || !referralCode.trim()) return;
+        setReferralLoading(true);
+        try {
+            const res = await fetch('http://localhost:8000/referrals/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    referral_code: referralCode.trim().toUpperCase(),
+                    firebase_uid: user.id
+                })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message);
+                setStats({ is_pro: true, applied_referral_code: referralCode.trim().toUpperCase() });
+                setReferralCode('');
+            } else {
+                alert(data.detail || 'Failed to apply referral code');
+            }
+        } catch (err) {
+            alert('Something went wrong. Please try again.');
+        } finally {
+            setReferralLoading(false);
+        }
+    };
+
+    const handleCopyCode = () => {
+        if (!user?.referral_code) return;
+        navigator.clipboard.writeText(user.referral_code);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+    };
+
+    // Phase 5: Persistence & Sync Effect
+    useEffect(() => {
+        const syncAndFetchStats = async () => {
+            if (!user?.firebase_uid || isDemo || syncing) return;
+
+            setSyncing(true);
+            try {
+                // 1. Sync local data to backend (one-time logic handled by server set union)
+                await persistenceService.syncToBackend(user.firebase_uid);
+
+                // 2. Fetch fresh stats (streaks, badges, pro status)
+                const stats = await persistenceService.getUserStats(user.firebase_uid);
+
+                // 3. Update Global Context
+                setStats({
+                    is_pro: stats.is_pro,
+                    streak_count: stats.streak_count,
+                    badges: stats.badges,
+                    scan_count: stats.scan_count,
+                    referral_code: stats.referral_code,
+                    referrals_count: stats.referrals_count
+                });
+            } catch (err) {
+                console.error('Phase 5 Sync Failed:', err);
+            } finally {
+                setSyncing(false);
+            }
+        };
+
+        syncAndFetchStats();
+    }, [user?.firebase_uid, isDemo]);
 
     useEffect(() => {
         // Hydrate from cache immediately to avoid "Loading" flash
@@ -332,13 +409,13 @@ export default function HomePage() {
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(16);
             pdf.text('Degree Report', margin + 4, y + 1);
-            
+
             pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(10);
             if (user?.name) {
                 pdf.text(`Student: ${user.name}`, margin + 4, y + 9);
             }
-            
+
             pdf.setFontSize(8.5);
             pdf.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin - 4, y + 1, { align: 'right' });
             if (user?.email) {
@@ -421,6 +498,29 @@ export default function HomePage() {
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1">CGPA</span> Intel
                     </div>
                     <div className="flex items-center gap-3 sm:gap-4 ml-auto">
+                        {/* Streak Badge (Phase 5) */}
+                        {user && user.streak_count > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                onClick={() => setIsAchievementModalOpen(true)}
+                                className="flex items-center gap-1 bg-orange-500/10 border border-orange-500/20 px-3 py-1.5 rounded-full shadow-sm cursor-pointer hover:bg-orange-500/20 transition-all"
+                                title={`${user.streak_count} day streak! Click for details.`}
+                            >
+                                <span className="text-lg">🔥</span>
+                                <span className="font-black text-orange-600 dark:text-orange-400 text-sm">{user.streak_count}</span>
+                            </motion.div>
+                        )}
+
+                        {/* Syncing Indicator */}
+                        {syncing && (
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-text-muted animate-pulse">
+                                <Icon icon="solar:refresh-bold-duotone" className="animate-spin" />
+                                SYNCING
+                            </div>
+                        )}
+
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                             <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary shadow-sm">
                                 {displayName.charAt(0).toUpperCase()}
@@ -502,10 +602,15 @@ export default function HomePage() {
                                     className="px-10 py-5 bg-gradient-to-r from-primary to-[#E65C00] text-white font-black text-xl rounded-full shadow-[0_20px_40px_rgba(212,80,10,0.3)] hover:scale-105 hover:shadow-[0_25px_50px_rgba(212,80,10,0.4)] transition-all flex items-center gap-3 relative overflow-hidden border border-primary/20"
                                 >
                                     <div className="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
-                                    <FiPlus className="w-6 h-6" />
                                     <span>Calculate First Semester</span>
                                 </button>
                             </div>
+
+                            {/* Achievements Section */}
+                            <BadgeShowcase
+                                reports={reports}
+                                onViewFull={() => setIsAchievementModalOpen(true)}
+                            />
                         </motion.div>
                     )}
 
@@ -581,6 +686,12 @@ export default function HomePage() {
                                     </button>
                                 </div>
                             </div>
+
+                            {/* Achievements Section */}
+                            <BadgeShowcase
+                                reports={reports}
+                                onViewFull={() => setIsAchievementModalOpen(true)}
+                            />
                         </motion.div>
                     )}
 
@@ -658,8 +769,19 @@ export default function HomePage() {
                                             <FiActivity /> {simulatorLoading ? 'Loading...' : 'Try Simulator →'}
                                         </button>
                                     </div>
+
+                                    {/* Placement Section for Partial */}
+                                    <div className="col-span-full bg-bg-card border border-border p-10 rounded-[40px] shadow-sm">
+                                        <PlacementEligiblityCard cgpa={latestCgpa} isPro={user?.is_pro || false} />
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* Achievements Section */}
+                            <BadgeShowcase
+                                reports={reports}
+                                onViewFull={() => setIsAchievementModalOpen(true)}
+                            />
                         </motion.div>
                     )}
 
@@ -709,31 +831,97 @@ export default function HomePage() {
                             <div className="px-2">
                                 <h3 className="text-sm font-bold tracking-widest text-text-muted uppercase mb-4">INSIGHTS</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="bg-bg-card-alt border border-border p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
-                                        <div>
-                                            <h3 className="text-2xl font-black flex items-center gap-3 mb-6">
-                                                <FiBriefcase className="text-primary" /> Placement Analytics
-                                            </h3>
-                                            <p className="text-text-primary text-lg font-medium mb-4">
-                                                Based on your final CGPA of {latestCgpa > 0 ? latestCgpa.toFixed(2) : '0.00'}, you are eligible for <strong>{latestCgpa >= 8.5 ? '100%' : latestCgpa >= 7.5 ? '80%' : '60%'}</strong> of Tier-1 company placement drives.
+                                    {/* Swapped with Component */}
+                                    {/* Swapped with Component */}
+                                    <div className="col-span-full">
+                                        <PlacementEligiblityCard cgpa={latestCgpa} isPro={user?.is_pro || false} />
+                                    </div>
+
+                                    {/* Refer & Earn Card */}
+                                    <div className="bg-gradient-to-br from-bg-card to-bg-card-alt border border-border p-8 rounded-[40px] shadow-sm relative overflow-hidden flex flex-col justify-between group">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-2xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
+                                        <div className="relative z-10">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl">
+                                                    <FiUserPlus />
+                                                </div>
+                                                <h3 className="text-2xl font-black">Refer & Earn</h3>
+                                            </div>
+                                            <p className="text-text-muted font-medium mb-6">
+                                                Invite 10 friends to join Saffron and unlock <span className="text-primary font-bold">1 Year of Pro</span> for free!
                                             </p>
+
+                                            {user?.referral_code && (
+                                                <div className="bg-bg-primary rounded-2xl p-4 border border-border mb-6 group/code relative overflow-hidden">
+                                                    <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Your Referral Code</p>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xl font-black tracking-widest text-primary">{user.referral_code}</span>
+                                                        <button
+                                                            onClick={handleCopyCode}
+                                                            className="p-2 hover:bg-bg-card rounded-xl transition-colors text-text-muted hover:text-primary"
+                                                        >
+                                                            <Icon icon={copySuccess ? "solar:check-read-bold" : "solar:copy-bold-duotone"} className="w-5 h-5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {!user?.applied_referral_code ? (
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter friend's code"
+                                                        value={referralCode}
+                                                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                                                        className="flex-1 bg-bg-card border border-border rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest outline-none focus:border-primary/50 transition-colors"
+                                                    />
+                                                    <button
+                                                        onClick={handleApplyReferral}
+                                                        disabled={referralLoading || !referralCode}
+                                                        className="px-6 py-3 bg-primary text-white font-black text-sm rounded-xl hover:bg-primary-hover disabled:opacity-50 transition-all flex items-center gap-2"
+                                                    >
+                                                        {referralLoading ? <Icon icon="solar:refresh-bold" className="animate-spin" /> : 'Apply'}
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-success bg-success/10 border border-success/20 px-4 py-3 rounded-2xl">
+                                                    <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
+                                                    <span className="text-xs font-black uppercase tracking-tight">Referral Reward Active</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="bg-bg-card border border-border p-8 rounded-[32px] relative overflow-hidden flex flex-col justify-between shadow-sm">
-                                        <div>
-                                            <h3 className="text-2xl font-black flex items-center gap-3 mb-6">
-                                                <FiCheckCircle className="text-primary" /> Curriculum Complete
-                                            </h3>
-                                            <p className="text-text-muted text-lg mb-8 font-medium">All 8 semesters successfully verified against Anna University Regulations 2021.</p>
+
+                                    {/* Semester Planner Card */}
+                                    <div
+                                        onClick={() => router.push('/home/planner')}
+                                        className="bg-bg-card border border-border p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer group hover:border-primary/30 transition-all hover:shadow-xl"
+                                    >
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-accent-1/5 blur-2xl -mr-16 -mt-16 group-hover:bg-accent-1/10 transition-colors" />
+                                        <div className="relative z-10">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <div className="w-12 h-12 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-xl">
+                                                    <FiTarget />
+                                                </div>
+                                                <h3 className="text-2xl font-black">Semester Planner</h3>
+                                            </div>
+                                            <p className="text-text-muted font-medium mb-8">
+                                                Set a target CGPA and we'll calculate the performance needed in your remaining semesters to hit it.
+                                            </p>
+                                            <div className="flex items-center gap-2 text-primary font-black text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
+                                                Start Planning <Icon icon="solar:alt-arrow-right-bold-duotone" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            {/* Achievements Section */}
+                            <BadgeShowcase onViewFull={() => setIsAchievementModalOpen(true)} />
                         </motion.div>
                     )}
 
-                </AnimatePresence>
+                </AnimatePresence >
 
                 <AnimatePresence>
                     {isSimulatorOpen && (
@@ -746,8 +934,13 @@ export default function HomePage() {
                         />
                     )}
                 </AnimatePresence>
-            </div>
-        </main>
+            </div >
+            {/* Achievement Detail Modal */}
+            <AchievementDetailModal
+                isOpen={isAchievementModalOpen}
+                onClose={() => setIsAchievementModalOpen(false)}
+            />
+        </main >
     );
 }
 
@@ -760,6 +953,7 @@ function JourneyRow({
     onOpenSemester,
     onUploadAllMissing,
     onEditAll,
+    isDemoGPA,
 }: {
     activeSems: number[];
     gpaBySem: Record<number, number>;
