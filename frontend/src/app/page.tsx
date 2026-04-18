@@ -11,6 +11,9 @@ import { useCalcFlow } from '@/context/CalcFlowContext';
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 import { TextGenerateEffect } from '@/components/TextGenerateEffect';
 import TextPressure from '@/components/TextPressure';
+import PricingSection from '@/components/PricingSection';
+import FeedbackSection from '@/components/FeedbackSection';
+import FlashSaleBanner from '@/components/FlashSaleBanner';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -39,7 +42,7 @@ export default function LandingPage() {
   const handleTryDemo = () => {
     // Check if demo has already been used on this device
     const demoUsed = localStorage.getItem('saffron_demo_consumed');
-    
+
     if (demoUsed === 'true') {
       alert("You've already used your free trial. Sign up to save your reports and calculate more semesters!");
       router.push('/auth');
@@ -55,6 +58,7 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary relative overflow-hidden font-outfit selection:bg-primary/30">
+      <FlashSaleBanner />
       <ParticleBackground />
 
       {/* Saffron OS Aurora Effects */}
@@ -71,9 +75,21 @@ export default function LandingPage() {
 
       {/* Navigation */}
       <nav className="relative z-20 flex justify-between items-center px-6 md:px-12 py-6 max-w-[1400px] mx-auto">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-2xl font-black tracking-tighter">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="text-2xl font-black tracking-tighter cursor-pointer" onClick={() => router.push('/')}>
           <span className="text-primary">CGPA</span> Intel
         </motion.div>
+
+        {/* Central Links */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-[0.2em] text-text-muted/60"
+        >
+          <a href="#features" className="hover:text-primary transition-colors duration-300">Features</a>
+          <a href="#pricing" className="hover:text-primary transition-colors duration-300">Pricing</a>
+          <a href="#feedback" className="hover:text-primary transition-colors duration-300">Give Feedback</a>
+        </motion.div>
+
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex gap-4 items-center">
           {user ? (
             <button onClick={() => router.push('/home')} className="text-sm font-bold text-primary px-6 py-2.5 rounded-full border border-primary/20 hover:bg-primary/10 transition-colors">
@@ -91,38 +107,38 @@ export default function LandingPage() {
 
         {/* 1. HERO SECTION */}
         <div className="pt-20 md:pt-32 pb-16 text-center max-w-5xl mx-auto relative z-10">
-          
+
           {/* Floating Atmospheric Shards (Reduced count & size for better performance) */}
           {[1, 2, 3].map((i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, rotate: 0 }}
-              animate={{ 
-                opacity: [0, 0.15, 0], 
-                y: [-15, 15], 
+              animate={{
+                opacity: [0, 0.15, 0],
+                y: [-15, 15],
                 x: i % 2 === 0 ? [-8, 8] : [8, -8],
                 rotate: [0, 90]
               }}
-              transition={{ 
-                duration: 6 + i, 
-                repeat: Infinity, 
+              transition={{
+                duration: 6 + i,
+                repeat: Infinity,
                 ease: "easeInOut",
                 delay: i * 0.5
               }}
               className={`absolute hidden lg:block w-6 h-6 rounded-lg bg-primary/20 blur-[2px] pointer-events-none -z-10`}
-              style={{ 
-                top: `${25 * i}%`, 
-                left: i % 2 === 0 ? '2%' : '95%' 
+              style={{
+                top: `${25 * i}%`,
+                left: i % 2 === 0 ? '2%' : '95%'
               }}
             />
           ))}
 
           {/* Holographic AI Badge (Refined scaling) */}
           {/* Saffron Engine Activated Badge - Premium Animation */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20, scale: 0.9 }} 
-            animate={{ opacity: 1, y: 0, scale: 1 }} 
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} 
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-full bg-bg-card/40 backdrop-blur-3xl border border-white/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-12 shadow-2xl overflow-hidden cursor-default"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent-1/10 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -138,12 +154,12 @@ export default function LandingPage() {
           {/* Liquid Animated Heading - Premium Animation Components */}
           <div className="relative mb-14 group/heading flex flex-col items-center">
             <h1 className="sr-only">Stop calculating manually. AI reads it all.</h1>
-            
+
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[180%] bg-[radial-gradient(circle_at_center,rgba(212,80,10,0.18)_0%,transparent_70%)] blur-[120px] -z-10 opacity-40 group-hover/heading:opacity-60 transition-opacity duration-1000" />
 
             {/* Main Title: Sequential Blur Reveal */}
-            <TextGenerateEffect 
-              words="Stop calculating manually." 
+            <TextGenerateEffect
+              words="Stop calculating manually."
               className="text-text-primary text-center text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter leading-none"
             />
 
@@ -163,31 +179,31 @@ export default function LandingPage() {
             </div>
 
             {/* Saffron Data Beam SVG (Pulsating) */}
-            <motion.div 
+            <motion.div
               animate={{ height: [128, 160, 128], opacity: [0.3, 0.5, 0.3] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[1px] pointer-events-none -z-10 bg-gradient-to-b from-primary/60 via-primary/20 to-transparent"
             />
           </div>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 15 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
-            transition={{ delay: 1.2, duration: 1, ease: "easeOut" }} 
+            transition={{ delay: 1.2, duration: 1, ease: "easeOut" }}
             className="text-lg md:text-2xl text-text-muted font-medium mb-12 max-w-3xl mx-auto leading-relaxed px-4"
           >
             Drop marksheets. Get your report in <span className="text-primary font-black underline decoration-primary/20 decoration-[4px] underline-offset-8">5 seconds.</span>
           </motion.p>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.8, delay: 0.7 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-20"
           >
-            <button 
-              onClick={handleGetStarted} 
+            <button
+              onClick={handleGetStarted}
               className="group relative px-12 py-5 bg-bg-primary text-white rounded-full font-black text-xl overflow-hidden shadow-[0_20px_40px_-5px_rgba(212,80,10,0.4)] hover:shadow-[0_30px_60px_-10px_rgba(212,80,10,0.6)] transition-all duration-500 hover:-translate-y-1.5 border border-white/10"
             >
               <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
@@ -198,7 +214,7 @@ export default function LandingPage() {
               </div>
             </button>
 
-            <button 
+            <button
               onClick={handleTryDemo}
               className="group px-12 py-5 bg-white/5 hover:bg-primary/5 border border-white/10 hover:border-primary/40 text-text-muted hover:text-primary font-black text-xl rounded-full backdrop-blur-3xl transition-all duration-500 shadow-xl flex items-center"
             >
@@ -266,7 +282,7 @@ export default function LandingPage() {
 
         {/* 2. SOCIAL PROOF PILLS */}
         <div className="relative z-20 -mt-8 mb-32 flex flex-col items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -314,7 +330,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Supported Regulations Marquee/Pill */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -382,7 +398,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="relative z-10 h-2 bg-border/40 rounded-full overflow-hidden w-48 border border-white/5">
-                <motion.div 
+                <motion.div
                   initial={{ width: "30%" }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
@@ -418,7 +434,7 @@ export default function LandingPage() {
               transition={{ delay: 0.2 }}
               className="md:col-span-2 group relative bg-gradient-to-br from-bg-card/40 to-[#121212]/5 backdrop-blur-xl border border-border/60 hover:border-text-muted/40 rounded-[2.5rem] p-8 flex flex-col justify-end gap-4 shadow-sm hover:shadow-2xl transition-all duration-700 overflow-hidden"
             >
-               <div className="w-12 h-12 rounded-full border border-border/50 flex items-center justify-center text-xl text-text-muted group-hover:border-primary/30 group-hover:text-primary transition-all">
+              <div className="w-12 h-12 rounded-full border border-border/50 flex items-center justify-center text-xl text-text-muted group-hover:border-primary/30 group-hover:text-primary transition-all">
                 <FiBriefcase />
               </div>
               <div>
@@ -439,7 +455,7 @@ export default function LandingPage() {
               className="md:col-span-4 group relative bg-bg-card/40 backdrop-blur-xl border border-border/60 hover:border-error/40 rounded-[2.5rem] p-10 flex md:flex-row flex-col items-center gap-10 shadow-sm hover:shadow-2xl transition-all duration-700 overflow-hidden"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-error/5 opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-1000 -z-10" />
-              
+
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-xl bg-error/10 flex items-center justify-center text-xl text-error">
@@ -461,11 +477,11 @@ export default function LandingPage() {
                   <span>8.12</span>
                 </div>
                 <div className="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden relative">
-                   <motion.div 
+                  <motion.div
                     animate={{ x: ["-100%", "100%"] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                     className="h-full w-1/2 bg-gradient-to-r from-transparent via-error to-transparent"
-                   />
+                  />
                 </div>
               </div>
             </motion.div>
@@ -475,12 +491,12 @@ export default function LandingPage() {
 
 
         {/* 4. HOW IT WORKS */}
-        <div className="mb-48 pt-24 relative overflow-hidden">
+        <div id="features" className="mb-48 pt-24 relative overflow-hidden scroll-mt-24">
           {/* Subtle background flow effect */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-[radial-gradient(circle_at_50%_50%,rgba(242,101,34,0.03),transparent_70%)] pointer-events-none" />
-          
+
           <div className="text-center mb-24 relative z-10">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -488,7 +504,7 @@ export default function LandingPage() {
             >
               3 steps. 30 seconds. Done.
             </motion.h2>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -523,7 +539,7 @@ export default function LandingPage() {
                 className="relative group pt-12 md:pt-0"
               >
                 <div className="absolute -top-12 md:-top-20 left-4 text-[8rem] md:text-[12rem] font-black text-primary/[0.08] select-none pointer-events-none group-hover:text-primary/[0.15] transition-colors duration-700 leading-none">01</div>
-                
+
                 <div className="bg-bg-card/40 backdrop-blur-2xl border border-border/60 rounded-[3rem] p-10 hover:shadow-2xl transition-all duration-700 group-hover:-translate-y-4 hover:border-primary/30 relative overflow-hidden">
                   <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center text-4xl text-primary mb-8 shadow-inner border border-primary/5 group-hover:scale-110 transition-transform duration-500">
                     <FiUploadCloud />
@@ -549,9 +565,9 @@ export default function LandingPage() {
                 className="relative group pt-12 md:pt-16"
               >
                 <div className="absolute -top-12 md:-top-4 left-4 text-[8rem] md:text-[12rem] font-black text-accent-1/[0.08] select-none pointer-events-none group-hover:text-accent-1/[0.15] transition-colors duration-700 leading-none">02</div>
-                
+
                 <div className="bg-bg-card/40 backdrop-blur-2xl border border-border/60 rounded-[3rem] p-10 hover:shadow-2xl transition-all duration-700 group-hover:-translate-y-4 hover:border-accent-1/30 relative overflow-hidden">
-                   <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-1/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent-1/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="w-20 h-20 rounded-3xl bg-accent-1/10 flex items-center justify-center text-4xl text-accent-1 mb-8 shadow-inner border border-accent-1/5 group-hover:rotate-6 transition-transform duration-500">
                     <FiCpu />
                   </div>
@@ -571,7 +587,7 @@ export default function LandingPage() {
                 className="relative group pt-12 md:pt-0"
               >
                 <div className="absolute -top-12 md:-top-20 left-4 text-[8rem] md:text-[12rem] font-black text-data/[0.08] select-none pointer-events-none group-hover:text-data/[0.15] transition-colors duration-700 leading-none">03</div>
-                
+
                 <div className="bg-bg-card/40 backdrop-blur-2xl border border-border/60 rounded-[3rem] p-10 hover:shadow-2xl transition-all duration-700 group-hover:-translate-y-4 hover:border-data/30 relative overflow-hidden">
                   <div className="w-20 h-20 rounded-3xl bg-data/10 flex items-center justify-center text-4xl text-data mb-8 shadow-inner border border-data/5 group-hover:scale-110 transition-transform duration-500">
                     <FiFileText />
@@ -596,14 +612,14 @@ export default function LandingPage() {
         <div className="mb-48 relative max-w-[1240px] mx-auto group">
           {/* Pitch Black Bento Container */}
           <div className="absolute inset-0 bg-[#0A0A0A] rounded-[4rem] shadow-[0_0_100px_rgba(212,80,10,0.15)] border border-white/5 overflow-hidden -z-10" />
-          
+
           {/* Animated Liquid Background Overlay */}
           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_100%_0%,rgba(212,80,10,0.15),transparent_50%)] pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_0%_100%,rgba(247,197,159,0.08),transparent_50%)] pointer-events-none" />
 
           <div className="p-10 md:p-24 flex flex-col md:flex-row items-center gap-16 relative z-10">
             <div className="flex-1 text-left">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -612,7 +628,7 @@ export default function LandingPage() {
                 <FiActivity className="w-4 h-4 animate-pulse" /> Superpower Included
               </motion.div>
 
-              <motion.h2 
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -623,18 +639,18 @@ export default function LandingPage() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1">Simulator.</span>
               </motion.h2>
 
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
                 className="text-lg md:text-xl text-gray-400 mb-12 font-medium leading-relaxed"
               >
-                Need 8.5 for placement? Wondering what grades you need next semester to hit <span className="text-white font-bold">First Class with Distinction</span>? 
+                Need 8.5 for placement? Wondering what grades you need next semester to hit <span className="text-white font-bold">First Class with Distinction</span>?
                 Enter your target, and our engine reverse-engineers the exact grades you need.
               </motion.p>
 
-              <motion.button 
+              <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -648,7 +664,7 @@ export default function LandingPage() {
             </div>
 
             {/* Simulator Mockup Visual */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true }}
@@ -661,16 +677,16 @@ export default function LandingPage() {
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest">Target CGPA</span>
                   <div className="px-3 py-1 bg-primary/20 text-primary text-[10px] font-black rounded-lg">LIVE SIM</div>
                 </div>
-                
+
                 <div className="text-6xl font-black text-white mb-10 text-center tracking-tighter">9.12</div>
-                
+
                 <div className="space-y-6">
                   <div className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5">
                     <span className="text-sm font-bold text-gray-400 uppercase tracking-tight">Sem 7 Goal</span>
                     <span className="text-xl font-black text-success">"S" Grade</span>
                   </div>
                   <div className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5">
-                <span className="text-sm font-bold text-gray-400 uppercase tracking-tight">Sem 8 Goal</span>
+                    <span className="text-sm font-bold text-gray-400 uppercase tracking-tight">Sem 8 Goal</span>
                     <span className="text-xl font-black text-accent-1">"A" Grade</span>
                   </div>
                 </div>
@@ -688,7 +704,7 @@ export default function LandingPage() {
 
         {/* 9. FAQ */}
         <div className="mb-48 max-w-4xl mx-auto px-6">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -703,8 +719,8 @@ export default function LandingPage() {
               { q: "What if the AI reads a grade wrong?", a: "We have a built-in verification step where you can manually click and edit any subject before it goes to the final calculation." },
               { q: "Does it handle arrear passes?", a: "Yes. Our engine merges duplicate subjects and always prefers the highest passing grade, aligning with Anna University's regulations." }
             ].map((faq, i) => (
-              <motion.div 
-                key={i} 
+              <motion.div
+                key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -718,8 +734,14 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* 10. FINAL CTA: SAFFRON CENTERPIECE */}
-        <motion.div 
+        {/* 10. PRICING */}
+        <PricingSection />
+
+        {/* 11. FEEDBACK */}
+        <FeedbackSection />
+
+        {/* 12. FINAL CTA: SAFFRON CENTERPIECE */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -727,14 +749,14 @@ export default function LandingPage() {
         >
           {/* Saffron Sun Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] -z-10" />
-          
+
           <h2 className="text-5xl md:text-7xl font-black mb-10 tracking-tighter leading-tight">
             Ready to see your <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-1">real CGPA?</span>
           </h2>
-          
-          <button 
-            onClick={handleGetStarted} 
+
+          <button
+            onClick={handleGetStarted}
             className="group relative px-14 py-7 bg-bg-primary text-white rounded-[2.5rem] font-black text-2xl overflow-hidden shadow-[0_40px_80px_-20px_rgba(212,80,10,0.5)] hover:shadow-[0_50px_100px_-20px_rgba(212,80,10,0.7)] transition-all duration-500 hover:-translate-y-2 border border-white/10"
           >
             <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
@@ -744,11 +766,31 @@ export default function LandingPage() {
               <FiArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-500" />
             </div>
           </button>
-          
+
           <p className="mt-8 text-text-muted font-bold text-sm tracking-widest uppercase opacity-40">
             No credit card required. No bullsh*t.
           </p>
         </motion.div>
+
+        {/* 11. FOOTER */}
+        <footer className="mt-20 py-12 border-t border-white/5 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="text-xl font-black tracking-tighter opacity-50">
+              <span className="text-primary">CGPA</span> Intel
+            </div>
+
+            <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
+              <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
+              <a href="#feedback" className="hover:text-primary transition-colors">Give Feedback</a>
+              <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+              <a href="#" className="hover:text-primary transition-colors">Terms</a>
+            </div>
+
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/20">
+              © 2026 Saffron Labs. Build for Students.
+            </div>
+          </div>
+        </footer>
       </div>
     </main>
   );
