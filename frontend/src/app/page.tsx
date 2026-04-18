@@ -85,9 +85,9 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-[0.2em] text-text-muted/60"
         >
-          <a href="#features" className="hover:text-primary transition-colors duration-300">Features</a>
-          <a href="#pricing" className="hover:text-primary transition-colors duration-300">Pricing</a>
-          <a href="#feedback" className="hover:text-primary transition-colors duration-300">Give Feedback</a>
+          <a href="/#features" className="hover:text-primary transition-colors duration-300">Features</a>
+          <a href="/#pricing" className="hover:text-primary transition-colors duration-300">Pricing</a>
+          <a href="/#feedback" className="hover:text-primary transition-colors duration-300">Give Feedback</a>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex gap-4 items-center">
