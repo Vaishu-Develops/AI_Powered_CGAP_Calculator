@@ -26,6 +26,7 @@ import {
 import confetti from 'canvas-confetti';
 import WhatIfSimulator from './WhatIfSimulator';
 import Odometer from './Odometer';
+import ShareModal from './ShareModal';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 
@@ -100,6 +101,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
     const router = useRouter();
     const { user, isDemoGPA, isDemo } = useUser();
     const { state: flowState } = useCalcFlow();
+    const [shareOpen, setShareOpen] = useState(false);
 
     useEffect(() => {
         if (isDemoGPA && typeof window !== 'undefined') {
@@ -195,31 +197,55 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
 
     useEffect(() => {
         setMounted(true);
-        if (process.env.NODE_ENV !== 'production') return;
 
+        // Phase 5: Result Reveal Blast
+        // Trigger a side-cannon "blast" for everyone shortly after the component mounts
+        const revealBlast = setTimeout(() => {
+            const count = 150;
+            const defaults = { origin: { y: 0.7 }, zIndex: 1000 };
+
+            function fire(particleRatio: number, opts: any) {
+                confetti({
+                    ...defaults,
+                    ...opts,
+                    particleCount: Math.floor(count * particleRatio)
+                });
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }, 1200);
+
+        // Extra celebration for high achievers
         if (data.cgpa >= 7.5 || data.class.toLowerCase().includes('distinction')) {
             const kickoff = setTimeout(() => {
-                const duration = 3 * 1000;
+                const duration = 5 * 1000;
                 const animationEnd = Date.now() + duration;
-                const defaults = { startVelocity: 24, spread: 300, ticks: 50, zIndex: 0 };
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
                 const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
                 const interval: any = setInterval(function () {
                     const timeLeft = animationEnd - Date.now();
                     if (timeLeft <= 0) return clearInterval(interval);
-                    const particleCount = 24 * (timeLeft / duration);
+                    const particleCount = 50 * (timeLeft / duration);
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
                     confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-                }, 320);
+                }, 250);
 
-                // Ensure interval is always cleaned up when effect reruns/unmounts.
-                const cleanup = () => clearInterval(interval);
-                window.addEventListener('beforeunload', cleanup, { once: true });
-            }, 1000); // Trigger shortly after render
+                return () => clearInterval(interval);
+            }, 1800);
 
-            return () => clearTimeout(kickoff);
+            return () => {
+                clearTimeout(revealBlast);
+                clearTimeout(kickoff);
+            };
         }
+
+        return () => clearTimeout(revealBlast);
     }, [data.cgpa, data.class]);
 
     const subjectEntries = useMemo(() => {
@@ -391,13 +417,13 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(16);
             pdf.text('Academic Performance Report', margin + 4, y + 1);
-            
+
             pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(10);
             if (effectiveName) {
                 pdf.text(`Student: ${effectiveName}`, margin + 4, y + 9);
             }
-            
+
             pdf.setFontSize(8.5);
             pdf.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin - 4, y + 1, { align: 'right' });
             if (effectiveEmail) {
@@ -556,9 +582,20 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                         {isSingle ? `Semester ${data.semester_info?.semester || '?'} Result` : 'Cumulative Result'}
                     </h2>
                 </div>
-                <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-xs self-end md:self-auto">
+                <button onClick={() => setShareOpen(true)} className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-xs self-end md:self-auto">
                     Share <FiShare2 className="text-lg" />
                 </button>
+
+                {/* Share Modal */}
+                <ShareModal
+                    isOpen={shareOpen}
+                    onClose={() => setShareOpen(false)}
+                    gpa={data.gpa}
+                    cgpa={data.cgpa}
+                    semester={data.semester_info?.semester}
+                    topGrade={highestGrade}
+                    className_={classLabel}
+                />
             </div>
 
             {/* ── BLOCK 1: THE REVEAL (Saffron Glass Redesign) ── */}
@@ -708,50 +745,50 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                             <div ref={containerRef} className="relative min-w-[520px] md:min-w-0" style={{ height: chartH + 56 }}>
                                 {/* Bars */}
                                 <div className="flex items-end justify-between gap-2 md:gap-3 px-1 md:px-2 relative" style={{ height: chartH }}>
-                                {semesterGpas.map((item, i) => {
-                                    const isSelected = selectedSem === item.sem;
-                                    const heightPct = Math.max((item.gpa / maxGpa) * 100, 8);
-                                    const hasArr = !!semHasArrears[item.sem];
-                                    const dimmed = selectedSem !== null && !isSelected;
+                                    {semesterGpas.map((item, i) => {
+                                        const isSelected = selectedSem === item.sem;
+                                        const heightPct = Math.max((item.gpa / maxGpa) * 100, 8);
+                                        const hasArr = !!semHasArrears[item.sem];
+                                        const dimmed = selectedSem !== null && !isSelected;
 
-                                    return (
-                                        <motion.div key={item.sem}
-                                            ref={el => { barRefs.current[i] = el; }}
-                                            initial={{ height: 0, opacity: 0 }} animate={{ height: '100%', opacity: 1 }}
-                                            transition={{ delay: 1.2 + i * 0.1 }}
-                                            className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
-                                            onClick={() => setSelectedSem(isSelected ? null : item.sem)}
-                                        >
-                                            {/* GPA floating label */}
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 6 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 1.5 + i * 0.08 }}
-                                                className={`mb-2 z-20 font-black text-[12px] px-3 py-1 rounded-full whitespace-nowrap transition-all pointer-events-none ${isSelected
-                                                    ? 'bg-[#D25419] text-white shadow-[0_4px_12px_rgba(210,84,25,0.3)]'
-                                                    : dimmed
-                                                        ? 'text-[#D1D5DB] opacity-50'
-                                                        : hasArr
-                                                            ? 'text-[#89858E] bg-[#F3F1EF]'
-                                                            : 'text-[#D25419] bg-[#FFF5EE]'
-                                                    }`}
-                                                style={{ fontFamily: 'Outfit' }}
+                                        return (
+                                            <motion.div key={item.sem}
+                                                ref={el => { barRefs.current[i] = el; }}
+                                                initial={{ height: 0, opacity: 0 }} animate={{ height: '100%', opacity: 1 }}
+                                                transition={{ delay: 1.2 + i * 0.1 }}
+                                                className="flex-1 flex flex-col justify-end items-center group cursor-pointer relative h-full"
+                                                onClick={() => setSelectedSem(isSelected ? null : item.sem)}
                                             >
-                                                {item.gpa.toFixed(2)}
+                                                {/* GPA floating label */}
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 6 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 1.5 + i * 0.08 }}
+                                                    className={`mb-2 z-20 font-black text-[12px] px-3 py-1 rounded-full whitespace-nowrap transition-all pointer-events-none ${isSelected
+                                                        ? 'bg-[#D25419] text-white shadow-[0_4px_12px_rgba(210,84,25,0.3)]'
+                                                        : dimmed
+                                                            ? 'text-[#D1D5DB] opacity-50'
+                                                            : hasArr
+                                                                ? 'text-[#89858E] bg-[#F3F1EF]'
+                                                                : 'text-[#D25419] bg-[#FFF5EE]'
+                                                        }`}
+                                                    style={{ fontFamily: 'Outfit' }}
+                                                >
+                                                    {item.gpa.toFixed(2)}
+                                                </motion.div>
+                                                {/* Bar */}
+                                                <div
+                                                    className={`w-full max-w-[40px] md:max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${dimmed ? 'bg-[#F3F1EF]'
+                                                        : hasArr ? 'bg-gradient-to-t from-[#B0ADA8] to-[#D6D4D0]'
+                                                            : 'bg-gradient-to-t from-[#D25419] to-[#F7C59F]'
+                                                        } ${isSelected ? 'shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)] scale-105' : 'hover:scale-[1.02]'}`}
+                                                    style={{ height: `${heightPct}%`, transition: 'height 0.5s, transform 0.3s, box-shadow 0.3s' }}
+                                                >
+                                                    <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
+                                                </div>
                                             </motion.div>
-                                            {/* Bar */}
-                                            <div
-                                                className={`w-full max-w-[40px] md:max-w-[48px] rounded-t-2xl transition-all duration-500 overflow-hidden relative ${dimmed ? 'bg-[#F3F1EF]'
-                                                    : hasArr ? 'bg-gradient-to-t from-[#B0ADA8] to-[#D6D4D0]'
-                                                        : 'bg-gradient-to-t from-[#D25419] to-[#F7C59F]'
-                                                    } ${isSelected ? 'shadow-[0_8px_20px_-4px_rgba(210,84,25,0.4)] scale-105' : 'hover:scale-[1.02]'}`}
-                                                style={{ height: `${heightPct}%`, transition: 'height 0.5s, transform 0.3s, box-shadow 0.3s' }}
-                                            >
-                                                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 blur-sm" />
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })}
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Trend line — uses measured positions */}
@@ -1031,7 +1068,7 @@ function StatTile({ label, value, sub, highlight }: { label: string, value: stri
     }
 
     return (
-            <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-5 sm:p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
+        <div className={`relative overflow-hidden ${bgTint} border ${borderTint} rounded-[32px] p-5 sm:p-7 flex flex-col items-center justify-center transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_15px_40px_-10px_rgba(210,84,25,0.06)] group shadow-sm`}>
             <div className={`absolute top-0 right-0 w-24 h-24 ${highlight === 'primary' ? 'bg-[#D25419]/5' : 'bg-[#89858E]/5'} rounded-full -mr-12 -mt-12 transition-transform duration-700 group-hover:scale-150`} />
 
             <div className="flex items-center gap-2 mb-3">
