@@ -55,6 +55,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const login = (userData: UserData) => {
+        // Clear previous user's cached data to prevent cross-account leakage
+        const previousUser = user;
+        if (previousUser && userData && previousUser.id !== userData.id) {
+            setHomeData(null);
+            setSubjectsData(null);
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('saffron_cgpa_reports');
+                localStorage.removeItem('cgpa_intel_badges');
+            }
+        }
         setUser(userData);
         setIsDemo(false);
         setIsDemoGPA(false);
