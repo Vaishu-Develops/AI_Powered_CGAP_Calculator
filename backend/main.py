@@ -1,7 +1,10 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='requests')
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks, Request
+import string
+import random
+from typing import Optional
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import shutil
@@ -14,6 +17,7 @@ from curriculum_service import CurriculumService
 from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 from models import User, Report, SubjectRow, Feedback
+from razorpay_utils import create_order, verify_payment_signature
 
 # Initialize App
 app = FastAPI(
@@ -67,8 +71,16 @@ def read_root():
         }
     }
 
-from pydantic import BaseModel
+from sqlalchemy.sql import func
+from pydantic import BaseModel, Field
 from typing import List, Optional
+
+def generate_unique_referral_code(db: Session):
+    while True:
+        code = "SAFF-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
+        exists = db.query(User).filter(User.referral_code == code).first()
+        if not exists:
+            return code
 
 
 class FirebaseLoginRequest(BaseModel):
@@ -87,15 +99,28 @@ class SaveSubjectRequest(BaseModel):
 
 class SaveReportRequest(BaseModel):
     firebase_uid: str
+    subjects: List[SaveSubjectRequest]
+    semester_info: Optional[dict] = None
+    is_demo: Optional[bool] = False
+
+class RazorpayOrderRequest(BaseModel):
+    firebase_uid: str
+    amount: int  # in paise
+
+class RazorpayVerifyRequest(BaseModel):
+    firebase_uid: str
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
     email: Optional[str] = None
     name: Optional[str] = None
-    semester: int
+    semester: Optional[int] = None
     regulation: str = "2021"
     branch: str = "CSE"
-    gpa: float
-    cgpa: float
+    gpa: Optional[float] = None
+    cgpa: Optional[float] = None
     total_credits: float = 0
-    subjects: List[SaveSubjectRequest]
+    subjects: List[SaveSubjectRequest] = Field(default_factory=list)
 
 class ManualSubject(BaseModel):
     subject_code: str
@@ -162,7 +187,8 @@ def firebase_login(request: FirebaseLoginRequest, db: Session = Depends(get_db))
                 streak_count=1,
                 last_active_at=now,
                 is_pro=False,
-                badges=[]
+                badges=[],
+                referral_code=generate_unique_referral_code(db)
             )
             db.add(user)
 
@@ -198,6 +224,11 @@ def get_user_stats(firebase_uid: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user.referral_code:
+        user.referral_code = generate_unique_referral_code(db)
+        db.commit()
+        db.refresh(user)
         
     return {
         "status": "success",
@@ -206,10 +237,59 @@ def get_user_stats(firebase_uid: str, db: Session = Depends(get_db)):
             "streak_count": user.streak_count,
             "badges": user.badges or [],
             "scan_count": user.scan_count,
-            "referrals_count": user.referrals_count,
+            "referrals_count": user.referrals_count or 0,
             "referral_code": user.referral_code
         }
     }
+
+@app.get("/users/ensure-referral/{firebase_uid}")
+def ensure_referral_code(firebase_uid: str, db: Session = Depends(get_db)):
+    """Generate a referral code if it doesn't exist yet."""
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user.referral_code:
+        user.referral_code = generate_unique_referral_code(db)
+        db.commit()
+        db.refresh(user)
+    return {"status": "success", "referral_code": user.referral_code}
+
+@app.post("/razorpay/create-order")
+async def create_razorpay_order_endpoint(request: RazorpayOrderRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.firebase_uid == request.firebase_uid).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    try:
+        order = create_order(request.amount, receipt=f"receipt_{user.firebase_uid}")
+        from razorpay_utils import RAZORPAY_KEY_ID
+        print(f"DEBUG: Created Razorpay Order: {order.get('id')} for amount {request.amount}")
+        print(f"DEBUG: Using Key ID: {RAZORPAY_KEY_ID}")
+        # Return as a clean dict to ensure key_id is serialized correctly
+        return {**order, "key_id": RAZORPAY_KEY_ID}
+    except Exception as e:
+        print(f"DEBUG: ERROR Creating Razorpay Order: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/razorpay/verify-payment")
+async def verify_razorpay_payment_endpoint(request: RazorpayVerifyRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.firebase_uid == request.firebase_uid).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    is_valid = verify_payment_signature(
+        request.razorpay_order_id,
+        request.razorpay_payment_id,
+        request.razorpay_signature
+    )
+
+    if is_valid:
+        user.is_pro = True
+        db.commit()
+        return {"status": "success", "message": "Payment verified and Pro status updated"}
+    else:
+        raise HTTPException(status_code=400, detail="Invalid payment signature")
 
 class SyncDataRequest(BaseModel):
     firebase_uid: str
@@ -579,12 +659,25 @@ def get_curriculum_subjects(branch: str, regulation: str, semester: int):
 
 
 @app.post("/preview-ocr/")
-async def preview_ocr(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+async def preview_ocr(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...), 
+    firebase_uid: Optional[str] = Header(None, alias="X-Firebase-Uid"),
+    db: Session = Depends(get_db)
+):
     """
     OCR Preview Endpoint — used by the frontend scan flow.
     Integrated with Redis Caching and ImageKit.
+    Increments user.scan_count if firebase_uid is provided.
     """
     try:
+        # 1. Update Scan Count if user is logged in
+        if firebase_uid:
+            user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+            if user:
+                user.scan_count = (user.scan_count or 0) + 1
+                db.commit()
+
         print(f"[preview-ocr] Received: {file.filename}, type: {file.content_type}")
         if not (file.content_type.startswith('image/') or file.content_type == 'application/pdf'):
             raise HTTPException(status_code=400, detail="File must be an image or PDF")
@@ -908,8 +1001,8 @@ async def apply_referral(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Invalid referral code")
 
     # 3. Process rewards
-    # Increment referrer's count
-    referrer.referrals_count += 1
+    # Increment referrer's count - handle None safety
+    referrer.referrals_count = (referrer.referrals_count or 0) + 1
     
     # Referrer Rewards
     # Logic: 1st referral gives 1 month, 10th gives 1 year.
@@ -925,6 +1018,5 @@ async def apply_referral(request: Request, db: Session = Depends(get_db)):
     return {
         "status": "success", 
         "message": "Referral applied! You and your friend now have Pro access.",
-        "referrals_count": referrer.referrals_count
+        "referrals_count": referrer.referrals_count or 0
     }
-
