@@ -13,6 +13,7 @@ import BadgeShowcase from '@/components/BadgeShowcase';
 import AchievementDetailModal from '@/components/AchievementDetailModal';
 import PlacementEligiblityCard from '@/components/PlacementEligiblityCard';
 import WhatIfSimulator from '@/components/WhatIfSimulator';
+import NotificationToast from '@/components/NotificationToast';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
@@ -83,31 +84,60 @@ function buildAiInsight(params: {
     return `Current CGPA is ${latestCgpa.toFixed(2)} with a ${trend}. Focus on a strong Sem ${nextSem} target around ${(Math.max(7.0, lastGpa + 0.4)).toFixed(1)}+ to strengthen First Class momentum across the remaining ${missingCount} semester${missingCount === 1 ? '' : 's'}.`;
 }
 
-const SemesterPlannerCard = ({ onClick, remainingSems }: { onClick: () => void, remainingSems: number }) => (
+const SemesterPlannerCard = ({ onClick, remainingSems, activeSems, targetCgpa }: { onClick: () => void, remainingSems: number, activeSems: number[], targetCgpa: string | null }) => (
     <div
         onClick={onClick}
-        className="bg-bg-card border border-border p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer group hover:border-primary/30 transition-all hover:shadow-xl h-full"
+        className="bg-bg-card border border-border p-6 md:p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-sm cursor-pointer group hover:border-primary/30 transition-all hover:shadow-xl min-h-[320px] h-full"
     >
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent-1/5 blur-2xl -mr-16 -mt-16 group-hover:bg-accent-1/10 transition-colors" />
         <div className="relative z-10 flex flex-col h-full">
-            <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-xl">
-                    <FiTarget />
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-accent-1/10 flex items-center justify-center text-accent-1 text-xl">
+                        <FiTarget />
+                    </div>
+                    <h3 className="text-2xl font-black">Semester Planner</h3>
                 </div>
-                <h3 className="text-2xl font-black">Semester Planner</h3>
+                {targetCgpa && (
+                    <div className="bg-accent-1/10 border border-accent-1/20 px-3 py-1 rounded-full text-[10px] font-black text-accent-1 uppercase tracking-wider">
+                        Target: {targetCgpa}
+                    </div>
+                )}
             </div>
-            <p className="text-text-muted font-medium mb-8 leading-relaxed">
+
+            <p className="text-text-muted font-medium mb-6 leading-relaxed text-sm">
                 {remainingSems > 0
                     ? `Set a target CGPA and we'll calculate the performance needed in your remaining ${remainingSems} semester${remainingSems !== 1 ? 's' : ''} to hit it.`
                     : "Review your completed journey and see how your target CGPA evolved over time."
                 }
             </p>
+
+            {/* Mini Progress Grid */}
+            <div className="bg-bg-primary/50 backdrop-blur-sm rounded-[2rem] p-4 border border-border/50 mb-6">
+                <div className="flex justify-between items-center mb-3">
+                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Academic Journey</p>
+                    <span className="text-[10px] font-black text-accent-1">{8 - remainingSems}/8</span>
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => {
+                        const isDone = activeSems.includes(s);
+                        return (
+                            <div
+                                key={s}
+                                className={`h-1.5 rounded-full transition-all duration-500 ${isDone ? 'bg-accent-1 shadow-[0_0_8px_rgba(230,122,56,0.4)]' : 'bg-border/30'}`}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+
             <div className="mt-auto flex items-center gap-2 text-primary font-black text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
                 {remainingSems > 0 ? 'Start Planning' : 'View Roadmap'} <Icon icon="solar:alt-arrow-right-bold-duotone" />
             </div>
         </div>
     </div>
 );
+
 
 const ReferAndEarnCard = ({ user, referralCode, setReferralCode, handleApplyReferral, handleCopyCode, referralLoading, copySuccess }: any) => (
     <div className="bg-gradient-to-br from-bg-card to-bg-card-alt border border-border p-8 rounded-[40px] shadow-sm relative overflow-hidden flex flex-col justify-between group h-full">
@@ -124,16 +154,40 @@ const ReferAndEarnCard = ({ user, referralCode, setReferralCode, handleApplyRefe
             </p>
 
             {user?.referral_code && (
-                <div className="bg-bg-primary rounded-2xl p-4 border border-border mb-6 group/code relative overflow-hidden">
-                    <p className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-1">Your Referral Code</p>
-                    <div className="flex items-center justify-between">
-                        <span className="text-xl font-black tracking-widest text-primary">{user.referral_code}</span>
+                <div className="bg-bg-primary rounded-3xl p-6 border border-border mb-8 group/code relative overflow-hidden shadow-inner">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover/code:opacity-10 transition-opacity">
+                        <Icon icon="solar:share-bold-duotone" className="w-12 h-12" />
+                    </div>
+                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] mb-2">Share Your Link</p>
+                    <div className="flex items-center justify-between gap-4">
+                        <span className="text-2xl md:text-3xl font-black tracking-widest text-primary font-mono">{user.referral_code}</span>
                         <button
                             onClick={handleCopyCode}
-                            className="p-2 hover:bg-bg-card rounded-xl transition-colors text-text-muted hover:text-primary"
+                            className="flex items-center gap-2 px-4 py-2 bg-bg-card hover:bg-bg-card-alt rounded-2xl transition-all text-text-muted hover:text-primary border border-border/50 shadow-sm font-black text-[10px] uppercase tracking-wider"
                         >
-                            <Icon icon={copySuccess ? "solar:check-read-bold" : "solar:copy-bold-duotone"} className="w-5 h-5" />
+                            <Icon icon={copySuccess ? "solar:check-read-bold" : "solar:copy-bold-duotone"} className="w-5 h-5 transition-transform group-active:scale-95" />
+                            {copySuccess ? 'Copied!' : 'Copy'}
                         </button>
+                    </div>
+
+                    {/* Referral Progress */}
+                    <div className="mt-6 pt-6 border-t border-border/50">
+                        <div className="flex justify-between items-end mb-2">
+                            <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">Your Progress</span>
+                            <span className="text-sm font-black text-primary">{(user.referrals_count || 0)}/10 Friends</span>
+                        </div>
+                        <div className="h-2 bg-bg-card border border-border rounded-full overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${Math.min(100, ((user.referrals_count || 0) / 10) * 100)}%` }}
+                                className="h-full bg-gradient-to-r from-primary to-accent-1 shadow-[0_0_10px_rgba(212,80,10,0.3)]"
+                            />
+                        </div>
+                        <p className="text-[9px] font-bold text-text-muted mt-2">
+                            {(user.referrals_count || 0) < 10
+                                ? `${10 - (user.referrals_count || 0)} more friends to unlock 1 Year of Pro!`
+                                : "🎉 Milestone Reached! Contact support to claim your 1 Year Pro."}
+                        </p>
                     </div>
                 </div>
             )}
@@ -184,9 +238,23 @@ export default function HomePage() {
     const [reportExporting, setReportExporting] = useState(false);
     const [syncing, setSyncing] = useState(false);
     const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+    const [targetCgpaDisplay, setTargetCgpaDisplay] = useState<string | null>(null);
     const [referralCode, setReferralCode] = useState('');
     const [referralLoading, setReferralLoading] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+
+    const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+    };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedTarget = localStorage.getItem('saffron_target_cgpa');
+            if (savedTarget) setTargetCgpaDisplay(parseFloat(savedTarget).toFixed(2));
+        }
+    }, []);
 
     const handleApplyReferral = async () => {
         if (!user || !referralCode.trim()) return;
@@ -202,14 +270,14 @@ export default function HomePage() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert(data.message);
+                showToast(data.message, 'success');
                 setStats({ is_pro: true, applied_referral_code: referralCode.trim().toUpperCase() });
                 setReferralCode('');
             } else {
-                alert(data.detail || 'Failed to apply referral code');
+                showToast(data.detail || 'Failed to apply referral code', 'error');
             }
         } catch (err) {
-            alert('Something went wrong. Please try again.');
+            showToast('Something went wrong. Please try again.', 'error');
         } finally {
             setReferralLoading(false);
         }
@@ -413,6 +481,12 @@ export default function HomePage() {
             return;
         }
 
+        // Phase 5: Feature Lock
+        if (!user.is_pro) {
+            showToast("Upgrade to Saffron Pro to unlock the Semester Planner & Goal Simulator!", "info");
+            return;
+        }
+
         setSimulatorLoading(true);
         try {
             const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
@@ -445,6 +519,14 @@ export default function HomePage() {
     };
 
     const handleDownloadDegreeReport = async () => {
+        if (!user || isDemo) return;
+
+        // Phase 5: Feature Lock
+        if (!user.is_pro) {
+            showToast("Pro Feature: Full Degree PDF Export is only for Saffron Pro users!", "info");
+            return;
+        }
+
         if (typeof window === 'undefined' || reportExporting) return;
 
         setReportExporting(true);
@@ -542,13 +624,14 @@ export default function HomePage() {
             anchor.download = fileName;
             document.body.appendChild(anchor);
             anchor.click();
+            showToast('Degree report downloaded successfully!', 'success');
             setTimeout(() => {
                 anchor.remove();
                 URL.revokeObjectURL(url);
             }, 1000);
         } catch (err) {
             console.error('Degree report download failed:', err);
-            alert('Unable to download the degree report right now. Please try again.');
+            showToast('Unable to download the degree report right now.', 'error');
         } finally {
             setReportExporting(false);
         }
@@ -616,15 +699,17 @@ export default function HomePage() {
                         )}
                         {showProfileMenu && (
                             <div className="absolute top-24 right-3 sm:right-6 md:right-0 bg-bg-card border border-border rounded-2xl p-2 w-[min(18rem,calc(100vw-1.5rem))] shadow-xl z-30">
-                                <button
-                                    onClick={() => {
-                                        setShowProfileMenu(false);
-                                        handleStartCalc();
-                                    }}
-                                    className="w-full text-left px-4 py-3 rounded-xl hover:bg-bg-card-alt font-semibold"
-                                >
-                                    + New Calculation
-                                </button>
+                                {user?.is_pro && (
+                                    <button
+                                        onClick={() => {
+                                            setShowProfileMenu(false);
+                                            handleStartCalc();
+                                        }}
+                                        className="w-full text-left px-4 py-3 rounded-xl hover:bg-bg-card-alt font-semibold"
+                                    >
+                                        + New Calculation
+                                    </button>
+                                )}
                                 <button
                                     onClick={() => {
                                         setShowProfileMenu(false);
@@ -682,6 +767,31 @@ export default function HomePage() {
                                 </button>
                             </div>
 
+                            {/* Section for New Users to see Referral & Planner immediately */}
+                            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <ReferAndEarnCard
+                                    user={user}
+                                    referralCode={referralCode}
+                                    setReferralCode={setReferralCode}
+                                    handleApplyReferral={handleApplyReferral}
+                                    handleCopyCode={handleCopyCode}
+                                    referralLoading={referralLoading}
+                                    copySuccess={copySuccess}
+                                />
+                                <SemesterPlannerCard
+                                    onClick={() => {
+                                        if (!user?.is_pro) {
+                                            showToast("The Semester Planner & Goal Setting is a Saffron Pro feature!", "info");
+                                        } else {
+                                            router.push('/home/planner');
+                                        }
+                                    }}
+                                    remainingSems={8 - activeSems.length}
+                                    activeSems={activeSems}
+                                    targetCgpa={targetCgpaDisplay}
+                                />
+                            </div>
+
                             {/* Achievements Section */}
                             <BadgeShowcase
                                 reports={reports}
@@ -726,6 +836,9 @@ export default function HomePage() {
                                 onUploadAllMissing={handleUploadAllMissing}
                                 onEditAll={handleEditAll}
                                 isDemoGPA={isDemoGPA}
+                                showToast={showToast}
+                                user={user}
+                                semestersPresent={activeSems}
                             />
 
                             {/* SECTION C - QUICK INSIGHTS */}
@@ -748,9 +861,27 @@ export default function HomePage() {
                                     </div>
                                 </div>
 
+                                <ReferAndEarnCard
+                                    user={user}
+                                    referralCode={referralCode}
+                                    setReferralCode={setReferralCode}
+                                    handleApplyReferral={handleApplyReferral}
+                                    handleCopyCode={handleCopyCode}
+                                    referralLoading={referralLoading}
+                                    copySuccess={copySuccess}
+                                />
+
                                 <SemesterPlannerCard
-                                    onClick={() => router.push('/home/planner')}
+                                    onClick={() => {
+                                        if (!user?.is_pro) {
+                                            showToast("The Semester Planner & Goal Setting is a Saffron Pro feature!", "info");
+                                        } else {
+                                            router.push('/home/planner');
+                                        }
+                                    }}
                                     remainingSems={8 - activeSems.length}
+                                    activeSems={activeSems}
+                                    targetCgpa={targetCgpaDisplay}
                                 />
                             </div>
 
@@ -803,6 +934,9 @@ export default function HomePage() {
                                 onUploadAllMissing={handleUploadAllMissing}
                                 onEditAll={handleEditAll}
                                 isDemoGPA={isDemoGPA}
+                                showToast={showToast}
+                                user={user}
+                                semestersPresent={activeSems}
                             />
 
                             {/* SECTION C - INSIGHTS */}
@@ -831,8 +965,16 @@ export default function HomePage() {
                                     />
 
                                     <SemesterPlannerCard
-                                        onClick={() => router.push('/home/planner')}
+                                        onClick={() => {
+                                            if (!user?.is_pro) {
+                                                showToast("The Semester Planner & Goal Setting is a Saffron Pro feature!", "info");
+                                            } else {
+                                                router.push('/home/planner');
+                                            }
+                                        }}
                                         remainingSems={8 - activeSems.length}
+                                        activeSems={activeSems}
+                                        targetCgpa={targetCgpaDisplay}
                                     />
 
                                     {/* Placement Section for Partial */}
@@ -890,6 +1032,9 @@ export default function HomePage() {
                                 onUploadAllMissing={handleUploadAllMissing}
                                 onEditAll={handleEditAll}
                                 isDemoGPA={isDemoGPA}
+                                showToast={showToast}
+                                user={user}
+                                semestersPresent={activeSems}
                             />
 
                             {/* SECTION C - INSIGHTS */}
@@ -914,8 +1059,16 @@ export default function HomePage() {
                                     />
 
                                     <SemesterPlannerCard
-                                        onClick={() => router.push('/home/planner')}
+                                        onClick={() => {
+                                            if (!user?.is_pro) {
+                                                showToast("The Semester Planner & Goal Setting is a Saffron Pro feature!", "info");
+                                            } else {
+                                                router.push('/home/planner');
+                                            }
+                                        }}
                                         remainingSems={8 - activeSems.length}
+                                        activeSems={activeSems}
+                                        targetCgpa={targetCgpaDisplay}
                                     />
                                 </div>
                             </div>
@@ -944,11 +1097,16 @@ export default function HomePage() {
                 isOpen={isAchievementModalOpen}
                 onClose={() => setIsAchievementModalOpen(false)}
             />
+            <NotificationToast
+                isVisible={!!toast}
+                message={toast?.message || ''}
+                type={toast?.type || 'info'}
+                onClose={() => setToast(null)}
+            />
         </main >
     );
 }
 
-// Reusable Journey Row Component representing 8 semesters
 function JourneyRow({
     activeSems,
     gpaBySem,
@@ -958,6 +1116,9 @@ function JourneyRow({
     onUploadAllMissing,
     onEditAll,
     isDemoGPA,
+    showToast,
+    user,
+    semestersPresent,
 }: {
     activeSems: number[];
     gpaBySem: Record<number, number>;
@@ -967,10 +1128,17 @@ function JourneyRow({
     onUploadAllMissing: () => void;
     onEditAll?: () => void;
     isDemoGPA?: boolean;
+    showToast: (msg: string, type: 'info' | 'success' | 'error') => void;
+    user: any;
+    semestersPresent: number[];
 }) {
 
-    const handleForbiddenAction = () => {
-        alert("The free trial is limited to single-semester GPA calculation. Sign up to unlock full 8-semester CGPA tracking!");
+    const handleTryAction = (sem: number) => {
+        if (!user && semestersPresent.length > 0) {
+            showToast("The free trial is limited to single-semester GPA calculation. Sign up to unlock full 8-semester CGPA tracking!", 'info');
+            return;
+        }
+        onAddSemester(sem);
     };
 
     return (
@@ -998,7 +1166,7 @@ function JourneyRow({
                                 </>
                             ) : (
                                 <button
-                                    onClick={isDemoGPA ? handleForbiddenAction : () => onAddSemester(sem)}
+                                    onClick={() => handleTryAction(sem)}
                                     title={`Add Semester ${sem}`}
                                     className="w-16 h-16 md:w-20 md:h-20 bg-bg-primary border border-border border-dashed rounded-2xl flex items-center justify-center text-text-muted hover:border-primary/50 hover:text-primary hover:bg-primary/10 transition-colors group relative shadow-sm"
                                 >
