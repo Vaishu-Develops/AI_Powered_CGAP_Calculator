@@ -3,13 +3,27 @@
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCalcFlow, InputMethodType } from '@/context/CalcFlowContext';
-import { FiUploadCloud, FiEdit3, FiArrowLeft, FiZap, FiClock } from 'react-icons/fi';
+import { useUser } from '@/context/UserContext';
+import NotificationToast from '@/components/NotificationToast';
+import { useState } from 'react';
+import { FiUploadCloud, FiEdit3, FiArrowLeft, FiZap, FiClock, FiLock } from 'react-icons/fi';
 
 export default function HowPage() {
     const router = useRouter();
-    const { setInputMethod } = useCalcFlow();
+    const { setInputMethod, state } = useCalcFlow();
+    const { user } = useUser();
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+    const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+    };
 
     const handleSelect = (method: InputMethodType) => {
+        if (method === 'ocr' && state.target === 'friend' && !user?.is_pro) {
+            showToast("AI OCR for 'Friend' mode is a Saffron Pro feature!", "info");
+            return;
+        }
         setInputMethod(method);
         router.push('/calculate/input');
     };
@@ -148,6 +162,13 @@ export default function HowPage() {
                 </div>
 
             </motion.div>
+
+            <NotificationToast
+                isVisible={!!toast}
+                message={toast?.message || ''}
+                type={toast?.type || 'info'}
+                onClose={() => setToast(null)}
+            />
         </main>
     );
 }
