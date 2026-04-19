@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from 'react-icons/fi';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import { useUser } from '@/context/UserContext';
-import LoadingSaffron from '@/components/LoadingSaffron';
 
 const GRADES = ['S', 'O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', 'AB', 'F', '-'];
 const FAILING = new Set(['U', 'RA', 'SA', 'W', 'AB', 'F', '-']);
@@ -260,7 +259,7 @@ export default function EditAllPage() {
   };
 
   if (loading) {
-    return <LoadingSaffron message="Loading edit workspace..." />;
+    return <main className="min-h-screen bg-bg-primary text-text-primary p-8">Loading edit workspace...</main>;
   }
 
   return (
