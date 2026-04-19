@@ -469,6 +469,13 @@ export default function InputPage() {
     setStage('ocr');
 
     try {
+      // ── Layer 0: Pro Limit Enforcement ──
+      if (user && !user.is_pro && (user.scan_count || 0) >= 2) {
+        setError("You've reached the limit of 2 free marksheet scans. Upgrade to Saffron Pro for 10 scans per year!");
+        setStage('idle');
+        return;
+      }
+
       const rawSubjectsPerFile: any[][] = files.map(() => []);
       const fileSems: number[] = files.map((_, idx) => (slotMap && slotMap[idx]) ? slotMap[idx] : 0);
       let overallConfidence = 0;
@@ -483,6 +490,7 @@ export default function InputPage() {
 
         const res = await fetch('http://localhost:8000/preview-ocr/', {
           method: 'POST',
+          headers: user?.id ? { 'X-Firebase-Uid': user.id } : {},
           body: formData,
         });
         if (!res.ok) {
@@ -537,6 +545,11 @@ export default function InputPage() {
       };
 
       setFileSemestersState(fileSems); // Store semester mapping for PreviewSection
+
+      // ── Update local scan count ──
+      const { setStats } = useUser(); // I need to move useUser out or just use the existing context destructuring
+      // wait, useUser is already called at top
+      setStats({ scan_count: (user?.scan_count || 0) + files.length });
 
       if (foundMismatches.length > 0) {
         // Pause — show mismatch modal before proceeding to preview
