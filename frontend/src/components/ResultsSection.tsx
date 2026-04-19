@@ -29,6 +29,7 @@ import Odometer from './Odometer';
 import ShareModal from './ShareModal';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import NotificationToast from '@/components/NotificationToast';
 
 // Assuming subject type based on backend
 interface SubjectDetail {
@@ -116,6 +117,12 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
     const [selectedSem, setSelectedSem] = useState<number | null>(null);
     const [chartView, setChartView] = useState<'bar' | 'line' | 'radar'>('bar');
     const [isExporting, setIsExporting] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+    const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+    };
 
     const isSingle = mode === 'single_sem' || isDemoGPA;
 
@@ -981,7 +988,13 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                     <p className="text-text-muted text-sm font-medium">Test hypothetical grades to see how your {isSingle ? 'GPA' : 'Overall CGPA'} would change.</p>
                 </div>
                 <button
-                    onClick={() => setIsSimOpen(true)}
+                    onClick={() => {
+                        if (!user?.is_pro) {
+                            showToast("The What-If Simulator is a Saffron Pro feature!", "info");
+                        } else {
+                            setIsSimOpen(true);
+                        }
+                    }}
                     className="px-6 py-3 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 shrink-0 relative z-10"
                 >
                     <FiSettings className="text-lg" /> Launch Simulator
@@ -1029,7 +1042,14 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                     )}
 
                     <button
-                        onClick={handleExportPdf}
+                        onClick={() => {
+                            const marksheetCount = isSingle ? 1 : semesterGpas.length;
+                            if (!user?.is_pro && marksheetCount > 2) {
+                                showToast("Exporting more than 2 marksheets is a Saffron Pro feature!", "info");
+                            } else {
+                                handleExportPdf();
+                            }
+                        }}
                         disabled={isExporting}
                         className="px-8 py-4 bg-bg-card border border-border text-text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-border/50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                     >
@@ -1042,6 +1062,12 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                 </div>
             </motion.div>
 
+            <NotificationToast
+                isVisible={!!toast}
+                message={toast?.message || ''}
+                type={toast?.type || 'info'}
+                onClose={() => setToast(null)}
+            />
         </motion.div >
     );
 }
