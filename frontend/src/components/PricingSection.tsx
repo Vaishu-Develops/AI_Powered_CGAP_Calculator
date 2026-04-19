@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
+import RazorpayButton from './RazorpayButton';
+import { useUser } from '@/context/UserContext';
 
 const PLANS = {
     semester: {
@@ -24,13 +26,14 @@ const PLANS = {
 const FREE_FEATURES = [
     { icon: 'solar:infinity-bold', text: 'Unlimited manual calculations', vibe: 'Infinite ammo' },
     { icon: 'solar:cpu-bolt-bold-duotone', text: '2 free marksheet scans', vibe: 'Try AI for 2 semesters' },
+    { icon: 'solar:link-bold-duotone', text: 'Quick Profile Link', vibe: 'Share your stats' },
     { icon: 'solar:file-text-bold-duotone', text: 'Basic GPA PDF export', vibe: 'Screenshot your W' },
     { icon: 'solar:user-bold-duotone', text: 'Solo profile only', vibe: 'Solo queue' },
-    { icon: 'solar:calendar-bold-duotone', text: 'Last 30 days history', vibe: 'Short-term memory' },
+    { icon: 'solar:calendar-bold-duotone', text: 'Last 15 days history', vibe: 'Short-term memory' },
 ];
 
 const PRO_FEATURES = [
-    { icon: 'solar:cpu-bolt-bold-duotone', text: 'Unlimited AI OCR scans', vibe: 'Infinite loot drops' },
+    { icon: 'solar:cpu-bolt-bold-duotone', text: '10 AI OCR scans per year', vibe: 'Precision loot drops' },
     { icon: 'solar:users-group-two-rounded-bold-duotone', text: '+1 Friend\'s Profile', vibe: 'Carry your duo partner' },
     { icon: 'solar:target-bold-duotone', text: 'What-If CGPA Simulator', vibe: 'Plan your endgame' },
     { icon: 'solar:document-bold-duotone', text: 'Full CGPA Dashboard PDF', vibe: 'Flex your stats' },
@@ -43,6 +46,7 @@ const PRO_FEATURES = [
 export default function PricingSection() {
     const [billing, setBilling] = useState<'semester' | 'annual'>('annual');
     const plan = PLANS[billing];
+    const { user } = useUser();
 
     return (
         <div id="pricing" className="mb-48 max-w-6xl mx-auto px-6 relative scroll-mt-24">
@@ -201,10 +205,21 @@ export default function PricingSection() {
                             ))}
                         </ul>
 
-                        <button className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-[#FF8C42] text-white font-black text-sm uppercase tracking-widest shadow-[0_20px_40px_-10px_rgba(212,80,10,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,80,10,0.6)] transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-3">
-                            <Icon icon="solar:lock-keyhole-unlocked-bold" className="w-5 h-5" />
-                            Unlock Pro
-                        </button>
+                        {user?.is_pro ? (
+                            <button className="w-full py-4 rounded-2xl border border-primary/30 text-primary font-black text-sm uppercase tracking-widest bg-primary/5 cursor-default flex items-center justify-center gap-3">
+                                <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
+                                Pro Unlocked
+                            </button>
+                        ) : (
+                            <RazorpayButton
+                                amount={parseInt(plan.price)}
+                                planName={`Saffron Pro ${plan.name}`}
+                                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-[#FF8C42] text-white font-black text-sm uppercase tracking-widest shadow-[0_20px_40px_-10px_rgba(212,80,10,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,80,10,0.6)] transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-3"
+                            >
+                                <Icon icon="solar:lock-keyhole-unlocked-bold" className="w-5 h-5" />
+                                Unlock {plan.name} Pro
+                            </RazorpayButton>
+                        )}
 
                         {/* OCR Top-up pill */}
                         <div className="mt-6 text-center text-[10px] font-black text-text-muted/40 uppercase tracking-widest">
