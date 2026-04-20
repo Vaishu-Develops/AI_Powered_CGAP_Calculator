@@ -1,6 +1,7 @@
 import razorpay
 import os
 import time
+from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -10,16 +11,21 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "placeholder_secret")
 
 client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
-def create_order(amount_in_paise: int, currency: str = "INR", receipt: str = None):
+def create_order(
+    amount_in_paise: int,
+    currency: str = "INR",
+    receipt: Optional[str] = None,
+    notes: Optional[Dict[str, Any]] = None,
+):
     """
     Creates a Razorpay order.
     Amount should be in the smallest currency unit (e.g., paise for INR).
     """
     data = {
         "amount": amount_in_paise,
-        "currency": "INR",
+        "currency": currency,
         "receipt": receipt,
-        "notes": {
+        "notes": notes or {
             "app": "Saffron CGPA",
             "type": "pro_upgrade"
         }
@@ -50,3 +56,22 @@ def verify_payment_signature(razorpay_order_id: str, razorpay_payment_id: str, r
         return True
     except Exception:
         return False
+
+
+def verify_webhook_signature(payload: str, webhook_signature: str, webhook_secret: str):
+    """
+    Verifies Razorpay webhook signature for raw request payload.
+    """
+    try:
+        client.utility.verify_webhook_signature(payload, webhook_signature, webhook_secret)
+        return True
+    except Exception:
+        return False
+
+
+def fetch_order(razorpay_order_id: str):
+    return client.order.fetch(razorpay_order_id)
+
+
+def fetch_payment(razorpay_payment_id: str):
+    return client.payment.fetch(razorpay_payment_id)
