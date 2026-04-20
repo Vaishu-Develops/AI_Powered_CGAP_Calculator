@@ -15,7 +15,10 @@ interface ShareModalProps {
     className_?: string;
 }
 
+import RazorpayButton from '@/components/RazorpayButton';
+
 export default function ShareModal({ isOpen, onClose, gpa, cgpa, semester, topGrade, className_ }: ShareModalProps) {
+
     const { user } = useUser();
     const [tab, setTab] = useState<'quick' | 'wrapped'>('quick');
     const [copied, setCopied] = useState(false);
@@ -149,16 +152,16 @@ export default function ShareModal({ isOpen, onClose, gpa, cgpa, semester, topGr
                                                 Upgrade to Pro to unlock stunning **Visual Recap Cards** and share your academic progress in style!
                                             </p>
                                             <div className="flex flex-col gap-3">
-                                                <button
-                                                    onClick={() => {
-                                                        onClose();
-                                                        const el = document.getElementById('pricing-section');
-                                                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                                                    }}
+                                                <RazorpayButton
+                                                    amount={199}
+                                                    planName="Saffron Pro"
+                                                    planCode="pro_monthly"
+                                                    onSuccess={() => { }}
                                                     className="w-full py-3.5 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
                                                 >
                                                     Upgrade to Pro
-                                                </button>
+                                                </RazorpayButton>
+
                                                 <button
                                                     onClick={() => setTab('quick')}
                                                     className="w-full py-3.5 bg-bg-card-alt text-text-muted rounded-xl font-black text-xs uppercase tracking-widest border border-border/40 hover:text-primary transition-all"
