@@ -13,7 +13,6 @@ import uvicorn
 import shutil
 import os
 from calculator import AnnaUniversityCGPA
-from ocr_service_v3 import SaffronOCRService
 from storage_service import storage_service
 from cache_service import cache_service
 from curriculum_service import CurriculumService
@@ -59,8 +58,24 @@ try:
 finally:
     db.close()
 
-ocr_service = SaffronOCRService(curriculum_service=curriculum_service, debug=False)
+ocr_service = None
+ocr_boot_error = None
+try:
+    from ocr_service_v3 import SaffronOCRService
+    ocr_service = SaffronOCRService(curriculum_service=curriculum_service, debug=False)
+except Exception as e:
+    ocr_boot_error = str(e)
+    print(f"OCR service unavailable at startup: {ocr_boot_error}")
+
 cgpa_calculator = AnnaUniversityCGPA(curriculum_service=curriculum_service)
+
+
+def ensure_ocr_available():
+    if ocr_service is None:
+        detail = "OCR service is currently unavailable on this deployment."
+        if ocr_boot_error:
+            detail = f"{detail} Boot error: {ocr_boot_error}"
+        raise HTTPException(status_code=503, detail=detail)
 
 @app.get("/")
 def read_root():
@@ -68,6 +83,7 @@ def read_root():
         "status": "✅ Anna University CGPA Calculator API is running",
         "version": "3.0.0",
         "ocr_engine": "7-Layer Production Pipeline v3",
+        "ocr_available": ocr_service is not None,
         "endpoints": {
             "health": "GET /",
             "calculate_single": "POST /calculate-cgpa/",
@@ -940,6 +956,8 @@ async def preview_ocr(
     Increments user.scan_count if firebase_uid is provided.
     """
     try:
+        ensure_ocr_available()
+
         # 1. Update Scan Count if user is logged in
         if firebase_uid:
             user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
@@ -1108,6 +1126,8 @@ async def calculate_cgpa(background_tasks: BackgroundTasks, file: UploadFile = F
     Integrated with Redis Caching and ImageKit.
     """
     try:
+        ensure_ocr_available()
+
         print(f"[calculate-cgpa] Received: {file.filename}, type: {file.content_type}")
         if not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="File must be an image")

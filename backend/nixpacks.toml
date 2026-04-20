@@ -1,5 +1,6 @@
 [phases.setup]
 nixPkgs = ["...", "libgcc", "glibc", "gcc"]
+aptPkgs = ["libgomp1", "libgl1", "libglib2.0-0"]
 
 [phases.build]
 nixLibs = ["...", "libgcc", "glibc"]
