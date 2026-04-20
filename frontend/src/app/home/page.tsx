@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
@@ -518,7 +518,10 @@ export default function HomePage() {
         }
     };
 
-    const handleDownloadDegreeReport = async () => {
+    const handleDownloadDegreeReport = async (e?: MouseEvent<HTMLButtonElement>) => {
+        e?.preventDefault();
+        e?.stopPropagation();
+
         if (!user || isDemo) return;
 
         // Phase 5: Feature Lock
@@ -1012,6 +1015,7 @@ export default function HomePage() {
 
                                 <div className="w-full max-w-sm mt-6 relative z-20">
                                     <button
+                                        type="button"
                                         onClick={handleDownloadDegreeReport}
                                         disabled={reportExporting}
                                         className="w-full px-8 py-5 bg-primary text-white font-black text-lg rounded-full shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
