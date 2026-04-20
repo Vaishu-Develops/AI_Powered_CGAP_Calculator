@@ -12,6 +12,7 @@ type UserData = {
     streak_count: number;
     badges: string[];
     scan_count: number;
+    pdf_export_count?: number;
     referral_code?: string;
     referrals_count: number;
     applied_referral_code?: string;
