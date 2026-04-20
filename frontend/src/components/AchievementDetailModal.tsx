@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import { FiX, FiLock, FiStar, FiTrendingUp, FiCalendar, FiTarget } from 'react-icons/fi';
 import { useUser } from '@/context/UserContext';
+import RazorpayButton from './RazorpayButton';
 
 interface AchievementDetailModalProps {
     isOpen: boolean;
@@ -157,9 +158,14 @@ export default function AchievementDetailModal({ isOpen, onClose }: AchievementD
                             </div>
 
                             {!isPro ? (
-                                <button className="w-full py-5 bg-gradient-to-r from-primary to-accent-1 text-white rounded-[24px] font-black text-sm uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                                <RazorpayButton 
+                                    amount={199} 
+                                    planName="Pro Player Upgrade"
+                                    planCode="pro_monthly"
+                                    className="w-full py-5 bg-gradient-to-r from-primary to-accent-1 text-white rounded-[24px] font-black text-sm uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                >
                                     Unlock Pro Access
-                                </button>
+                                </RazorpayButton>
                             ) : (
                                 <div className="p-6 rounded-[24px] bg-primary/10 border border-primary/20 text-center flex flex-col items-center gap-2">
                                     <Icon icon="solar:check-circle-bold" className="text-primary text-2xl" />
