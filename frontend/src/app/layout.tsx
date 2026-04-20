@@ -66,10 +66,6 @@ export default function RootLayout({
             ensureFn('clearResourceTimings');
           })();`}
         </Script>
-        <Script
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="afterInteractive"
-        />
         <UserProvider>
           <CalcFlowProvider>
             {children}
