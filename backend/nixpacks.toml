@@ -1,2 +1,5 @@
 [phases.setup]
-nixPkgs = ["...", "gcc"]
+nixPkgs = ["...", "libgcc"]
+
+[phases.build]
+nixLibs = ["...", "libgcc"]
