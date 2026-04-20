@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import { Icon } from '@iconify/react';
 import NotificationToast from './NotificationToast';
@@ -8,6 +8,7 @@ import NotificationToast from './NotificationToast';
 interface RazorpayButtonProps {
     amount: number; // in INR
     planName: string;
+    planCode?: string;
     onSuccess?: () => void;
     className?: string;
     children?: React.ReactNode;
@@ -19,9 +20,65 @@ declare global {
     }
 }
 
+const RAZORPAY_SCRIPT_SRC = 'https://checkout.razorpay.com/v1/checkout.js';
+
+const ensureRazorpayLoaded = (): Promise<void> => {
+    if (typeof window === 'undefined') {
+        return Promise.reject(new Error('Window is not available.'));
+    }
+
+    if (window.Razorpay) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${RAZORPAY_SCRIPT_SRC}"]`) as HTMLScriptElement | null;
+        if (existing) {
+            const onLoad = () => {
+                existing.removeEventListener('load', onLoad);
+                existing.removeEventListener('error', onError);
+                resolve();
+            };
+            const onError = () => {
+                existing.removeEventListener('load', onLoad);
+                existing.removeEventListener('error', onError);
+                reject(new Error('Failed to load Razorpay checkout script.'));
+            };
+
+            let checks = 0;
+            const poll = window.setInterval(() => {
+                if (window.Razorpay) {
+                    window.clearInterval(poll);
+                    resolve();
+                    return;
+                }
+                checks += 1;
+                if (checks > 80) {
+                    window.clearInterval(poll);
+                    reject(new Error('Razorpay checkout script did not initialize in time.'));
+                }
+            }, 50);
+
+            existing.addEventListener('load', onLoad);
+            existing.addEventListener('error', onError);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = RAZORPAY_SCRIPT_SRC;
+        script.async = true;
+
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Failed to load Razorpay checkout script.'));
+
+        document.body.appendChild(script);
+    });
+};
+
 export default function RazorpayButton({
     amount,
     planName,
+    planCode = 'pro_monthly',
     onSuccess,
     className,
     children
@@ -29,6 +86,7 @@ export default function RazorpayButton({
     const { user, login } = useUser();
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+    const lastFailureKeyRef = useRef<string | null>(null);
 
     const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
         setToast({ message, type });
@@ -44,6 +102,7 @@ export default function RazorpayButton({
         setLoading(true);
 
         try {
+            await ensureRazorpayLoaded();
             console.log("[RAZORPAY] Starting order creation...");
             // 1. Create Order on Backend
             const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/razorpay/create-order`, {
@@ -51,7 +110,7 @@ export default function RazorpayButton({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     firebase_uid: user.firebase_uid,
-                    amount: amount * 100, // Smallest currency unit (paise)
+                    plan_code: planCode,
                 }),
             });
 
@@ -86,6 +145,7 @@ export default function RazorpayButton({
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,
                                 razorpay_signature: response.razorpay_signature,
+                                plan_code: planCode,
                             }),
                         });
 
@@ -143,8 +203,34 @@ export default function RazorpayButton({
             const rzp = new window.Razorpay(options);
             
             rzp.on('payment.failed', function (response: any) {
-                console.error("[RAZORPAY] Modal Error Detail:", response.error);
-                showToast(`Payment failed: ${response.error.description}`, "error");
+                const details = {
+                    code: response?.error?.code,
+                    description: response?.error?.description,
+                    source: response?.error?.source,
+                    step: response?.error?.step,
+                    reason: response?.error?.reason,
+                    order_id: response?.error?.metadata?.order_id,
+                    payment_id: response?.error?.metadata?.payment_id,
+                };
+                const dedupeKey = `${details.payment_id || 'na'}:${details.reason || 'na'}:${details.step || 'na'}`;
+                if (lastFailureKeyRef.current === dedupeKey) {
+                    return;
+                }
+                lastFailureKeyRef.current = dedupeKey;
+
+                const serialized = JSON.stringify(details);
+                const isUserCancelled =
+                    details.reason === 'payment_cancelled' ||
+                    details.code === 'BAD_REQUEST_ERROR' && details.step === 'payment_authentication';
+
+                if (isUserCancelled) {
+                    console.warn(`[RAZORPAY] Modal Cancel Detail: ${serialized}`);
+                    showToast('Payment was cancelled.', 'info');
+                    return;
+                }
+
+                console.error(`[RAZORPAY] Modal Error Detail: ${serialized}`);
+                showToast(`Payment failed: ${details.description || 'Unknown error'}`, "error");
             });
             
             rzp.open();
