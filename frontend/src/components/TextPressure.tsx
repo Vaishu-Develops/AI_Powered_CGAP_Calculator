@@ -66,12 +66,36 @@ const TextPressure = ({
 
   const mouseRef = useRef({ x: 0, y: 0 });
   const cursorRef = useRef({ x: 0, y: 0 });
+  const charCentersRef = useRef<Array<{ x: number; y: number }>>([]);
+  const maxDistRef = useRef(1);
+  const metricsDirtyRef = useRef(true);
+  const lastAnimationTsRef = useRef(0);
 
   const [fontSize, setFontSize] = useState(minFontSize);
   const [scaleY, setScaleY] = useState(1);
   const [lineHeight, setLineHeight] = useState(1);
 
   const chars = text.split('');
+
+  const updateLayoutMetrics = useCallback(() => {
+    if (!titleRef.current) return;
+
+    const titleRect = titleRef.current.getBoundingClientRect();
+    maxDistRef.current = Math.max(titleRect.width / 2, 1);
+
+    const nextCenters: Array<{ x: number; y: number }> = [];
+    spansRef.current.forEach((span) => {
+      if (!span) return;
+      const rect = span.getBoundingClientRect();
+      nextCenters.push({
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2
+      });
+    });
+
+    charCentersRef.current = nextCenters;
+    metricsDirtyRef.current = false;
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -122,8 +146,13 @@ const TextPressure = ({
         setScaleY(yRatio);
         setLineHeight(yRatio);
       }
+
+      requestAnimationFrame(() => {
+        metricsDirtyRef.current = true;
+        updateLayoutMetrics();
+      });
     });
-  }, [chars.length, minFontSize, scale]);
+  }, [chars.length, minFontSize, scale, updateLayoutMetrics]);
 
   useEffect(() => {
     const debouncedSetSize = debounce(setSize, 100);
@@ -133,25 +162,38 @@ const TextPressure = ({
   }, [setSize]);
 
   useEffect(() => {
+    const markDirty = () => {
+      metricsDirtyRef.current = true;
+    };
+
+    window.addEventListener('scroll', markDirty, { passive: true });
+    return () => window.removeEventListener('scroll', markDirty);
+  }, []);
+
+  useEffect(() => {
     let rafId: number;
-    const animate = () => {
+    const animate = (ts: number) => {
+      if (ts - lastAnimationTsRef.current < 24) {
+        rafId = requestAnimationFrame(animate);
+        return;
+      }
+      lastAnimationTsRef.current = ts;
+
       mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
       mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 15;
 
-      if (titleRef.current) {
-        const titleRect = titleRef.current.getBoundingClientRect();
-        const maxDist = titleRect.width / 2;
+      if (metricsDirtyRef.current) {
+        updateLayoutMetrics();
+      }
 
-        spansRef.current.forEach(span => {
-          if (!span) return;
+      const centers = charCentersRef.current;
+      const maxDist = maxDistRef.current;
 
-          const rect = span.getBoundingClientRect();
-          const charCenter = {
-            x: rect.x + rect.width / 2,
-            y: rect.y + rect.height / 2
-          };
+      if (centers.length) {
+        spansRef.current.forEach((span, i) => {
+          if (!span || !centers[i]) return;
 
-          const d = dist(mouseRef.current, charCenter);
+          const d = dist(mouseRef.current, centers[i]);
 
           const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
           const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
@@ -172,9 +214,9 @@ const TextPressure = ({
       rafId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animate(0);
     return () => cancelAnimationFrame(rafId);
-  }, [width, weight, italic, alpha]);
+  }, [width, weight, italic, alpha, updateLayoutMetrics]);
 
   const styleElement = useMemo(() => {
     return (
