@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import { useEffect, useState, useMemo, useRef, useCallback, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
@@ -100,7 +100,7 @@ function displaySubjectCode(code: string | undefined | null, fallback?: string):
 
 export default function ResultsSection({ data, onReset, onBackToPreview, mode = 'single_sem', context }: ResultsSectionProps) {
     const router = useRouter();
-    const { user, isDemoGPA, isDemo } = useUser();
+    const { user, isDemoGPA, isDemo, setStats } = useUser();
     const { state: flowState } = useCalcFlow();
     const [shareOpen, setShareOpen] = useState(false);
 
@@ -347,7 +347,10 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
     const primaryValue = isSingle ? data.gpa : data.cgpa;
     const classLabel = sanitizeClassLabel(data.class);
 
-    const handleExportPdf = async () => {
+    const handleExportPdf = async (e?: MouseEvent<HTMLButtonElement>) => {
+        e?.preventDefault();
+        e?.stopPropagation();
+
         if (typeof window === 'undefined' || isExporting) return;
 
         setIsExporting(true);
@@ -565,6 +568,16 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
             alert('Unable to export PDF right now. Please try again.');
         } finally {
             setIsExporting(false);
+            if (user && !user.is_pro) {
+                // Increment counter on backend to strictly enforce 2-export free limit
+                fetch(`http://localhost:8000/users/increment-pdf/${user.firebase_uid}`, {
+                    method: 'POST',
+                }).then(res => res.json()).then(data => {
+                    if (data.status === 'success' && setStats) {
+                        setStats({ pdf_export_count: data.pdf_export_count });
+                    }
+                }).catch(err => console.error("Failed to increment PDF count", err));
+            }
         }
     };
 
@@ -1042,12 +1055,13 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
                     )}
 
                     <button
-                        onClick={() => {
-                            const marksheetCount = isSingle ? 1 : semesterGpas.length;
-                            if (!user?.is_pro && marksheetCount > 2) {
-                                showToast("Exporting more than 2 marksheets is a Saffron Pro feature!", "info");
+                        type="button"
+                        onClick={(e) => {
+                            const count = user?.pdf_export_count || 0;
+                            if (!user?.is_pro && count >= 2) {
+                                showToast("You have used your 2 Free PDF exports! Unlock Saffron Pro to export unlimited times 🚀", "info");
                             } else {
-                                handleExportPdf();
+                                handleExportPdf(e);
                             }
                         }}
                         disabled={isExporting}
