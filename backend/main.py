@@ -3,6 +3,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module='requests')
 
 import string
 import random
+import secrets
+import json
+import time
 from typing import Optional
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,7 +20,7 @@ from curriculum_service import CurriculumService
 from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 from models import User, Report, SubjectRow, Feedback
-from razorpay_utils import create_order, verify_payment_signature
+from razorpay_utils import create_order, verify_payment_signature, verify_webhook_signature, fetch_order, fetch_payment
 
 # Initialize App
 app = FastAPI(
@@ -99,19 +102,28 @@ class SaveSubjectRequest(BaseModel):
 
 class SaveReportRequest(BaseModel):
     firebase_uid: str
+    semester: int = 1
+    gpa: float
+    cgpa: float
+    regulation: str = "2021"
+    branch: str = "CSE"
+    total_credits: float = 0
     subjects: List[SaveSubjectRequest]
+    email: Optional[str] = None
+    name: Optional[str] = None
     semester_info: Optional[dict] = None
     is_demo: Optional[bool] = False
 
 class RazorpayOrderRequest(BaseModel):
     firebase_uid: str
-    amount: int  # in paise
+    plan_code: str = "pro_monthly"
 
 class RazorpayVerifyRequest(BaseModel):
     firebase_uid: str
     razorpay_order_id: str
     razorpay_payment_id: str
     razorpay_signature: str
+    plan_code: str = "pro_monthly"
     email: Optional[str] = None
     name: Optional[str] = None
     semester: Optional[int] = None
@@ -133,6 +145,81 @@ class CalculateRequest(BaseModel):
     semester: int = 1
     regulation: str = "2021"
     branch: str = "CSE"
+
+
+RAZORPAY_PLAN_PRICES = {
+    "pro_monthly": int(os.getenv("RAZORPAY_PRO_MONTHLY_PAISE", "19900")),
+}
+
+PAYMENT_ORDER_TTL_SECONDS = int(os.getenv("PAYMENT_ORDER_TTL_SECONDS", "1800"))
+PAYMENT_CONFIRM_TTL_SECONDS = int(os.getenv("PAYMENT_CONFIRM_TTL_SECONDS", "2592000"))
+PAYMENT_WEBHOOK_EVENT_TTL_SECONDS = int(os.getenv("PAYMENT_WEBHOOK_EVENT_TTL_SECONDS", "604800"))
+RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "").strip()
+
+
+def _cache_set_json(key: str, payload: dict, ttl_seconds: int):
+    if not cache_service.client:
+        return
+    try:
+        cache_service.client.set(key, json.dumps(payload), ex=ttl_seconds)
+    except Exception:
+        pass
+
+
+def _cache_get_json(key: str):
+    if not cache_service.client:
+        return None
+    try:
+        raw = cache_service.client.get(key)
+        if not raw:
+            return None
+        if isinstance(raw, dict):
+            return raw
+        return json.loads(raw)
+    except Exception:
+        return None
+
+
+def _cache_delete(key: str):
+    if not cache_service.client:
+        return
+    try:
+        cache_service.client.delete(key)
+    except Exception:
+        pass
+
+
+def _resolve_user_for_paid_order(db: Session, order_id: str, order_notes: Optional[dict] = None, order_receipt: str = ""):
+    pending = _cache_get_json(f"rzp_order:{order_id}")
+    if pending:
+        user_id = pending.get("user_id")
+        if user_id:
+            user = db.query(User).filter(User.id == int(user_id)).first()
+            if user:
+                return user
+
+        uid = pending.get("firebase_uid")
+        if uid:
+            user = db.query(User).filter(User.firebase_uid == uid).first()
+            if user:
+                return user
+
+    notes = order_notes or {}
+    note_user_id = notes.get("user_id")
+    if note_user_id:
+        user = db.query(User).filter(User.id == int(note_user_id)).first()
+        if user:
+            return user
+
+    receipt = str(order_receipt or "")
+    if receipt.startswith("pro_"):
+        parts = receipt.split("_", 2)
+        if len(parts) >= 3 and parts[1].isdigit():
+            user = db.query(User).filter(User.id == int(parts[1])).first()
+            if user:
+                return user
+
+    return None
 
 
 @app.post("/auth/firebase-login")
@@ -238,9 +325,22 @@ def get_user_stats(firebase_uid: str, db: Session = Depends(get_db)):
             "badges": user.badges or [],
             "scan_count": user.scan_count,
             "referrals_count": user.referrals_count or 0,
-            "referral_code": user.referral_code
+            "referral_code": user.referral_code,
+            "pdf_export_count": getattr(user, "pdf_export_count", 0)
         }
     }
+
+@app.post("/users/increment-pdf/{firebase_uid}")
+def increment_pdf_export_count(firebase_uid: str, db: Session = Depends(get_db)):
+    """Increment the user's PDF export count."""
+    user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_count = getattr(user, "pdf_export_count", 0)
+    user.pdf_export_count = current_count + 1
+    db.commit()
+    return {"status": "success", "pdf_export_count": user.pdf_export_count}
 
 @app.get("/users/ensure-referral/{firebase_uid}")
 def ensure_referral_code(firebase_uid: str, db: Session = Depends(get_db)):
@@ -260,17 +360,47 @@ async def create_razorpay_order_endpoint(request: RazorpayOrderRequest, db: Sess
     user = db.query(User).filter(User.firebase_uid == request.firebase_uid).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    amount = RAZORPAY_PLAN_PRICES.get(request.plan_code)
+    if amount is None:
+        raise HTTPException(status_code=400, detail="Invalid plan")
     
     try:
-        order = create_order(request.amount, receipt=f"receipt_{user.firebase_uid}")
+        receipt = f"pro_{user.id}_{secrets.token_hex(6)}"
+        order = create_order(
+            amount,
+            currency="INR",
+            receipt=receipt,
+            notes={
+                "app": "Saffron CGPA",
+                "type": "pro_upgrade",
+                "plan_code": request.plan_code,
+                "user_id": str(user.id),
+            },
+        )
         from razorpay_utils import RAZORPAY_KEY_ID
-        print(f"DEBUG: Created Razorpay Order: {order.get('id')} for amount {request.amount}")
+        print(f"DEBUG: Created Razorpay Order: {order.get('id')} for amount {amount}")
         print(f"DEBUG: Using Key ID: {RAZORPAY_KEY_ID}")
+
+        order_id = order.get("id")
+        if order_id:
+            _cache_set_json(
+                f"rzp_order:{order_id}",
+                {
+                    "firebase_uid": user.firebase_uid,
+                    "user_id": user.id,
+                    "amount": amount,
+                    "plan_code": request.plan_code,
+                    "created_at": int(time.time()),
+                },
+                PAYMENT_ORDER_TTL_SECONDS,
+            )
+
         # Return as a clean dict to ensure key_id is serialized correctly
         return {**order, "key_id": RAZORPAY_KEY_ID}
     except Exception as e:
         print(f"DEBUG: ERROR Creating Razorpay Order: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Unable to create payment order")
 
 @app.post("/razorpay/verify-payment")
 async def verify_razorpay_payment_endpoint(request: RazorpayVerifyRequest, db: Session = Depends(get_db)):
@@ -278,18 +408,157 @@ async def verify_razorpay_payment_endpoint(request: RazorpayVerifyRequest, db: S
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    expected_amount = RAZORPAY_PLAN_PRICES.get(request.plan_code)
+    if expected_amount is None:
+        raise HTTPException(status_code=400, detail="Invalid plan")
+
+    if _cache_get_json(f"rzp_payment:{request.razorpay_payment_id}"):
+        return {"status": "success", "message": "Payment already verified"}
+
     is_valid = verify_payment_signature(
         request.razorpay_order_id,
         request.razorpay_payment_id,
         request.razorpay_signature
     )
 
-    if is_valid:
-        user.is_pro = True
-        db.commit()
-        return {"status": "success", "message": "Payment verified and Pro status updated"}
-    else:
+    if not is_valid:
         raise HTTPException(status_code=400, detail="Invalid payment signature")
+
+    try:
+        order_data = fetch_order(request.razorpay_order_id)
+        payment_data = fetch_payment(request.razorpay_payment_id)
+    except Exception as e:
+        print(f"DEBUG: Verification fetch failed: {str(e)}")
+        raise HTTPException(status_code=400, detail="Unable to verify payment details")
+
+    if str(payment_data.get("order_id")) != request.razorpay_order_id:
+        raise HTTPException(status_code=400, detail="Payment/order mismatch")
+
+    if str(payment_data.get("status", "")).lower() not in {"captured", "authorized"}:
+        raise HTTPException(status_code=400, detail="Payment not successful")
+
+    if int(order_data.get("amount", 0)) != int(expected_amount):
+        raise HTTPException(status_code=400, detail="Amount mismatch")
+
+    pending = _cache_get_json(f"rzp_order:{request.razorpay_order_id}")
+    if pending:
+        if pending.get("firebase_uid") != request.firebase_uid:
+            raise HTTPException(status_code=403, detail="Order does not belong to user")
+        if int(pending.get("amount", 0)) != int(expected_amount):
+            raise HTTPException(status_code=400, detail="Order amount mismatch")
+    else:
+        receipt = str(order_data.get("receipt", ""))
+        if not receipt.startswith(f"pro_{user.id}_"):
+            raise HTTPException(status_code=403, detail="Order ownership could not be verified")
+
+    user.is_pro = True
+    db.commit()
+
+    _cache_set_json(
+        f"rzp_payment:{request.razorpay_payment_id}",
+        {
+            "firebase_uid": request.firebase_uid,
+            "order_id": request.razorpay_order_id,
+            "verified_at": int(time.time()),
+        },
+        PAYMENT_CONFIRM_TTL_SECONDS,
+    )
+    _cache_delete(f"rzp_order:{request.razorpay_order_id}")
+
+    return {"status": "success", "message": "Payment verified and Pro status updated"}
+
+
+@app.post("/razorpay/webhook")
+async def razorpay_webhook(
+    request: Request,
+    x_razorpay_signature: Optional[str] = Header(default=None, alias="x-razorpay-signature"),
+    db: Session = Depends(get_db),
+):
+    if not RAZORPAY_WEBHOOK_SECRET:
+        raise HTTPException(status_code=503, detail="Webhook secret not configured")
+
+    if not x_razorpay_signature:
+        raise HTTPException(status_code=401, detail="Missing webhook signature")
+
+    raw_body = await request.body()
+    payload_text = raw_body.decode("utf-8")
+
+    if not verify_webhook_signature(payload_text, x_razorpay_signature, RAZORPAY_WEBHOOK_SECRET):
+        raise HTTPException(status_code=401, detail="Invalid webhook signature")
+
+    try:
+        event = json.loads(payload_text)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+
+    event_id = str(event.get("id") or "")
+    if event_id and _cache_get_json(f"rzp_webhook_event:{event_id}"):
+        return {"status": "success", "message": "Duplicate event ignored"}
+
+    event_type = str(event.get("event") or "")
+    payload = event.get("payload") or {}
+
+    payment_entity = ((payload.get("payment") or {}).get("entity") or {})
+    order_entity = ((payload.get("order") or {}).get("entity") or {})
+
+    order_id = str(payment_entity.get("order_id") or order_entity.get("id") or "")
+    payment_id = str(payment_entity.get("id") or "")
+    amount = int(payment_entity.get("amount") or order_entity.get("amount") or 0)
+    notes = payment_entity.get("notes") or order_entity.get("notes") or {}
+    receipt = str(order_entity.get("receipt") or "")
+
+    processed = False
+
+    if event_type in {"payment.captured", "payment.authorized", "order.paid"} and order_id:
+        pending = _cache_get_json(f"rzp_order:{order_id}")
+        if pending:
+            expected_amount = int(pending.get("amount") or 0)
+            if amount and expected_amount and amount != expected_amount:
+                print(f"WARN: webhook amount mismatch for order {order_id}: got={amount}, expected={expected_amount}")
+            else:
+                user = _resolve_user_for_paid_order(db, order_id, notes, receipt)
+                if user:
+                    if not user.is_pro:
+                        user.is_pro = True
+                        db.commit()
+                    if payment_id:
+                        _cache_set_json(
+                            f"rzp_payment:{payment_id}",
+                            {
+                                "firebase_uid": user.firebase_uid,
+                                "order_id": order_id,
+                                "verified_at": int(time.time()),
+                                "source": "webhook",
+                            },
+                            PAYMENT_CONFIRM_TTL_SECONDS,
+                        )
+                    _cache_delete(f"rzp_order:{order_id}")
+                    processed = True
+
+    if event_type == "payment.failed" and payment_id:
+        _cache_set_json(
+            f"rzp_payment_failed:{payment_id}",
+            {
+                "order_id": order_id,
+                "reason": payment_entity.get("error_reason") or payment_entity.get("description") or "unknown",
+                "updated_at": int(time.time()),
+            },
+            PAYMENT_ORDER_TTL_SECONDS,
+        )
+        processed = True
+
+    if event_id:
+        _cache_set_json(
+            f"rzp_webhook_event:{event_id}",
+            {
+                "event": event_type,
+                "processed": processed,
+                "received_at": int(time.time()),
+            },
+            PAYMENT_WEBHOOK_EVENT_TTL_SECONDS,
+        )
+
+    return {"status": "success", "event": event_type, "processed": processed}
 
 class SyncDataRequest(BaseModel):
     firebase_uid: str
