@@ -27,6 +27,12 @@ export interface PreviewSubject {
     is_cleared_arrear?: boolean;
 }
 
+type PreviewSubjectDraft = Omit<PreviewSubject, 'credits' | 'original_semester'> & {
+    credits?: string;
+    original_semester?: string;
+    points?: string;
+};
+
 interface PreviewSectionProps {
     imageUrls: string[];
     ocrData: {
@@ -142,7 +148,7 @@ function SemSlide({
     useEffect(() => { scaleRef.current = scale; }, [scale]);
 
     // State: Row Editing
-    const [editing, setEditing] = useState<Record<number, PreviewSubject>>({});
+    const [editing, setEditing] = useState<Record<number, PreviewSubjectDraft>>({});
 
     // Handlers: Image Zoom
     const resetZoom = () => {
@@ -211,7 +217,14 @@ function SemSlide({
 
     // Handlers: Row Editing
     const startEdit = (idx: number, subject: PreviewSubject) => {
-        setEditing(prev => ({ ...prev, [idx]: { ...subject } }));
+        setEditing(prev => ({
+            ...prev,
+            [idx]: {
+                ...subject,
+                credits: subject.credits !== undefined ? String(subject.credits) : '',
+                original_semester: subject.original_semester !== undefined ? String(subject.original_semester) : '',
+            },
+        }));
     };
 
     const cancelEdit = (idx: number) => {
@@ -227,14 +240,15 @@ function SemSlide({
         if (!edited) return;
 
         const newSubjects = [...subjects];
-        // Ensure numeric fields are normalized before saving edits.
-        if (typeof edited.credits === 'string') {
-            edited.credits = Number(edited.credits) || 0;
-        }
-        const parsedSem = Number((edited as any).original_semester);
-        (edited as any).original_semester = parsedSem > 0 ? Math.floor(parsedSem) : undefined;
+        const parsedCredits = Number(edited.credits);
+        const parsedSem = Number(edited.original_semester);
+        const { points: _ignoredPoints, credits: _ignoredCredits, original_semester: _ignoredSemester, ...rest } = edited;
 
-        newSubjects[idx] = edited;
+        newSubjects[idx] = {
+            ...rest,
+            credits: Number.isFinite(parsedCredits) ? parsedCredits : undefined,
+            original_semester: parsedSem > 0 ? Math.floor(parsedSem) : undefined,
+        };
         onChange(newSubjects);
 
         cancelEdit(idx);
@@ -366,7 +380,7 @@ function SemSlide({
                                                     inputMode="numeric"
                                                     min={1}
                                                     max={8}
-                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], original_semester: e.target.value } as any }))}
+                                                    onChange={e => setEditing(p => ({ ...p, [idx]: { ...p[idx], original_semester: e.target.value } }))}
                                                     title="Semester"
                                                     style={{ width: 58, border: '1.5px solid #FDE8D8', borderRadius: 8, padding: '8px', fontSize: 13, fontWeight: 800, fontFamily: 'Outfit', color: '#D4500A', outline: 'none', background: '#FFF', textAlign: 'center' }}
                                                 />
