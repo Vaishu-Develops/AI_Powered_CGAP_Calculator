@@ -15,6 +15,7 @@ export interface PreviewSubject {
     grade: string;
     marks?: number;
     credits?: number;
+    semester?: number;
     is_revaluation?: boolean;
     confidence?: string | number;
     original_semester?: number;
