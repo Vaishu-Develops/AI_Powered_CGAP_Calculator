@@ -381,7 +381,7 @@ export default function InputPage() {
     };
 
     loadSavedPreview();
-  }, [isEditAllPreviewMode, user, isDemo]);
+  }, [isEditAllPreviewMode, user?.id, isDemo]);
 
   const persistReport = async (resultData: any) => {
     const firebaseUid = user?.id || null;
