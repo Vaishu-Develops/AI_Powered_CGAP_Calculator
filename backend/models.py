@@ -18,6 +18,7 @@ class User(Base):
     last_active_at = Column(DateTime(timezone=True), server_default=func.now())
     badges = Column(JSONB, default=[]) # Array of unlocked badge IDs
     scan_count = Column(Integer, default=0)
+    pdf_export_count = Column(Integer, default=0)
     
     # Referral System
     referral_code = Column(String, unique=True, index=True, nullable=True)
