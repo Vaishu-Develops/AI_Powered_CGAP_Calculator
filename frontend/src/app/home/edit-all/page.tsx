@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from 'react-icons/fi';
 import { useCalcFlow } from '@/context/CalcFlowContext';
@@ -42,7 +42,7 @@ type ApiSubject = {
   is_arrear?: boolean;
 };
 
-export default function EditAllPage() {
+function EditAllContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isDemo } = useUser();
@@ -433,5 +433,13 @@ export default function EditAllPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function EditAllPage() {
+  return (
+    <Suspense fallback={<LoadingSaffron message="Loading Workspace..." />}>
+      <EditAllContent />
+    </Suspense>
   );
 }
