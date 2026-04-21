@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { Suspense, useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -270,7 +270,7 @@ function buildResultsFromEditAllPreview(payload: EditAllPreviewPayload) {
   };
 }
 
-export default function InputPage() {
+function InputPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { state } = useCalcFlow();
@@ -1075,6 +1075,14 @@ export default function InputPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function InputPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen" />}>
+      <InputPageContent />
+    </Suspense>
   );
 }
 

@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // Railway advertises many CPUs; capping workers avoids OOM during prerender.
+    cpus: 2,
+  },
 };
 
 export default nextConfig;
