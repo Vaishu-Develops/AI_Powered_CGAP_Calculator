@@ -489,7 +489,7 @@ function InputPageContent() {
         const formData = new FormData();
         formData.append('file', files[i]);
 
-        const res = await fetch('http://localhost:8000/preview-ocr/', {
+        const res = await fetch(`${API_BASE}/preview-ocr/`, {
           method: 'POST',
           headers: user?.id ? { 'X-Firebase-Uid': user.id } : {},
           body: formData,
@@ -615,7 +615,7 @@ function InputPageContent() {
         branch: metadata.branch
       };
 
-      const res = await fetch('http://localhost:8000/calculate-from-data/', {
+      const res = await fetch(`${API_BASE}/calculate-from-data/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -651,7 +651,7 @@ function InputPageContent() {
 
       let allSubjectsForCompute = [...editedSubjects];
       if (state.mode === 'multi_sem' && user && !isDemo) {
-        const existingRes = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
+        const existingRes = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}/subjects`);
         if (existingRes.ok) {
           const existingData = await existingRes.json();
           const existingSubjects = Array.isArray(existingData?.subjects)
@@ -697,7 +697,7 @@ function InputPageContent() {
         regulation: ocrData?.semester_info?.regulation || "2021"
       };
 
-      const res = await fetch('http://localhost:8000/calculate-from-data/', {
+      const res = await fetch(`${API_BASE}/calculate-from-data/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
