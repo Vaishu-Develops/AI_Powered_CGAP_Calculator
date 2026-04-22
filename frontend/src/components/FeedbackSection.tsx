@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import { useUser } from '@/context/UserContext';
+import { API_BASE } from '@/config/api';
 
 const REACTIONS = [
     { emoji: '😍', label: 'Love it', value: 5 },
@@ -26,7 +27,7 @@ export default function FeedbackSection() {
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/feedback', {
+            const response = await fetch(`${API_BASE}/feedback/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
