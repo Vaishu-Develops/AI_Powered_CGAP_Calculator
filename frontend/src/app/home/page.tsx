@@ -261,7 +261,7 @@ export default function HomePage() {
         if (!user || !referralCode.trim()) return;
         setReferralLoading(true);
         try {
-            const res = await fetch('http://localhost:8000/referrals/apply', {
+            const res = await fetch(`${API_BASE}/referrals/apply`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -490,7 +490,7 @@ export default function HomePage() {
 
         setSimulatorLoading(true);
         try {
-            const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
+            const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}/subjects`);
             if (!res.ok) throw new Error('Failed to load simulator data');
             const data: HomeSubjectsResponse = await res.json();
             const flatSubjects = Array.isArray(data?.subjects) ? data.subjects : [];
