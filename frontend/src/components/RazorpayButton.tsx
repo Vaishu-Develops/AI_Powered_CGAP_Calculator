@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useUser } from '@/context/UserContext';
+import { API_BASE } from '@/config/api';
 import { Icon } from '@iconify/react';
 import NotificationToast from './NotificationToast';
 
@@ -105,7 +106,7 @@ export default function RazorpayButton({
             await ensureRazorpayLoaded();
             console.log("[RAZORPAY] Starting order creation...");
             // 1. Create Order on Backend
-            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/razorpay/create-order`, {
+            const orderResponse = await fetch(`${API_BASE}/create-razorpay-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -118,7 +119,7 @@ export default function RazorpayButton({
                 const errorData = await orderResponse.json();
                 throw new Error(errorData.detail || "Failed to create order");
             }
-            
+
             const orderData = await orderResponse.json();
             console.log("[RAZORPAY] Order Created Successfully:", orderData);
 
@@ -137,7 +138,7 @@ export default function RazorpayButton({
                 handler: async function (response: any) {
                     console.log("[RAZORPAY] Payment success, verifying...", response);
                     try {
-                        const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/razorpay/verify-payment`, {
+                        const verifyResponse = await fetch(`${API_BASE}/verify-razorpay-payment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
@@ -151,14 +152,14 @@ export default function RazorpayButton({
 
                         if (verifyResponse.ok) {
                             showToast("Upgrade successful! Welcome to the Pro Club. 🚀", "success");
-                            
+
                             // Refresh context
                             const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/users/stats/${user.firebase_uid}`);
                             if (statsRes.ok) {
                                 const statsData = await statsRes.json();
                                 if (login) {
-                                    login({ 
-                                        ...user, 
+                                    login({
+                                        ...user,
                                         is_pro: statsData.stats.is_pro,
                                         referrals_count: statsData.stats.referrals_count,
                                         scan_count: statsData.stats.scan_count
@@ -184,7 +185,7 @@ export default function RazorpayButton({
                     color: "#D4500A",
                 },
                 modal: {
-                    ondismiss: function() {
+                    ondismiss: function () {
                         setLoading(false);
                         console.log("[RAZORPAY] Checkout modal closed");
                     }
@@ -201,7 +202,7 @@ export default function RazorpayButton({
             });
 
             const rzp = new window.Razorpay(options);
-            
+
             rzp.on('payment.failed', function (response: any) {
                 const details = {
                     code: response?.error?.code,
@@ -232,7 +233,7 @@ export default function RazorpayButton({
                 console.error(`[RAZORPAY] Modal Error Detail: ${serialized}`);
                 showToast(`Payment failed: ${details.description || 'Unknown error'}`, "error");
             });
-            
+
             rzp.open();
         } catch (error: any) {
             console.error("[RAZORPAY] Integration Error:", error);
