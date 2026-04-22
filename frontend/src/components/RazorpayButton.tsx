@@ -154,7 +154,7 @@ export default function RazorpayButton({
                             showToast("Upgrade successful! Welcome to the Pro Club. 🚀", "success");
 
                             // Refresh context
-                            const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/users/stats/${user.firebase_uid}`);
+                            const statsRes = await fetch(`${API_BASE}/users/stats/${user.firebase_uid}`);
                             if (statsRes.ok) {
                                 const statsData = await statsRes.json();
                                 if (login) {
