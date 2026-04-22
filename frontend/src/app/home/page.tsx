@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import { API_BASE } from '@/config/api';
 import dynamic from 'next/dynamic';
 import { FiPlus, FiCheck, FiDownload, FiTrendingUp, FiActivity, FiAlertCircle, FiAward, FiStar, FiFileText, FiBriefcase, FiCheckCircle, FiChevronDown, FiUserPlus, FiUpload, FiEdit3, FiTarget } from 'react-icons/fi';
 import { Icon } from '@iconify/react';
@@ -335,7 +336,7 @@ export default function HomePage() {
             setReportsLoading(true);
 
             try {
-                const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}`);
+                const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}`);
                 if (!res.ok) throw new Error('Failed to load reports');
                 const data: HomeReportsResponse = await res.json();
 

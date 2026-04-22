@@ -6,6 +6,7 @@ import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from 'react-icons/fi';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import { useUser } from '@/context/UserContext';
 import LoadingSaffron from '@/components/LoadingSaffron';
+import { API_BASE } from '@/config/api';
 
 const GRADES = ['S', 'O', 'A+', 'A', 'B+', 'B', 'C', 'U', 'RA', 'SA', 'W', 'AB', 'F', '-'];
 const FAILING = new Set(['U', 'RA', 'SA', 'W', 'AB', 'F', '-']);
@@ -64,7 +65,7 @@ function EditAllContent() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
+        const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}/subjects`);
         if (!res.ok) throw new Error('Failed to load semester data');
         const data = await res.json();
 
@@ -208,7 +209,7 @@ function EditAllContent() {
         subjects,
       };
 
-      const res = await fetch('http://localhost:8000/reports/save', {
+      const res = await fetch(`${API_BASE}/reports/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

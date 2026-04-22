@@ -9,6 +9,7 @@ import UploadSection from '@/components/UploadSection';
 import ResultsSection from '@/components/ResultsSection';
 import PreviewSection from '@/components/PreviewSection';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import { API_BASE } from '@/config/api';
 import { useUser } from '@/context/UserContext';
 import ManualEntryGrid from '@/components/ManualEntryGrid';
 import SemesterSelector, { SemSlot } from '@/components/SemesterSelector';
@@ -337,7 +338,7 @@ function InputPageContent() {
       setStage('calculating');
 
       try {
-        const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/subjects`);
+        const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}/subjects`);
         if (!res.ok) {
           throw new Error('Unable to load saved semesters for preview');
         }

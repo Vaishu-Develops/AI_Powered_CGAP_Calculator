@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
+import { API_BASE } from '@/config/api';
 import dynamic from 'next/dynamic';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
@@ -22,7 +23,7 @@ export default function AuthPage() {
         const firebaseUid = email.trim().toLowerCase();
 
         try {
-            const res = await fetch('http://localhost:8000/auth/firebase-login', {
+            const res = await fetch(`${API_BASE}/auth/firebase-login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

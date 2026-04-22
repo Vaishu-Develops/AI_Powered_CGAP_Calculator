@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Icon } from '@iconify/react';
 import { useUser } from '@/context/UserContext';
 import { FiArrowLeft, FiTarget, FiTrendingUp, FiAlertCircle, FiCheckCircle, FiAward, FiZap } from 'react-icons/fi';
+import { API_BASE } from '@/config/api';
 import dynamic from 'next/dynamic';
 import LoadingSaffron from '@/components/LoadingSaffron';
 
@@ -48,7 +49,7 @@ export default function SemesterPlanner() {
 
             if (user?.id) {
                 try {
-                    const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}`);
+                    const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data?.reports?.length > 0) {
@@ -130,7 +131,7 @@ export default function SemesterPlanner() {
             const fetchSubjects = async () => {
                 setIsFetchingSubjects(true);
                 try {
-                    const res = await fetch(`http://localhost:8000/curriculum/subjects?branch=${encodeURIComponent(latestReport.branch || '')}&regulation=${encodeURIComponent(latestReport.regulation || '')}&semester=${nextSemester}`);
+                    const res = await fetch(`${API_BASE}/curriculum/subjects?branch=${encodeURIComponent(latestReport.branch || '')}&regulation=${encodeURIComponent(latestReport.regulation || '')}&semester=${nextSemester}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data.status === 'success' && data.subjects?.length > 0) {

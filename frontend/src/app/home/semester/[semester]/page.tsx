@@ -6,6 +6,7 @@ import { FiArrowLeft, FiEdit3, FiRefreshCw, FiUploadCloud } from 'react-icons/fi
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
 import LoadingSaffron from '@/components/LoadingSaffron';
+import { API_BASE } from '@/config/api';
 
 type SemesterSubject = {
     id: number;
@@ -51,7 +52,7 @@ export default function SemesterDetailPage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch(`http://localhost:8000/reports/user/${encodeURIComponent(user.id)}/semester/${safeSemester}`);
+                const res = await fetch(`${API_BASE}/reports/user/${encodeURIComponent(user.id)}/semester/${safeSemester}`);
                 if (!res.ok) throw new Error('Failed to load semester report');
                 const data = await res.json();
                 setReport(data?.report || null);
