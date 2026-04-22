@@ -35,6 +35,8 @@ Base.metadata.create_all(bind=engine)
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://aipoweredcgapcalculator-production.up.railway.app",
+    "https://ai-cgpa-calculator-saas.up.railway.app"
 ]
 
 app.add_middleware(
