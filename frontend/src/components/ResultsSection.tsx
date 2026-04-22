@@ -29,6 +29,7 @@ import Odometer from './Odometer';
 import ShareModal from './ShareModal';
 import { useUser } from '@/context/UserContext';
 import { useCalcFlow } from '@/context/CalcFlowContext';
+import { API_BASE } from '@/config/api';
 import NotificationToast from '@/components/NotificationToast';
 
 // Assuming subject type based on backend
@@ -570,7 +571,7 @@ export default function ResultsSection({ data, onReset, onBackToPreview, mode = 
             setIsExporting(false);
             if (user && !user.is_pro) {
                 // Increment counter on backend to strictly enforce 2-export free limit
-                fetch(`http://localhost:8000/users/increment-pdf/${user.firebase_uid}`, {
+                fetch(`${API_BASE}/users/increment-pdf/${user.firebase_uid}`, {
                     method: 'POST',
                 }).then(res => res.json()).then(data => {
                     if (data.status === 'success' && setStats) {
