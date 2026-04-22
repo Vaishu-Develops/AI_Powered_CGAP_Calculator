@@ -2,6 +2,7 @@
  * Persistence Service for CGPA Intel
  * Bridges localStorage with Neon PostgreSQL backend.
  */
+import { API_BASE } from '@/config/api';
 
 export interface SavedReport {
     id?: number;
@@ -24,7 +25,7 @@ export interface UserStats {
     referral_code?: string;
 }
 
-const API_BASE = 'http://localhost:8000';
+// API_BASE is now imported from '@/config/api'
 
 export const persistenceService = {
     /**
