@@ -248,29 +248,40 @@ def firebase_login(request: FirebaseLoginRequest, db: Session = Depends(get_db))
     """
     try:
         uid = request.firebase_uid.strip()
+        email = request.email.strip().lower() if request.email else None
+        
         if not uid:
             raise HTTPException(status_code=400, detail="firebase_uid is required")
 
+        # 1. Search by Firebase UID
         user = db.query(User).filter(User.firebase_uid == uid).first()
-        from datetime import datetime, timezone, timedelta
+        
+        # 2. Fallback: Search by Email to handle account migration
+        if not user and email:
+            print(f"User linking: Searching for existing account with email {email}")
+            user = db.query(User).filter(User.email == email).first()
+            if user:
+                print(f"User linking: Migrating account {user.id} from UID '{user.firebase_uid}' to '{uid}'")
+                user.firebase_uid = uid
+                db.flush()
 
+        from datetime import datetime, timezone, timedelta
         now = datetime.now(timezone.utc)
         
         if user:
             # Update email/name if provided
-            if request.email:
-                user.email = request.email.strip()
+            if email:
+                user.email = email
             if request.name and not user.name:
                 user.name = request.name
                 
             # --- STREAK LOGIC ---
+            # ... (keep existing streak logic)
             last_active = user.last_active_at
             if last_active:
-                # Ensure last_active is aware
                 if last_active.tzinfo is None:
                     last_active = last_active.replace(tzinfo=timezone.utc)
                 
-                # Ensure counters are not None (for safety with old records)
                 if user.streak_count is None: user.streak_count = 1
                 if user.scan_count is None: user.scan_count = 0
                 if user.badges is None: user.badges = []
@@ -280,14 +291,13 @@ def firebase_login(request: FirebaseLoginRequest, db: Session = Depends(get_db))
                     user.streak_count = (user.streak_count or 0) + 1
                 elif diff.days > 1:
                     user.streak_count = 1
-                # if diff.days == 0, already active today, do nothing
             
             user.last_active_at = now
         else:
             # Create new user
             user = User(
                 firebase_uid=uid, 
-                email=request.email.strip() if request.email else None, 
+                email=email, 
                 name=request.name,
                 streak_count=1,
                 last_active_at=now,
