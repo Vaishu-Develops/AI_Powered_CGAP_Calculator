@@ -106,7 +106,7 @@ export default function RazorpayButton({
             await ensureRazorpayLoaded();
             console.log("[RAZORPAY] Starting order creation...");
             // 1. Create Order on Backend
-            const orderResponse = await fetch(`${API_BASE}/create-razorpay-order`, {
+            const orderResponse = await fetch(`${API_BASE}/razorpay/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -138,7 +138,7 @@ export default function RazorpayButton({
                 handler: async function (response: any) {
                     console.log("[RAZORPAY] Payment success, verifying...", response);
                     try {
-                        const verifyResponse = await fetch(`${API_BASE}/verify-razorpay-payment`, {
+                        const verifyResponse = await fetch(`${API_BASE}/razorpay/verify-payment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
