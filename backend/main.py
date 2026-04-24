@@ -36,7 +36,9 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://aipoweredcgapcalculator-production.up.railway.app",
-    "https://ai-cgpa-calculator-saas.up.railway.app"
+    "https://ai-cgpa-calculator-saas.up.railway.app",
+    "https://ai-cgpa-calculator-saas.vercel.app",
+    "https://anna-cgpa-calculator.vercel.app"
 ]
 
 app.add_middleware(
