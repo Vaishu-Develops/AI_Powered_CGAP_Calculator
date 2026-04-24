@@ -16,7 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Render/Railway inject PORT env var at runtime
+# Pre-download PaddleOCR models to prevent runtime timeouts on Render/Railway
+# The models are stored in /root/.paddleocr by default
+RUN python3 -c "from paddleocr import PaddleOCR; PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False, show_log=False)"
+
+# Render/Render inject PORT env var at runtime
 EXPOSE 10000
 
 # Use shell form so $PORT is expanded; fall back to 10000 if unset (Render default)
