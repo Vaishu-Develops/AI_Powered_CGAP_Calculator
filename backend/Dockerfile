@@ -16,8 +16,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Railway injects PORT env var at runtime
-EXPOSE 8080
+# Render/Railway inject PORT env var at runtime
+EXPOSE 10000
 
-# Use shell form so $PORT is expanded; fall back to 8080 if unset
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
+# Use shell form so $PORT is expanded; fall back to 10000 if unset (Render default)
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
