@@ -31,19 +31,10 @@ app = FastAPI(
 # Ensure tables exist for local/dev runs (safe no-op when already migrated)
 Base.metadata.create_all(bind=engine)
 
-# CORS (Allow Frontend)
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://aipoweredcgapcalculator-production.up.railway.app",
-    "https://ai-cgpa-calculator-saas.up.railway.app",
-    "https://ai-cgpa-calculator-saas.vercel.app",
-    "https://anna-cgpa-calculator.vercel.app"
-]
-
+# CORS (Allow All Origins for Deployment Flexibility)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
